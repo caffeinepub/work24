@@ -1,0 +1,37 @@
+{
+  "kind": "build_request",
+  "title": "Add \"Contact Us\" item to the navbar",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Add a new \"Contact Us\" navigation item to the site header navigation (desktop and mobile) that routes to the existing \"/contact\" page, using the existing i18n label key \"nav.contact\".",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "add contact us in navbar"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The header navbar shows a \"Contact Us\" item in the desktop navigation.",
+        "The mobile (sheet) navigation also includes a \"Contact Us\" item.",
+        "Clicking/tapping the \"Contact Us\" item navigates to the existing route \"/contact\" and renders the existing ContactUs page.",
+        "The nav item label is sourced from i18n using the existing key \"nav.contact\" (do not hardcode the string)."
+      ]
+    }
+  ],
+  "constraints": [
+    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui/*."
+  ],
+  "nonGoals": [
+    "Do not create a new Contact Us page or change the existing \"/contact\" route.",
+    "Do not change backend canister logic or add new backend APIs."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 3,
+  "summary": "New project",
+  "architectural_notes": [],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-add-a-new-contact-us-navigation-item-to-the-site-header-navigation-desktop-and-mobile-that-routes-to-the-existing-contact-page-using-the-existing-i18n-label-key-nav-contact",
+      "title": "Add a new \"Contact Us\" navigation item to the site header navigation (desktop and mobile) that routes to the existing \"/contact\" page, using the existing i18n label key \"nav.contact\".",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Add a \"Contact Us\" link/item to the navigation bar",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "projectName": "Add \"Contact Us\" item to the navbar",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

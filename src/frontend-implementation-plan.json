@@ -1,0 +1,24 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Add Contact Us item to header navigation",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Add a localized \"Contact Us\" nav item in the header for both desktop and mobile that navigates to the existing /contact route using i18n key nav.contact.",
+      "acceptanceCriteria": [
+        "The header navbar shows a \"Contact Us\" item in the desktop navigation.",
+        "The mobile (sheet) navigation also includes a \"Contact Us\" item.",
+        "Clicking/tapping the \"Contact Us\" item navigates to the existing route \"/contact\" and renders the existing ContactUs page.",
+        "The nav item label is sourced from i18n using the existing key \"nav.contact\" (do not hardcode the string)."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/layout/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Update the header navItems list to include a new entry { label: t('nav.contact'), path: '/contact' } so it renders in both the desktop nav and the mobile Sheet menu; keep using the existing shadcn-ui Button/Sheet components already used by the header for consistent behavior. Verify the component's usage instructions before implementing."
+        }
+      ]
+    }
+  ]
+}
