@@ -3,11 +3,18 @@ import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useI18n } from '../../i18n/I18nProvider';
+import { useInternetIdentity } from '../../hooks/useInternetIdentity';
+import { shouldShowAdminUI } from '../../lib/adminAllowlist';
 import LanguageSwitcher from '../settings/LanguageSwitcher';
 
 export default function AppHeader() {
   const { t } = useI18n();
   const navigate = useNavigate();
+  const { identity } = useInternetIdentity();
+
+  const isAuthenticated = !!identity;
+  const principalString = identity?.getPrincipal().toString();
+  const showAdmin = isAuthenticated && shouldShowAdminUI(principalString);
 
   const navItems = [
     { label: t('nav.home'), path: '/' },
@@ -18,6 +25,10 @@ export default function AppHeader() {
     { label: t('nav.sellerSubmission'), path: '/seller-submission' },
     { label: t('nav.contact'), path: '/contact' },
   ];
+
+  if (showAdmin) {
+    navItems.push({ label: t('nav.admin'), path: '/admin' });
+  }
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">

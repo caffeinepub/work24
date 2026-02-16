@@ -1,16 +1,42 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
+  "summary": "Build an admin page to view app data stored in an Internet Computer canister.",
+  "architectural_notes": [
+    "App data is stored in an Internet Computer canister; provide an admin UI to view this stored data (optionally via Candid UI link)."
+  ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-a-new-contact-us-navigation-item-to-the-site-header-navigation-desktop-and-mobile-that-routes-to-the-existing-contact-page-using-the-existing-i18n-label-key-nav-contact",
-      "title": "Add a new \"Contact Us\" navigation item to the site header navigation (desktop and mobile) that routes to the existing \"/contact\" page, using the existing i18n label key \"nav.contact\".",
+      "id": "feature-create-an-admin-page-that-displays-the-data-stored-in-the-internet-computer-canister-by-listing-the-stored-messages-returned-by-the-backend-each-message-s-text-plus-its-timestamp",
+      "title": "Create an Admin page that displays the data stored in the Internet Computer canister by listing the stored messages returned by the backend (each message’s text plus its timestamp).",
       "reqIds": [
         "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-wire-the-admin-page-to-the-new-backend-admin-only-method-and-handle-unauthorized-access-with-clear-ui-feedback",
+      "title": "Wire the Admin page to the new backend admin-only method and handle unauthorized access with clear UI feedback.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-expose-navigation-access-to-the-admin-page-in-the-header-without-editing-immutable-hook-files-the-link-should-only-be-shown-when-the-user-is-authenticated-and-appears-to-be-an-admin",
+      "title": "Expose navigation access to the Admin page in the header without editing immutable hook files; the link should only be shown when the user is authenticated and appears to be an admin.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-i18n-keys-for-the-admin-page-and-admin-navigation-label-with-english-text-at-minimum-using-the-existing-translation-structure",
+      "title": "Add i18n keys for the Admin page and Admin navigation label, with English text at minimum, using the existing translation structure.",
+      "reqIds": [
+        "REQ-5"
       ],
       "version": 1
     }
@@ -18,12 +44,20 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add a \"Contact Us\" link/item to the navigation bar",
+      "summary": "Add an admin page for viewing stored canister data (e.g., list/submissions)",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Add backend access control for viewing stored data from the admin page by introducing an admin-only query method that returns the stored messages only when the caller principal is in a backend allowlist; otherwise return an explicit error.",
+      "reqIds": [
+        "REQ-2"
+      ],
       "status": "pending"
     }
   ],
-  "projectName": "Add \"Contact Us\" item to the navbar",
+  "projectName": "Add admin page to view canister-stored data (messages)",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

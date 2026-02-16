@@ -28,6 +28,7 @@ const translations: Record<Language, Translations> = {
       workerSubmission: 'Add Your Work',
       sellerSubmission: 'List Material',
       contact: 'Contact Us',
+      admin: 'Admin',
     },
     languages: {
       en: 'English',
@@ -195,6 +196,18 @@ const translations: Record<Language, Translations> = {
       descriptionRequired: 'Description is required',
       imagesRequired: 'At least one image is required',
     },
+    admin: {
+      title: 'Admin Dashboard',
+      description: 'View all contact requests and submissions',
+      loading: 'Loading messages...',
+      empty: 'No messages found',
+      refresh: 'Refresh',
+      timestamp: 'Timestamp',
+      message: 'Message',
+      accessDenied: 'Access Denied',
+      accessDeniedDescription: 'You do not have permission to view this page. Only administrators can access this area.',
+      signInPrompt: 'Please sign in with Internet Identity to access the admin dashboard.',
+    },
     footer: {
       copyright: '© 2026. Built with',
       love: 'love',
@@ -234,6 +247,7 @@ const translations: Record<Language, Translations> = {
       workerSubmission: 'अपना काम जोड़ें',
       sellerSubmission: 'सामग्री सूचीबद्ध करें',
       contact: 'संपर्क करें',
+      admin: 'एडमिन',
     },
     languages: {
       en: 'English',
@@ -336,10 +350,10 @@ const translations: Record<Language, Translations> = {
       subtitle: 'अपनी परियोजना का विवरण जमा करें',
       nameLabel: 'आर्किटेक्ट/कंपनी का नाम',
       namePlaceholder: 'नाम दर्ज करें',
-      projectTypeLabel: 'परियोजना प्रकार',
+      projectTypeLabel: 'परियोजना का प्रकार',
       projectTypePlaceholder: 'जैसे, आवासीय, वाणिज्यिक',
       locationLabel: 'स्थान',
-      locationPlaceholder: 'परियोजना स्थान',
+      locationPlaceholder: 'परियोजना का स्थान',
       budgetLabel: 'बजट रेंज',
       budgetPlaceholder: 'जैसे, 10-20 लाख',
       messageLabel: 'परियोजना विवरण',
@@ -347,10 +361,10 @@ const translations: Record<Language, Translations> = {
       imagesLabel: 'डिज़ाइन चित्र',
       imagesHelper: 'डिज़ाइन चित्र अपलोड करें (वैकल्पिक)',
       submit: 'परियोजना जमा करें',
-      submitting: 'भेजा जा रहा है...',
+      submitting: 'जमा किया जा रहा है...',
       success: 'परियोजना सफलतापूर्वक जमा की गई! हम समीक्षा करेंगे और आपसे संपर्क करेंगे।',
       nameRequired: 'नाम आवश्यक है',
-      projectTypeRequired: 'परियोजना प्रकार आवश्यक है',
+      projectTypeRequired: 'परियोजना का प्रकार आवश्यक है',
       locationRequired: 'स्थान आवश्यक है',
       budgetRequired: 'बजट रेंज आवश्यक है',
     },
@@ -370,7 +384,7 @@ const translations: Record<Language, Translations> = {
       workImagesLabel: 'काम की तस्वीरें',
       workImagesHelper: 'अपने पिछले काम की 3-5 तस्वीरें अपलोड करें',
       submit: 'प्रोफ़ाइल जमा करें',
-      submitting: 'भेजा जा रहा है...',
+      submitting: 'जमा किया जा रहा है...',
       success: 'प्रोफ़ाइल सफलतापूर्वक जमा की गई! आपका काम अब दिखाई दे रहा है।',
       nameRequired: 'नाम आवश्यक है',
       skillRequired: 'कौशल आवश्यक है',
@@ -383,7 +397,7 @@ const translations: Record<Language, Translations> = {
       title: 'अपनी सामग्री सूचीबद्ध करें',
       subtitle: 'हमारे बाज़ार में सामग्री जोड़ें',
       nameLabel: 'सामग्री का नाम',
-      namePlaceholder: 'जैसे, सीमेंट, स्टील रॉड',
+      namePlaceholder: 'जैसे, सीमेंट, स्टील की छड़ें',
       categoryLabel: 'श्रेणी',
       categoryPlaceholder: 'जैसे, निर्माण, हार्डवेयर',
       locationLabel: 'स्थान',
@@ -393,7 +407,7 @@ const translations: Record<Language, Translations> = {
       imagesLabel: 'सामग्री की तस्वीरें',
       imagesHelper: 'सामग्री की तस्वीरें अपलोड करें',
       submit: 'सामग्री जमा करें',
-      submitting: 'भेजा जा रहा है...',
+      submitting: 'जमा किया जा रहा है...',
       success: 'सामग्री सफलतापूर्वक जमा की गई! यह अब बाज़ार में दिखाई दे रही है।',
       nameRequired: 'सामग्री का नाम आवश्यक है',
       categoryRequired: 'श्रेणी आवश्यक है',
@@ -401,10 +415,22 @@ const translations: Record<Language, Translations> = {
       descriptionRequired: 'विवरण आवश्यक है',
       imagesRequired: 'कम से कम एक तस्वीर आवश्यक है',
     },
+    admin: {
+      title: 'एडमिन डैशबोर्ड',
+      description: 'सभी संपर्क अनुरोध और सबमिशन देखें',
+      loading: 'संदेश लोड हो रहे हैं...',
+      empty: 'कोई संदेश नहीं मिला',
+      refresh: 'रीफ्रेश करें',
+      timestamp: 'समय',
+      message: 'संदेश',
+      accessDenied: 'पहुंच अस्वीकृत',
+      accessDeniedDescription: 'आपके पास इस पृष्ठ को देखने की अनुमति नहीं है। केवल प्रशासक इस क्षेत्र तक पहुंच सकते हैं।',
+      signInPrompt: 'एडमिन डैशबोर्ड तक पहुंचने के लिए कृपया Internet Identity से साइन इन करें।',
+    },
     footer: {
-      copyright: '© 2026. प्यार से बनाया गया',
+      copyright: '© 2026. बनाया गया',
       love: 'प्यार',
-      using: 'उपयोग करके',
+      using: 'का उपयोग करके',
       caffeine: 'caffeine.ai',
       contactTitle: 'संपर्क करें',
       servicesTitle: 'हमारी सेवाएं',
@@ -440,6 +466,7 @@ const translations: Record<Language, Translations> = {
       workerSubmission: 'તમારું કામ ઉમેરો',
       sellerSubmission: 'સામગ્રી સૂચિબદ્ધ કરો',
       contact: 'સંપર્ક કરો',
+      admin: 'એડમિન',
     },
     languages: {
       en: 'English',
@@ -483,18 +510,18 @@ const translations: Record<Language, Translations> = {
       mobileLabel: 'મોબાઇલ નંબર',
       mobilePlaceholder: 'તમારો મોબાઇલ નંબર દાખલ કરો',
       requirementLabel: 'તમારી જરૂરિયાત',
-      requirementPlaceholder: 'તમને શું જોઈએ છે તે જણાવો...',
-      submit: 'વિનંતી મોકલો',
-      submitting: 'મોકલી રહ્યા છીએ...',
-      success: 'વિનંતી સફળતાપૂર્વક મોકલી! અમે ટૂંક સમયમાં તમારો સંપર્ક કરીશું।',
+      requirementPlaceholder: 'તમને શું જોઈએ છે તે વર્ણવો...',
+      submit: 'વિનંતી સબમિટ કરો',
+      submitting: 'સબમિટ થઈ રહ્યું છે...',
+      success: 'વિનંતી સફળતાપૂર્વક સબમિટ થઈ! અમે ટૂંક સમયમાં તમારો સંપર્ક કરીશું।',
       nameRequired: 'નામ જરૂરી છે',
       mobileRequired: 'મોબાઇલ નંબર જરૂરી છે',
       mobileInvalid: 'કૃપા કરીને માન્ય 10-અંકનો મોબાઇલ નંબર દાખલ કરો',
-      requirementRequired: 'કૃપા કરીને તમારી જરૂરિયાત જણાવો',
+      requirementRequired: 'કૃપા કરીને તમારી જરૂરિયાત વર્ણવો',
     },
     contactUs: {
       title: 'સંપર્ક કરો',
-      subtitle: 'તમારી તમામ બાંધકામ અને સેવા જરૂરિયાતો માટે Work24 નો સંપર્ક કરો',
+      subtitle: 'તમારી બધી બાંધકામ અને સેવા જરૂરિયાતો માટે Work24 નો સંપર્ક કરો',
       phoneLabel: 'ફોન નંબર',
       emailLabel: 'ઇમેઇલ સરનામું',
       servicesTitle: 'અમારી સેવાઓ',
@@ -523,14 +550,14 @@ const translations: Record<Language, Translations> = {
       mobileLabel: 'મોબાઇલ નંબર',
       mobilePlaceholder: 'તમારો મોબાઇલ નંબર દાખલ કરો',
       skillsLabel: 'કુશળતા',
-      skillsPlaceholder: 'દા.ત., સુથારી, પ્લમ્બિંગ, ઇલેક્ટ્રિકલ',
+      skillsPlaceholder: 'દા.ત., સુથારીકામ, પ્લમ્બિંગ, ઇલેક્ટ્રિકલ',
       experienceLabel: 'અનુભવ',
       experiencePlaceholder: 'વર્ષોનો અનુભવ',
       messageLabel: 'સંદેશ',
       messagePlaceholder: 'તમારા વિશે જણાવો...',
-      submit: 'અરજી મોકલો',
-      submitting: 'મોકલી રહ્યા છીએ...',
-      success: 'અરજી સફળતાપૂર્વક મોકલી! અમે ટૂંક સમયમાં તમારો સંપર્ક કરીશું।',
+      submit: 'અરજી સબમિટ કરો',
+      submitting: 'સબમિટ થઈ રહ્યું છે...',
+      success: 'અરજી સફળતાપૂર્વક સબમિટ થઈ! અમે ટૂંક સમયમાં તમારો સંપર્ક કરીશું।',
       nameRequired: 'નામ જરૂરી છે',
       mobileRequired: 'મોબાઇલ નંબર જરૂરી છે',
       mobileInvalid: 'કૃપા કરીને માન્ય 10-અંકનો મોબાઇલ નંબર દાખલ કરો',
@@ -542,27 +569,27 @@ const translations: Record<Language, Translations> = {
       subtitle: 'તમારા પ્રોજેક્ટની વિગતો સબમિટ કરો',
       nameLabel: 'આર્કિટેક્ટ/કંપનીનું નામ',
       namePlaceholder: 'નામ દાખલ કરો',
-      projectTypeLabel: 'પ્રોજેક્ટ પ્રકાર',
-      projectTypePlaceholder: 'દા.ત., રહેણાંક, વ્યાપારી',
+      projectTypeLabel: 'પ્રોજેક્ટનો પ્રકાર',
+      projectTypePlaceholder: 'દા.ત., રહેણાંક, વાણિજ્યિક',
       locationLabel: 'સ્થાન',
-      locationPlaceholder: 'પ્રોજેક્ટ સ્થાન',
+      locationPlaceholder: 'પ્રોજેક્ટનું સ્થાન',
       budgetLabel: 'બજેટ રેન્જ',
       budgetPlaceholder: 'દા.ત., 10-20 લાખ',
-      messageLabel: 'પ્રોજેક્ટ વિગતો',
+      messageLabel: 'પ્રોજેક્ટની વિગતો',
       messagePlaceholder: 'તમારા પ્રોજેક્ટનું વર્ણન કરો...',
       imagesLabel: 'ડિઝાઇન છબીઓ',
       imagesHelper: 'ડિઝાઇન છબીઓ અપલોડ કરો (વૈકલ્પિક)',
       submit: 'પ્રોજેક્ટ સબમિટ કરો',
-      submitting: 'મોકલી રહ્યા છીએ...',
+      submitting: 'સબમિટ થઈ રહ્યું છે...',
       success: 'પ્રોજેક્ટ સફળતાપૂર્વક સબમિટ થયો! અમે સમીક્ષા કરીશું અને તમારો સંપર્ક કરીશું।',
       nameRequired: 'નામ જરૂરી છે',
-      projectTypeRequired: 'પ્રોજેક્ટ પ્રકાર જરૂરી છે',
+      projectTypeRequired: 'પ્રોજેક્ટનો પ્રકાર જરૂરી છે',
       locationRequired: 'સ્થાન જરૂરી છે',
       budgetRequired: 'બજેટ રેન્જ જરૂરી છે',
     },
     workerSubmission: {
       title: 'તમારું કામ ઉમેરો',
-      subtitle: 'તમારી કુશળતા અને અગાઉના કામ દર્શાવો',
+      subtitle: 'તમારી કુશળતા અને અગાઉના કામને પ્રદર્શિત કરો',
       nameLabel: 'તમારું નામ',
       namePlaceholder: 'તમારું નામ દાખલ કરો',
       skillLabel: 'કુશળતા/સેવા',
@@ -576,8 +603,8 @@ const translations: Record<Language, Translations> = {
       workImagesLabel: 'કામની છબીઓ',
       workImagesHelper: 'તમારા અગાઉના કામની 3-5 છબીઓ અપલોડ કરો',
       submit: 'પ્રોફાઇલ સબમિટ કરો',
-      submitting: 'મોકલી રહ્યા છીએ...',
-      success: 'પ્રોફાઇલ સફળતાપૂર્વક સબમિટ થયો! તમારું કામ હવે દેખાય છે।',
+      submitting: 'સબમિટ થઈ રહ્યું છે...',
+      success: 'પ્રોફાઇલ સફળતાપૂર્વક સબમિટ થઈ! તમારું કામ હવે દૃશ્યમાન છે।',
       nameRequired: 'નામ જરૂરી છે',
       skillRequired: 'કુશળતા જરૂરી છે',
       categoryRequired: 'શ્રેણી જરૂરી છે',
@@ -599,18 +626,30 @@ const translations: Record<Language, Translations> = {
       imagesLabel: 'સામગ્રીની છબીઓ',
       imagesHelper: 'સામગ્રીની છબીઓ અપલોડ કરો',
       submit: 'સામગ્રી સબમિટ કરો',
-      submitting: 'મોકલી રહ્યા છીએ...',
-      success: 'સામગ્રી સફળતાપૂર્વક સબમિટ થઈ! તે હવે બજારમાં દેખાય છે।',
+      submitting: 'સબમિટ થઈ રહ્યું છે...',
+      success: 'સામગ્રી સફળતાપૂર્વક સબમિટ થઈ! તે હવે બજારમાં દૃશ્યમાન છે।',
       nameRequired: 'સામગ્રીનું નામ જરૂરી છે',
       categoryRequired: 'શ્રેણી જરૂરી છે',
       locationRequired: 'સ્થાન જરૂરી છે',
       descriptionRequired: 'વર્ણન જરૂરી છે',
       imagesRequired: 'ઓછામાં ઓછી એક છબી જરૂરી છે',
     },
+    admin: {
+      title: 'એડમિન ડેશબોર્ડ',
+      description: 'બધા સંપર્ક વિનંતીઓ અને સબમિશન જુઓ',
+      loading: 'સંદેશા લોડ થઈ રહ્યા છે...',
+      empty: 'કોઈ સંદેશા મળ્યા નથી',
+      refresh: 'રિફ્રેશ કરો',
+      timestamp: 'સમય',
+      message: 'સંદેશ',
+      accessDenied: 'પ્રવેશ નકારાયો',
+      accessDeniedDescription: 'તમને આ પૃષ્ઠ જોવાની પરવાનગી નથી। ફક્ત વ્યવસ્થાપકો આ વિસ્તારને ઍક્સેસ કરી શકે છે।',
+      signInPrompt: 'એડમિન ડેશબોર્ડને ઍક્સેસ કરવા માટે કૃપા કરીને Internet Identity સાથે સાઇન ઇન કરો।',
+    },
     footer: {
-      copyright: '© 2026. પ્રેમથી બનાવેલ',
+      copyright: '© 2026. બનાવ્યું',
       love: 'પ્રેમ',
-      using: 'ઉપયોગ કરીને',
+      using: 'નો ઉપયોગ કરીને',
       caffeine: 'caffeine.ai',
       contactTitle: 'સંપર્ક કરો',
       servicesTitle: 'અમારી સેવાઓ',
@@ -625,19 +664,26 @@ const translations: Record<Language, Translations> = {
   },
 };
 
-export default translations;
-
-export function getTranslation(language: Language, key: string): string {
+export function getTranslation(lang: Language, key: string): string {
   const keys = key.split('.');
-  let value: any = translations[language];
-  
+  let value: string | Translations = translations[lang];
+
   for (const k of keys) {
-    if (value && typeof value === 'object') {
+    if (typeof value === 'object' && k in value) {
       value = value[k];
     } else {
-      return key;
+      // Fallback to English if key not found
+      value = translations.en;
+      for (const fallbackKey of keys) {
+        if (typeof value === 'object' && fallbackKey in value) {
+          value = value[fallbackKey];
+        } else {
+          return key; // Return key if not found in English either
+        }
+      }
+      break;
     }
   }
-  
+
   return typeof value === 'string' ? value : key;
 }

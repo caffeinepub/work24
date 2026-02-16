@@ -29,7 +29,7 @@ export function useSubmitContact() {
       await actor.addMessage(message);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['messages'] });
+      queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
     },
   });
 }

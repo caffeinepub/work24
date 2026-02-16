@@ -2,20 +2,85 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-new-contact-us-navigation-item-to-the-site-header-navigation-desktop-and-mobile-that-routes-to-the-existing-contact-page-using-the-existing-i18n-label-key-nav-contact",
-      "featureTitle": "Add a new \"Contact Us\" navigation item to the site header navigation (desktop and mobile) that routes to the existing \"/contact\" page, using the existing i18n label key \"nav.contact\".",
+      "featureId": "feature-create-an-admin-page-that-displays-the-data-stored-in-the-internet-computer-canister-by-listing-the-stored-messages-returned-by-the-backend-each-message-s-text-plus-its-timestamp",
+      "featureTitle": "Create an Admin page that displays the data stored in the Internet Computer canister by listing the stored messages returned by the backend (each message’s text plus its timestamp).",
       "files": [
-        "frontend/src/components/layout/AppHeader.tsx"
+        "frontend/src/lib/formatIcTime.ts",
+        "frontend/src/pages/Admin.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
         "shadcn-ui@1.0.0",
         "build-template-react@1.0.0",
         "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0"
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
       ],
       "testIds": [
         "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-wire-the-admin-page-to-the-new-backend-admin-only-method-and-handle-unauthorized-access-with-clear-ui-feedback",
+      "featureTitle": "Wire the Admin page to the new backend admin-only method and handle unauthorized access with clear UI feedback.",
+      "files": [
+        "frontend/src/hooks/useQueries.ts",
+        "frontend/src/pages/Admin.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-expose-navigation-access-to-the-admin-page-in-the-header-without-editing-immutable-hook-files-the-link-should-only-be-shown-when-the-user-is-authenticated-and-appears-to-be-an-admin",
+      "featureTitle": "Expose navigation access to the Admin page in the header without editing immutable hook files; the link should only be shown when the user is authenticated and appears to be an admin.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/layout/AppHeader.tsx",
+        "frontend/src/lib/adminAllowlist.ts",
+        "frontend/src/pages/Admin.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-i18n-keys-for-the-admin-page-and-admin-navigation-label-with-english-text-at-minimum-using-the-existing-translation-structure",
+      "featureTitle": "Add i18n keys for the Admin page and Admin navigation label, with English text at minimum, using the existing translation structure.",
+      "files": [
+        "frontend/src/components/layout/AppHeader.tsx",
+        "frontend/src/i18n/translations.ts",
+        "frontend/src/pages/Admin.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
       ],
       "confidence": "high"
     }

@@ -8,8 +8,21 @@ export interface None {
 }
 export type Option<T> = Some<T> | None;
 export type Time = bigint;
+export interface UserProfile {
+    name: string;
+}
+export enum UserRole {
+    admin = "admin",
+    user = "user",
+    guest = "guest"
+}
 export interface backendInterface {
     addMessage(message: string): Promise<void>;
-    getMessages(): Promise<Array<[string, Time]>>;
-    getMessagesByTimestamp(): Promise<Array<[string, Time]>>;
+    assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    getAdminMessages(): Promise<Array<[string, Time]>>;
+    getCallerUserProfile(): Promise<UserProfile | null>;
+    getCallerUserRole(): Promise<UserRole>;
+    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    isCallerAdmin(): Promise<boolean>;
+    saveCallerUserProfile(profile: UserProfile): Promise<void>;
 }

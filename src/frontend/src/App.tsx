@@ -12,6 +12,7 @@ import Architect from './pages/Architect';
 import WorkerSubmission from './pages/WorkerSubmission';
 import SellerMaterialSubmission from './pages/SellerMaterialSubmission';
 import ContactUs from './pages/ContactUs';
+import Admin from './pages/Admin';
 
 function RootComponent() {
   const { t } = useI18n();
@@ -84,6 +85,12 @@ const contactRoute = createRoute({
   component: ContactUs,
 });
 
+const adminRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/admin',
+  component: Admin,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   serviceDetailRoute,
@@ -93,6 +100,7 @@ const routeTree = rootRoute.addChildren([
   workerSubmissionRoute,
   sellerMaterialSubmissionRoute,
   contactRoute,
+  adminRoute,
 ]);
 
 const router = createRouter({ routeTree });

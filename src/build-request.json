@@ -1,34 +1,116 @@
 {
   "kind": "build_request",
-  "title": "Add \"Contact Us\" item to the navbar",
+  "title": "Add admin page to view canister-stored data (messages)",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Add a new \"Contact Us\" navigation item to the site header navigation (desktop and mobile) that routes to the existing \"/contact\" page, using the existing i18n label key \"nav.contact\".",
+      "text": "Create an Admin page that displays the data stored in the Internet Computer canister by listing the stored messages returned by the backend (each message’s text plus its timestamp).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-11"
         ],
         "quotes": [
-          "add contact us in navbar"
+          "then give admin page to see data."
         ]
       },
       "acceptanceCriteria": [
-        "The header navbar shows a \"Contact Us\" item in the desktop navigation.",
-        "The mobile (sheet) navigation also includes a \"Contact Us\" item.",
-        "Clicking/tapping the \"Contact Us\" item navigates to the existing route \"/contact\" and renders the existing ContactUs page.",
-        "The nav item label is sourced from i18n using the existing key \"nav.contact\" (do not hardcode the string)."
+        "A new page exists at a stable route (e.g., \"/admin\") and renders inside the existing AppShell layout.",
+        "The page fetches canister messages using the existing React Query pattern (same data source as useGetMessages / actor.getMessages).",
+        "The page renders a readable list/table showing message text and a human-readable timestamp for each record.",
+        "The page includes visible loading and empty states (e.g., “Loading…” and “No data found”).",
+        "The page includes a manual “Refresh” action that re-fetches the messages (React Query refetch / invalidation)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add backend access control for viewing stored data from the admin page by introducing an admin-only query method that returns the stored messages only when the caller principal is in a backend allowlist; otherwise return an explicit error.",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-11"
+        ],
+        "quotes": [
+          "then give admin page to see data."
+        ]
+      },
+      "acceptanceCriteria": [
+        "backend/main.mo defines an admin allowlist of principals (hardcoded in code) used to authorize access to admin data.",
+        "A new query method exists (e.g., getMessagesAdmin) that checks caller against the allowlist.",
+        "If authorized, the method returns the same message records currently stored (text + timestamp).",
+        "If unauthorized, the method returns an error response (e.g., a Result-style variant) rather than silently returning empty data.",
+        "Existing public methods (addMessage, getMessages, etc.) continue to behave as they do today (no breaking change)."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Wire the Admin page to the new backend admin-only method and handle unauthorized access with clear UI feedback.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-11"
+        ],
+        "quotes": [
+          "then give admin page to see data."
+        ]
+      },
+      "acceptanceCriteria": [
+        "The Admin page calls the new admin-only backend query method (not the public getMessages) when an actor is available.",
+        "If the backend returns an unauthorized/forbidden error, the UI shows an “Access denied” message in English and does not show any data.",
+        "If the user is not logged in (no identity/actor), the Admin page shows an English prompt to sign in using Internet Identity before attempting to load data.",
+        "Successful authorized access shows the message list/table without errors."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Expose navigation access to the Admin page in the header without editing immutable hook files; the link should only be shown when the user is authenticated and appears to be an admin.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-11"
+        ],
+        "quotes": [
+          "then give admin page to see data."
+        ]
+      },
+      "acceptanceCriteria": [
+        "App routing includes the Admin route alongside existing routes (no regression to current routes like /contact).",
+        "The header navigation includes an “Admin” entry that navigates to the Admin route.",
+        "The “Admin” nav item is conditionally visible only when the user is authenticated and the app can determine admin eligibility (e.g., by comparing the current principal string to a frontend admin allowlist that matches backend configuration).",
+        "If the user is not eligible, the “Admin” link does not appear in desktop or mobile navigation."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Add i18n keys for the Admin page and Admin navigation label, with English text at minimum, using the existing translation structure.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-11"
+        ],
+        "quotes": [
+          "then give admin page to see data."
+        ]
+      },
+      "acceptanceCriteria": [
+        "New translation keys exist for the Admin nav label and Admin page headings/messages.",
+        "English strings are provided for all new keys.",
+        "If non-English languages are not translated, they fall back to English strings or otherwise do not break rendering (no missing-key crashes)."
       ]
     }
   ],
   "constraints": [
-    "Frontend immutable paths must not be edited: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui/*."
+    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
+    "Do not modify any frontend files under frontend/src/components/ui (compose them only).",
+    "Do not edit immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
+    "Do not remove or break existing routes and navigation items (e.g., the existing /contact page and Contact Us nav item)."
   ],
   "nonGoals": [
-    "Do not create a new Contact Us page or change the existing \"/contact\" route.",
-    "Do not change backend canister logic or add new backend APIs."
+    "Building a full CRUD admin console for workers/materials stored in localStorage.",
+    "Adding third-party authentication/roles systems beyond Internet Identity and a simple allowlist.",
+    "Providing a Candid UI link/button (not requested once the user chose an admin page).",
+    "Real-time updates (polling/refresh is sufficient)."
   ],
   "imageRequirements": {
     "required": [],
