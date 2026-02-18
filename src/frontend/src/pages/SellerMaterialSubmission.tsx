@@ -7,6 +7,7 @@ import Work24FormField from '../components/common/Work24FormField';
 import { useI18n } from '../i18n/I18nProvider';
 import { validateRequired } from '../lib/validation';
 import { addMaterial } from '../lib/materialsStorage';
+import { getUserName, getSubmitterId } from '../lib/localPreferences';
 import { toast } from 'sonner';
 
 export default function SellerMaterialSubmission() {
@@ -76,12 +77,20 @@ export default function SellerMaterialSubmission() {
         formData.images.map(file => fileToBase64(file))
       );
 
+      // Get submitter information
+      const submitterName = getUserName() || 'Anonymous';
+      const submitterId = getSubmitterId();
+
       addMaterial({
         name: formData.name,
         category: formData.category,
         description: formData.description,
         location: formData.location,
         images: imagesBase64,
+        submittedBy: {
+          name: submitterName,
+          id: submitterId,
+        },
       });
 
       toast.success(t('sellerSubmission.success'));

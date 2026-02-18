@@ -1,88 +1,118 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Work24 Admin Dashboard — Human-friendly rendering for JSON submissions",
+  "title": "Add worker attribution and tab organization to admin panel",
   "requirements": [
     {
-      "id": "REQ-7",
-      "summary": "Render JSON-shaped admin message payloads as a structured, readable layout instead of raw JSON in the Message column, while preserving plain-text behavior for non-JSON.",
+      "id": "REQ-1",
+      "summary": "Store worker identity with material submissions for tracking purposes",
       "acceptanceCriteria": [
-        "When a message’s text value is a JSON object string, the Admin page parses it client-side and renders a structured view (labels + values) rather than showing the raw JSON string.",
-        "When a message’s text value is not valid JSON, the Admin page continues to display it as plain text (current behavior).",
-        "The structured view is readable on mobile and desktop (wraps long text, does not overflow the table cell)."
+        "Material submissions include worker name and ID fields",
+        "Worker information is persisted with the material data",
+        "Backend stores the association between materials and workers"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/admin/AdminMessageRenderer.tsx",
+          "path": "frontend/src/types/materials.ts",
+          "operation": "modify",
+          "description": "Extend the Material interface to include submittedBy field containing worker name and ID. Add optional fields to maintain backward compatibility with existing stored materials."
+        },
+        {
+          "path": "frontend/src/pages/SellerMaterialSubmission.tsx",
+          "operation": "modify",
+          "description": "Update the material submission form to capture and store the worker name and ID when a new material is submitted. Retrieve worker identity from local preferences or prompt if not available, then include it in the material object before saving to storage."
+        },
+        {
+          "path": "frontend/src/lib/materialsStorage.ts",
+          "operation": "modify",
+          "description": "Update the addMaterial function to accept and persist the new submittedBy field containing worker name and ID with each material entry."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Store worker identity with service/worker profile submissions for attribution tracking",
+      "acceptanceCriteria": [
+        "Worker profile submissions include submitter identification",
+        "Attribution data is stored with each service listing",
+        "Backend maintains the link between workers and their postings"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/types/workers.ts",
+          "operation": "modify",
+          "description": "Extend the Worker interface to include submittedBy field containing the submitter's name and ID. Add optional fields to maintain backward compatibility with existing worker profiles."
+        },
+        {
+          "path": "frontend/src/pages/WorkerSubmission.tsx",
+          "operation": "modify",
+          "description": "Update the worker profile submission form to capture and store the submitter identity when a worker profile is created. Retrieve submitter name and ID from local preferences or prompt if not available, then include it in the worker object before saving to storage."
+        },
+        {
+          "path": "frontend/src/lib/workersStorage.ts",
+          "operation": "modify",
+          "description": "Update the addWorker function to accept and persist the new submittedBy field containing submitter name and ID with each worker profile entry."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Display worker attribution information for each material in the admin panel",
+      "acceptanceCriteria": [
+        "Admin panel displays worker name for each material entry",
+        "Worker ID is visible in the material details",
+        "Attribution information is clearly labeled and easy to identify"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/admin/MaterialsTab.tsx",
           "operation": "create",
-          "description": "Create a dedicated renderer for the Admin table “Message” cell that attempts client-side JSON parsing and, when successful, shows a readable structured layout with wrapping and overflow-safe styles; otherwise falls back to plain text. Use shadcn-ui components (e.g., Button) where appropriate. Verify the component's usage instructions before implementing."
+          "description": "Create a new component that displays all materials in a table or card layout. Show material name, category, description, and worker attribution (name and ID) for each entry. Include a column or section clearly labeled 'Submitted By' showing the worker name and ID. Handle materials without attribution gracefully by showing 'Unknown' or similar placeholder."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Display worker attribution information for each service posting in the admin panel",
+      "acceptanceCriteria": [
+        "Admin panel shows who posted each service/worker profile",
+        "Worker attribution is displayed alongside service data",
+        "Information is formatted consistently with material attribution"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/admin/WorkersTab.tsx",
+          "operation": "create",
+          "description": "Create a new component that displays all worker profiles in a table or card layout. Show worker name, skill, service category, and submitter attribution (name and ID) for each entry. Include a column or section clearly labeled 'Submitted By' showing the submitter name and ID. Format attribution consistently with MaterialsTab and handle missing attribution gracefully."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Organize admin panel data into separate tabs for materials, services, and messages",
+      "acceptanceCriteria": [
+        "Admin panel uses a tabbed interface with at least three tabs",
+        "Materials tab shows all material submissions with worker attribution",
+        "Services tab shows all worker/service postings with attribution",
+        "Messages tab shows contact form submissions and other messages",
+        "User can switch between tabs without losing data",
+        "Active tab is visually indicated"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/admin/MessagesTab.tsx",
+          "operation": "create",
+          "description": "Extract the current messages table functionality from Admin.tsx into a dedicated MessagesTab component. Include the existing message display, delete functionality, and refresh capability with source badges and timestamps."
         },
         {
           "path": "frontend/src/pages/Admin.tsx",
           "operation": "modify",
-          "description": "Update the Admin messages table to use the new AdminMessageRenderer component in the “Message” column, ensuring the cell remains mobile/desktop friendly (wrap long content; no overflow). Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "summary": "Add a per-message toggle to switch between Formatted view and Raw JSON view for JSON-parsable messages without refetching and without affecting other rows.",
-      "acceptanceCriteria": [
-        "For JSON-parsable messages, the UI includes an explicit control to view the raw JSON text.",
-        "Toggling does not affect other rows and does not require a refetch.",
-        "Raw JSON is displayed in a monospaced, wrapped block to keep it readable."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "operation": "modify",
-          "description": "Add per-row local UI state and a toggle control for JSON-parsable messages to switch between “Formatted” and “Raw JSON”; render raw JSON in a monospaced, wrapped block and keep the toggle isolated to the row. Use shadcn-ui components (e.g., Button) for the toggle. Verify the component's usage instructions before implementing."
+          "description": "Restructure the admin page to use a tabbed interface with three tabs: Materials, Workers/Services, and Messages. Use the shadcn Tabs component to implement the tab navigation. Wire in MaterialsTab, WorkersTab, and MessagesTab components as tab content. Ensure the login form remains as the entry point before showing tabs. Maintain the active tab state and provide clear visual indication of which tab is selected. Preserve the existing admin authentication mechanism (username/password: Bharat1213)."
         },
         {
-          "path": "frontend/src/pages/Admin.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Ensure the table cell integration supports the per-row toggle (no shared state across rows; no refetch required when toggling) by passing stable identifiers/props to AdminMessageRenderer. Verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "summary": "In formatted view, highlight common fields with labeled sections and show remaining keys under an “Other fields” list, only rendering fields that exist.",
-      "acceptanceCriteria": [
-        "If the parsed JSON contains recognized keys, those values are shown with clear labels and sensible formatting (e.g., multi-line text preserved for “requirement/message/details”).",
-        "If the parsed JSON contains other keys, they are still visible under an “Other fields” (or equivalent) section as key/value pairs.",
-        "If fields are missing, the UI does not show empty labels; it only shows fields that exist in that message."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "operation": "modify",
-          "description": "Implement formatted rendering that surfaces common fields when present (type, customerName/name, mobile, requirement/message/details, location, budget, skills, experience, timestamp (if embedded), image/file counts) using clearly labeled rows/sections; preserve multi-line text; render remaining keys under an “Other fields” section as generic key/value pairs; omit missing/empty fields. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/lib/adminMessageFormatting.ts",
-          "operation": "create",
-          "description": "Add helper functions for Admin message parsing/normalization (safe JSON parse, recognized-key extraction, residual key listing, and simple value formatting such as counts and multi-line text handling) to keep AdminMessageRenderer clean and consistent."
-        }
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "summary": "Add i18n keys for new Admin formatted/raw UI text and field labels with English defaults, and ensure all new labels are sourced via i18n.",
-      "acceptanceCriteria": [
-        "All newly introduced Admin UI labels/buttons (e.g., Formatted, Raw JSON, Other fields) are sourced via the i18n translation function.",
-        "English translations exist for all newly introduced keys."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/i18n/translations.ts",
-          "operation": "modify",
-          "description": "Add new Admin translation keys (English required) for the formatted/raw toggle labels and formatted field labels/section headings (e.g., formatted, rawJson, otherFields, type, name, mobile, requirement, message, details, location, budget, skills, experience, timestamp, imageCount, fileCount)."
-        },
-        {
-          "path": "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "operation": "modify",
-          "description": "Replace any new user-facing strings introduced for formatted/raw views and field labels with i18n lookups via the existing translation function (useI18n().t). Verify the component's usage instructions before implementing."
+          "description": "Add React Query hooks for fetching materials and workers data from localStorage. Create useGetMaterials and useGetWorkers hooks that return the stored data with proper typing including the new submittedBy fields. These hooks should work alongside the existing admin messages hooks."
         }
       ]
     }

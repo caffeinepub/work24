@@ -6,4 +6,8 @@ export interface Worker {
   profileImage: string;
   workImages: string[];
   location?: string;
+  submittedBy?: {
+    name: string;
+    id: string;
+  };
 }

@@ -48,6 +48,7 @@ export default function Architect() {
     try {
       await submitContact.mutateAsync({
         type: 'architect',
+        origin: 'architect',
         customerName: formData.name,
         mobile: '',
         requirement: `Project Type: ${formData.projectType}\nLocation: ${formData.location}\nBudget: ${formData.budget}\nMessage: ${formData.message}\nImages: ${selectedFiles.length} files`,

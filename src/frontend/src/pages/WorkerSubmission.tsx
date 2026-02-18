@@ -7,6 +7,7 @@ import Work24FormField from '../components/common/Work24FormField';
 import { useI18n } from '../i18n/I18nProvider';
 import { validateRequired } from '../lib/validation';
 import { addWorker } from '../lib/workersStorage';
+import { getUserName, getSubmitterId } from '../lib/localPreferences';
 import { services } from '../lib/servicesCatalog';
 import { toast } from 'sonner';
 
@@ -89,6 +90,10 @@ export default function WorkerSubmission() {
         formData.workImages.map(file => fileToBase64(file))
       );
 
+      // Get submitter information
+      const submitterName = getUserName() || 'Anonymous';
+      const submitterId = getSubmitterId();
+
       addWorker({
         name: formData.name,
         skill: formData.skill,
@@ -96,6 +101,10 @@ export default function WorkerSubmission() {
         location: formData.location,
         profileImage: profileImageBase64,
         workImages: workImagesBase64,
+        submittedBy: {
+          name: submitterName,
+          id: submitterId,
+        },
       });
 
       toast.success(t('workerSubmission.success'));

@@ -33,6 +33,7 @@ export function safeJsonParse(text: string): ParsedMessage {
  */
 export const RECOGNIZED_FIELDS = [
   'type',
+  'origin',
   'customerName',
   'name',
   'mobile',
@@ -111,4 +112,28 @@ export function getFieldLabel(key: string, t: (key: string) => string): string {
   }
   
   return translated;
+}
+
+/**
+ * Extract the origin/source from a message and return a human-readable label
+ */
+export function getMessageSource(messageText: string, t: (key: string) => string): string {
+  const parsed = safeJsonParse(messageText);
+  
+  if (!parsed.isJson || !parsed.data) {
+    return t('adminSource.unknown');
+  }
+  
+  const origin = parsed.data.origin || parsed.data.type || 'unknown';
+  
+  // Map origin values to translation keys
+  const sourceKey = `adminSource.${origin}`;
+  const translated = t(sourceKey);
+  
+  // If translation exists, use it; otherwise fall back to unknown
+  if (translated !== sourceKey) {
+    return translated;
+  }
+  
+  return t('adminSource.unknown');
 }

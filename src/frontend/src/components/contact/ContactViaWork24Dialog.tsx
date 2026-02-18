@@ -56,6 +56,7 @@ export default function ContactViaWork24Dialog({
     try {
       await submitContact.mutateAsync({
         type: 'worker',
+        origin: 'worker-contact',
         workerName: worker?.name,
         customerName: formData.name,
         mobile: formData.mobile,

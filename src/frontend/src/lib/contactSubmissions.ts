@@ -7,6 +7,7 @@ export interface ContactSubmission {
   mobile: string;
   requirement: string;
   type: 'worker' | 'material' | 'career' | 'architect';
+  origin?: string;
 }
 
 export function useSubmitContact() {
@@ -19,6 +20,7 @@ export function useSubmitContact() {
       
       const message = JSON.stringify({
         type: submission.type,
+        origin: submission.origin || 'unknown',
         workerName: submission.workerName,
         customerName: submission.customerName,
         mobile: submission.mobile,

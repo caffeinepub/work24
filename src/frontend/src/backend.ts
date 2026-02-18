@@ -102,9 +102,9 @@ export interface backendInterface {
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     addMessage(message: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    deleteAllMessages(adminId: string, password: string): Promise<bigint>;
-    deleteMessage(adminId: string, password: string, messageId: bigint): Promise<boolean>;
-    getAdminMessages(adminId: string, password: string): Promise<Array<[bigint, string, Time]>>;
+    deleteAllMessages(): Promise<bigint>;
+    deleteMessage(messageId: bigint): Promise<boolean>;
+    getAdminMessages(): Promise<Array<[bigint, string, Time]>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;
@@ -156,45 +156,45 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async deleteAllMessages(arg0: string, arg1: string): Promise<bigint> {
+    async deleteAllMessages(): Promise<bigint> {
         if (this.processError) {
             try {
-                const result = await this.actor.deleteAllMessages(arg0, arg1);
+                const result = await this.actor.deleteAllMessages();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.deleteAllMessages(arg0, arg1);
+            const result = await this.actor.deleteAllMessages();
             return result;
         }
     }
-    async deleteMessage(arg0: string, arg1: string, arg2: bigint): Promise<boolean> {
+    async deleteMessage(arg0: bigint): Promise<boolean> {
         if (this.processError) {
             try {
-                const result = await this.actor.deleteMessage(arg0, arg1, arg2);
+                const result = await this.actor.deleteMessage(arg0);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.deleteMessage(arg0, arg1, arg2);
+            const result = await this.actor.deleteMessage(arg0);
             return result;
         }
     }
-    async getAdminMessages(arg0: string, arg1: string): Promise<Array<[bigint, string, Time]>> {
+    async getAdminMessages(): Promise<Array<[bigint, string, Time]>> {
         if (this.processError) {
             try {
-                const result = await this.actor.getAdminMessages(arg0, arg1);
+                const result = await this.actor.getAdminMessages();
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.getAdminMessages(arg0, arg1);
+            const result = await this.actor.getAdminMessages();
             return result;
         }
     }

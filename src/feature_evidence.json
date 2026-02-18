@@ -2,10 +2,89 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-update-the-admin-dashboard-message-table-to-display-collected-submission-data-in-a-human-friendly-easy-to-read-layout-instead-of-showing-the-raw-json-string-in-the-message-column",
-      "featureTitle": "Update the Admin dashboard message table to display collected submission data in a human-friendly, easy-to-read layout instead of showing the raw JSON string in the “Message” column.",
+      "featureId": "feature-store-the-worker-identity-name-and-id-with-each-material-submission-so-the-system-can-track-which-worker-uploaded-which-material",
+      "featureTitle": "Store the worker identity (name and ID) with each material submission so the system can track which worker uploaded which material",
       "files": [
-        "frontend/src/components/admin/AdminMessageRenderer.tsx",
+        "frontend/src/pages/SellerMaterialSubmission.tsx",
+        "frontend/src/types/materials.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-store-the-worker-identity-name-and-id-with-each-service-worker-profile-submission-so-the-system-can-track-attribution",
+      "featureTitle": "Store the worker identity (name and ID) with each service/worker profile submission so the system can track attribution",
+      "files": [
+        "frontend/src/pages/WorkerSubmission.tsx",
+        "frontend/src/types/workers.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-display-worker-attribution-information-name-and-id-for-each-material-in-the-admin-panel-so-the-website-owner-knows-who-uploaded-it",
+      "featureTitle": "Display worker attribution information (name and ID) for each material in the admin panel so the website owner knows who uploaded it",
+      "files": [
+        "frontend/src/components/admin/MaterialsTab.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-display-worker-attribution-information-name-and-id-for-each-service-posting-in-the-admin-panel",
+      "featureTitle": "Display worker attribution information (name and ID) for each service posting in the admin panel",
+      "files": [
+        "frontend/src/components/admin/WorkersTab.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-organize-admin-panel-data-into-separate-tabs-one-for-materials-one-for-services-workers-and-one-for-general-contact-messages",
+      "featureTitle": "Organize admin panel data into separate tabs: one for materials, one for services/workers, and one for general contact messages",
+      "files": [
+        "frontend/src/components/admin/MessagesTab.tsx",
+        "frontend/src/hooks/useQueries.ts",
         "frontend/src/pages/Admin.tsx"
       ],
       "components": [
@@ -17,67 +96,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-a-per-message-toggle-on-the-admin-dashboard-to-switch-between-formatted-view-and-raw-json-view-for-messages-that-can-be-parsed-as-json",
-      "featureTitle": "Add a per-message toggle on the Admin dashboard to switch between “Formatted” view and “Raw JSON” view for messages that can be parsed as JSON.",
-      "files": [
-        "frontend/src/components/admin/AdminMessageRenderer.tsx",
-        "frontend/src/pages/Admin.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-in-the-formatted-admin-message-view-surface-commonly-useful-fields-when-present-as-dedicated-clearly-labeled-rows-sections-type-customername-name-mobile-requirement-message-details-location-budget-skills-experience-timestamp-if-embedded-and-image-file-counts-render-any-remaining-json-keys-as-a-generic-key-value-list",
-      "featureTitle": "In the formatted Admin message view, surface commonly useful fields (when present) as dedicated, clearly labeled rows/sections: type, customerName/name, mobile, requirement/message/details, location, budget, skills, experience, timestamp (if embedded), and image/file counts; render any remaining JSON keys as a generic key/value list.",
-      "files": [
-        "frontend/src/components/admin/AdminMessageRenderer.tsx",
-        "frontend/src/lib/adminMessageFormatting.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-adjust-i18n-strings-for-any-new-admin-dashboard-ui-text-introduced-by-the-formatted-raw-toggle-and-formatted-field-labels-ensure-english-strings-are-present-and-used-as-the-default",
-      "featureTitle": "Add/adjust i18n strings for any new Admin dashboard UI text introduced by the formatted/raw toggle and formatted field labels; ensure English strings are present and used as the default.",
-      "files": [
-        "frontend/src/components/admin/AdminMessageRenderer.tsx",
-        "frontend/src/i18n/translations.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-10"
+        "REQ-5"
       ],
       "confidence": "high"
     }

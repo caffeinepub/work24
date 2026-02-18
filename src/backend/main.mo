@@ -8,8 +8,6 @@ import MixinAuthorization "authorization/MixinAuthorization";
 import AccessControl "authorization/access-control";
 import Nat "mo:core/Nat";
 
-
-
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -25,8 +23,9 @@ actor {
   var messages = Map.empty<Nat, Message>();
 
   public shared ({ caller }) func addMessage(message : Text) : async () {
-    // Allow any authenticated caller (users and guests) to submit messages
-    // This ensures anonymous principals can submit, which is typical for public submission forms
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can add messages");
+    };
     let newMessage : Message = {
       id = nextMessageId;
       text = message;
@@ -36,8 +35,8 @@ actor {
     nextMessageId += 1;
   };
 
-  public shared ({ caller }) func getAdminMessages(adminId : Text, password : Text) : async [(Nat, Text, Time.Time)] {
-    if (adminId != "Bharat1213" or password != "bharatranjan1213") {
+  public query ({ caller }) func getAdminMessages() : async [(Nat, Text, Time.Time)] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can access messages");
     };
 
@@ -49,8 +48,8 @@ actor {
     );
   };
 
-  public shared ({ caller }) func deleteMessage(adminId : Text, password : Text, messageId : Nat) : async Bool {
-    if (adminId != "Bharat1213" or password != "bharatranjan1213") {
+  public shared ({ caller }) func deleteMessage(messageId : Nat) : async Bool {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can delete messages");
     };
 
@@ -63,8 +62,8 @@ actor {
     };
   };
 
-  public shared ({ caller }) func deleteAllMessages(adminId : Text, password : Text) : async Nat {
-    if (adminId != "Bharat1213" or password != "bharatranjan1213") {
+  public shared ({ caller }) func deleteAllMessages() : async Nat {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can delete all messages");
     };
 
@@ -100,4 +99,3 @@ actor {
     userProfiles.add(caller, profile);
   };
 };
-

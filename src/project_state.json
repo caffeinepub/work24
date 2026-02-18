@@ -1,40 +1,51 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
+  "summary": "Worker marketplace platform with admin panel tracking materials/services posted by workers",
+  "architectural_notes": [
+    "Admin panel tracks worker-to-material/service associations",
+    "Tab-based navigation in admin interface"
+  ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-update-the-admin-dashboard-message-table-to-display-collected-submission-data-in-a-human-friendly-easy-to-read-layout-instead-of-showing-the-raw-json-string-in-the-message-column",
-      "title": "Update the Admin dashboard message table to display collected submission data in a human-friendly, easy-to-read layout instead of showing the raw JSON string in the “Message” column.",
+      "id": "feature-store-the-worker-identity-name-and-id-with-each-material-submission-so-the-system-can-track-which-worker-uploaded-which-material",
+      "title": "Store the worker identity (name and ID) with each material submission so the system can track which worker uploaded which material",
       "reqIds": [
-        "REQ-7"
+        "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-a-per-message-toggle-on-the-admin-dashboard-to-switch-between-formatted-view-and-raw-json-view-for-messages-that-can-be-parsed-as-json",
-      "title": "Add a per-message toggle on the Admin dashboard to switch between “Formatted” view and “Raw JSON” view for messages that can be parsed as JSON.",
+      "id": "feature-store-the-worker-identity-name-and-id-with-each-service-worker-profile-submission-so-the-system-can-track-attribution",
+      "title": "Store the worker identity (name and ID) with each service/worker profile submission so the system can track attribution",
       "reqIds": [
-        "REQ-8"
+        "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-in-the-formatted-admin-message-view-surface-commonly-useful-fields-when-present-as-dedicated-clearly-labeled-rows-sections-type-customername-name-mobile-requirement-message-details-location-budget-skills-experience-timestamp-if-embedded-and-image-file-counts-render-any-remaining-json-keys-as-a-generic-key-value-list",
-      "title": "In the formatted Admin message view, surface commonly useful fields (when present) as dedicated, clearly labeled rows/sections: type, customerName/name, mobile, requirement/message/details, location, budget, skills, experience, timestamp (if embedded), and image/file counts; render any remaining JSON keys as a generic key/value list.",
+      "id": "feature-display-worker-attribution-information-name-and-id-for-each-material-in-the-admin-panel-so-the-website-owner-knows-who-uploaded-it",
+      "title": "Display worker attribution information (name and ID) for each material in the admin panel so the website owner knows who uploaded it",
       "reqIds": [
-        "REQ-9"
+        "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-adjust-i18n-strings-for-any-new-admin-dashboard-ui-text-introduced-by-the-formatted-raw-toggle-and-formatted-field-labels-ensure-english-strings-are-present-and-used-as-the-default",
-      "title": "Add/adjust i18n strings for any new Admin dashboard UI text introduced by the formatted/raw toggle and formatted field labels; ensure English strings are present and used as the default.",
+      "id": "feature-display-worker-attribution-information-name-and-id-for-each-service-posting-in-the-admin-panel",
+      "title": "Display worker attribution information (name and ID) for each service posting in the admin panel",
       "reqIds": [
-        "REQ-10"
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-organize-admin-panel-data-into-separate-tabs-one-for-materials-one-for-services-workers-and-one-for-general-contact-messages",
+      "title": "Organize admin panel data into separate tabs: one for materials, one for services/workers, and one for general contact messages",
+      "reqIds": [
+        "REQ-5"
       ],
       "version": 1
     }
@@ -42,12 +53,18 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Display collected data in an easy-to-read, human-friendly format on the admin page (not raw JSON)",
+      "summary": "Display which worker posted each material/service in admin panel",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Organize admin data into separate tabs",
       "reqIds": [],
       "status": "pending"
     }
   ],
-  "projectName": "Work24 Admin Dashboard",
+  "projectName": "Work24",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

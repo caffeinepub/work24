@@ -41,6 +41,7 @@ export default function Career() {
     try {
       await submitContact.mutateAsync({
         type: 'career',
+        origin: 'career',
         customerName: formData.name,
         mobile: formData.mobile,
         requirement: `Skills: ${formData.skills}\nExperience: ${formData.experience}\nMessage: ${formData.message}`,

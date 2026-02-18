@@ -1,78 +1,99 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-18T14:20:58.612Z",
+  "generatedAt": "2026-02-18T16:11:26.056Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 4,
-    "implemented": 4,
+    "total": 5,
+    "implemented": 5,
     "items": [
       {
-        "id": "REQ-10",
-        "summary": "Add/adjust i18n strings for any new Admin dashboard UI text introduced by the formatted/raw toggle and formatted field labels; ensure English strings are present and used as the default.",
+        "id": "REQ-1",
+        "summary": "Store the worker identity (name and ID) with each material submission so the system can track which worker uploaded which material",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/i18n/translations.ts",
-          "frontend/src/components/admin/AdminMessageRenderer.tsx"
+          "frontend/src/types/materials.ts",
+          "frontend/src/pages/SellerMaterialSubmission.tsx",
+          "frontend/src/lib/materialsStorage.ts"
         ],
         "matchedFiles": [
-          "frontend/src/i18n/translations.ts",
-          "frontend/src/components/admin/AdminMessageRenderer.tsx"
+          "frontend/src/types/materials.ts",
+          "frontend/src/pages/SellerMaterialSubmission.tsx"
         ]
       },
       {
-        "id": "REQ-7",
-        "summary": "Update the Admin dashboard message table to display collected submission data in a human-friendly, easy-to-read layout instead of showing the raw JSON string in the “Message” column.",
+        "id": "REQ-2",
+        "summary": "Store the worker identity (name and ID) with each service/worker profile submission so the system can track attribution",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "frontend/src/pages/Admin.tsx"
+          "frontend/src/types/workers.ts",
+          "frontend/src/pages/WorkerSubmission.tsx",
+          "frontend/src/lib/workersStorage.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "frontend/src/pages/Admin.tsx"
+          "frontend/src/types/workers.ts",
+          "frontend/src/pages/WorkerSubmission.tsx"
         ]
       },
       {
-        "id": "REQ-8",
-        "summary": "Add a per-message toggle on the Admin dashboard to switch between “Formatted” view and “Raw JSON” view for messages that can be parsed as JSON.",
+        "id": "REQ-3",
+        "summary": "Display worker attribution information (name and ID) for each material in the admin panel so the website owner knows who uploaded it",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "frontend/src/pages/Admin.tsx"
+          "frontend/src/components/admin/MaterialsTab.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "frontend/src/pages/Admin.tsx"
+          "frontend/src/components/admin/MaterialsTab.tsx"
         ]
       },
       {
-        "id": "REQ-9",
-        "summary": "In the formatted Admin message view, surface commonly useful fields (when present) as dedicated, clearly labeled rows/sections: type, customerName/name, mobile, requirement/message/details, location, budget, skills, experience, timestamp (if embedded), and image/file counts; render any remaining JSON keys as a generic key/value list.",
+        "id": "REQ-4",
+        "summary": "Display worker attribution information (name and ID) for each service posting in the admin panel",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "frontend/src/lib/adminMessageFormatting.ts"
+          "frontend/src/components/admin/WorkersTab.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "frontend/src/lib/adminMessageFormatting.ts"
+          "frontend/src/components/admin/WorkersTab.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Organize admin panel data into separate tabs: one for materials, one for services/workers, and one for general contact messages",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/admin/MessagesTab.tsx",
+          "frontend/src/pages/Admin.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/admin/MessagesTab.tsx",
+          "frontend/src/pages/Admin.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/admin/AdminMessageRenderer.tsx",
+    "frontend/src/components/admin/MaterialsTab.tsx",
+    "frontend/src/components/admin/MessagesTab.tsx",
+    "frontend/src/components/admin/WorkersTab.tsx",
+    "frontend/src/hooks/useQueries.ts",
     "frontend/src/i18n/translations.ts",
-    "frontend/src/lib/adminMessageFormatting.ts",
+    "frontend/src/lib/localPreferences.ts",
     "frontend/src/pages/Admin.tsx",
+    "frontend/src/pages/SellerMaterialSubmission.tsx",
+    "frontend/src/pages/WorkerSubmission.tsx",
+    "frontend/src/types/materials.ts",
+    "frontend/src/types/workers.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

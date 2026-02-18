@@ -5,4 +5,8 @@ export interface Material {
   description: string;
   images: string[];
   location?: string;
+  submittedBy?: {
+    name: string;
+    id: string;
+  };
 }
