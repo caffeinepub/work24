@@ -1,84 +1,88 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Work24 Admin Dashboard: list submissions with ids and allow deletion",
+  "title": "Work24 Admin Dashboard — Human-friendly rendering for JSON submissions",
   "requirements": [
     {
-      "id": "REQ-3",
-      "summary": "Update /admin to render collected submissions from backend list including timestamp and content (and internally use stable ids).",
+      "id": "REQ-7",
+      "summary": "Render JSON-shaped admin message payloads as a structured, readable layout instead of raw JSON in the Message column, while preserving plain-text behavior for non-JSON.",
       "acceptanceCriteria": [
-        "After admin login, the Admin dashboard renders a table/list populated from the backend list API (not hardcoded).",
-        "If there is no data, the page shows the existing empty state (or an equivalent English empty state).",
-        "The Refresh button still refetches and updates the list."
+        "When a message’s text value is a JSON object string, the Admin page parses it client-side and renders a structured view (labels + values) rather than showing the raw JSON string.",
+        "When a message’s text value is not valid JSON, the Admin page continues to display it as plain text (current behavior).",
+        "The structured view is readable on mobile and desktop (wraps long text, does not overflow the table cell)."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Update the admin messages query to use the backend’s new tuple shape (messageId, messageText, timestamp) and keep the query key stable while still incorporating the current admin session from sessionStorage."
+          "path": "frontend/src/components/admin/AdminMessageRenderer.tsx",
+          "operation": "create",
+          "description": "Create a dedicated renderer for the Admin table “Message” cell that attempts client-side JSON parsing and, when successful, shows a readable structured layout with wrapping and overflow-safe styles; otherwise falls back to plain text. Use shadcn-ui components (e.g., Button) where appropriate. Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/pages/Admin.tsx",
           "operation": "modify",
-          "description": "Update the admin dashboard table rendering to consume the new message list shape from React Query (use messageId as the row key; display at minimum timestamp + submission content). Use existing shadcn-ui Table/Card/Button components already present; verify the component's usage instructions before implementing."
+          "description": "Update the Admin messages table to use the new AdminMessageRenderer component in the “Message” column, ensuring the cell remains mobile/desktop friendly (wrap long content; no overflow). Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-4",
-      "summary": "Add per-row delete controls with confirmation and post-delete refresh behavior on the Admin dashboard.",
+      "id": "REQ-8",
+      "summary": "Add a per-message toggle to switch between Formatted view and Raw JSON view for JSON-parsable messages without refetching and without affecting other rows.",
       "acceptanceCriteria": [
-        "Each listed submission row includes a Delete action.",
-        "Clicking Delete asks for confirmation (dialog or equivalent).",
-        "On successful delete, the deleted submission no longer appears without requiring a full page reload (React Query invalidation/refetch is acceptable).",
-        "On error (e.g., unauthorized), the UI shows an English error message and does not remove the row."
+        "For JSON-parsable messages, the UI includes an explicit control to view the raw JSON text.",
+        "Toggling does not affect other rows and does not require a refetch.",
+        "Raw JSON is displayed in a monospaced, wrapped block to keep it readable."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/Admin.tsx",
+          "path": "frontend/src/components/admin/AdminMessageRenderer.tsx",
           "operation": "modify",
-          "description": "Add a Delete action per submission row, including a confirmation step (e.g., confirm dialog or equivalent) and UI states for deleting/errors. Ensure the list updates after deletion via React Query invalidation/refetch. Use existing shadcn-ui Button/Alert/Table components already imported; verify the component's usage instructions before implementing."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Extend React Query hooks to fetch admin list with ids and perform delete mutations using the admin session stored in sessionStorage.",
-      "acceptanceCriteria": [
-        "Admin list query keying remains stable and continues to use the admin session as part of the query key.",
-        "Delete mutation uses the stored adminId/password from the existing admin session helper and calls the new backend delete API.",
-        "After deletion, the admin list query is invalidated/refetched."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/hooks/useQueries.ts",
-          "operation": "modify",
-          "description": "Add a delete mutation hook that reads adminId/password from the existing sessionStorage helper and calls the backend delete capability using the messageId. On success, invalidate/refetch the admin messages query; on error, surface the error to the caller for English UI messaging."
+          "description": "Add per-row local UI state and a toggle control for JSON-parsable messages to switch between “Formatted” and “Raw JSON”; render raw JSON in a monospaced, wrapped block and keep the toggle isolated to the row. Use shadcn-ui components (e.g., Button) for the toggle. Verify the component's usage instructions before implementing."
         },
         {
           "path": "frontend/src/pages/Admin.tsx",
           "operation": "modify",
-          "description": "Wire the new delete mutation hook into the Delete action, and ensure success triggers list refresh via invalidation/refetch without a full page reload. Use existing shadcn-ui UI primitives already in the file; verify the component's usage instructions before implementing."
+          "description": "Ensure the table cell integration supports the per-row toggle (no shared state across rows; no refetch required when toggling) by passing stable identifiers/props to AdminMessageRenderer. Verify the component's usage instructions before implementing."
         }
       ]
     },
     {
-      "id": "REQ-6",
-      "summary": "Add/adjust English i18n strings for delete actions and confirmation prompts used in the Admin dashboard (no Internet Identity references).",
+      "id": "REQ-9",
+      "summary": "In formatted view, highlight common fields with labeled sections and show remaining keys under an “Other fields” list, only rendering fields that exist.",
       "acceptanceCriteria": [
-        "Admin delete UI strings (e.g., “Delete”, “Cancel”, “Confirm delete”, “Are you sure?”) are available in English and are wired through the existing i18n mechanism.",
-        "No admin UI text references Internet Identity."
+        "If the parsed JSON contains recognized keys, those values are shown with clear labels and sensible formatting (e.g., multi-line text preserved for “requirement/message/details”).",
+        "If the parsed JSON contains other keys, they are still visible under an “Other fields” (or equivalent) section as key/value pairs.",
+        "If fields are missing, the UI does not show empty labels; it only shows fields that exist in that message."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/admin/AdminMessageRenderer.tsx",
+          "operation": "modify",
+          "description": "Implement formatted rendering that surfaces common fields when present (type, customerName/name, mobile, requirement/message/details, location, budget, skills, experience, timestamp (if embedded), image/file counts) using clearly labeled rows/sections; preserve multi-line text; render remaining keys under an “Other fields” section as generic key/value pairs; omit missing/empty fields. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/lib/adminMessageFormatting.ts",
+          "operation": "create",
+          "description": "Add helper functions for Admin message parsing/normalization (safe JSON parse, recognized-key extraction, residual key listing, and simple value formatting such as counts and multi-line text handling) to keep AdminMessageRenderer clean and consistent."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Add i18n keys for new Admin formatted/raw UI text and field labels with English defaults, and ensure all new labels are sourced via i18n.",
+      "acceptanceCriteria": [
+        "All newly introduced Admin UI labels/buttons (e.g., Formatted, Raw JSON, Other fields) are sourced via the i18n translation function.",
+        "English translations exist for all newly introduced keys."
       ],
       "file_operations": [
         {
           "path": "frontend/src/i18n/translations.ts",
           "operation": "modify",
-          "description": "Add new admin translation keys for delete UI (e.g., Delete/Cancel/Confirm delete/Are you sure?/Deleting…/Delete failed) in English and wire them for use by the Admin page. Ensure no strings mention Internet Identity."
+          "description": "Add new Admin translation keys (English required) for the formatted/raw toggle labels and formatted field labels/section headings (e.g., formatted, rawJson, otherFields, type, name, mobile, requirement, message, details, location, budget, skills, experience, timestamp, imageCount, fileCount)."
         },
         {
-          "path": "frontend/src/pages/Admin.tsx",
+          "path": "frontend/src/components/admin/AdminMessageRenderer.tsx",
           "operation": "modify",
-          "description": "Replace hardcoded delete-related UI text with the new i18n keys via the existing I18nProvider translation function, ensuring all user-facing delete/confirm/error text is in English (and no Internet Identity references). Use existing shadcn-ui Alert/Button components; verify the component's usage instructions before implementing."
+          "description": "Replace any new user-facing strings introduced for formatted/raw views and field labels with i18n lookups via the existing translation function (useI18n().t). Verify the component's usage instructions before implementing."
         }
       ]
     }

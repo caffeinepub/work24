@@ -7,34 +7,34 @@
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-expand-the-admin-page-admin-to-display-all-collected-user-submissions-using-the-new-backend-message-list-show-at-minimum-timestamp-submission-content-keep-user-facing-text-in-english",
-      "title": "Expand the Admin page (/admin) to display all collected user submissions using the new backend message list (show at minimum timestamp + submission content; keep user-facing text in English).",
+      "id": "feature-update-the-admin-dashboard-message-table-to-display-collected-submission-data-in-a-human-friendly-easy-to-read-layout-instead-of-showing-the-raw-json-string-in-the-message-column",
+      "title": "Update the Admin dashboard message table to display collected submission data in a human-friendly, easy-to-read layout instead of showing the raw JSON string in the “Message” column.",
       "reqIds": [
-        "REQ-3"
+        "REQ-7"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-delete-controls-to-the-admin-dashboard-so-the-admin-can-delete-individual-collected-submissions-from-the-ui-with-a-confirmation-step-and-the-ui-refreshes-after-deletion",
-      "title": "Add delete controls to the Admin dashboard so the admin can delete individual collected submissions from the UI, with a confirmation step, and the UI refreshes after deletion.",
+      "id": "feature-add-a-per-message-toggle-on-the-admin-dashboard-to-switch-between-formatted-view-and-raw-json-view-for-messages-that-can-be-parsed-as-json",
+      "title": "Add a per-message toggle on the Admin dashboard to switch between “Formatted” view and “Raw JSON” view for messages that can be parsed as JSON.",
       "reqIds": [
-        "REQ-4"
+        "REQ-8"
       ],
       "version": 1
     },
     {
-      "id": "feature-update-react-query-hooks-to-support-fetching-the-admin-submission-list-with-ids-and-performing-delete-mutations-using-the-current-admin-session-stored-in-sessionstorage",
-      "title": "Update React Query hooks to support fetching the admin submission list with ids and performing delete mutations using the current admin session stored in sessionStorage.",
+      "id": "feature-in-the-formatted-admin-message-view-surface-commonly-useful-fields-when-present-as-dedicated-clearly-labeled-rows-sections-type-customername-name-mobile-requirement-message-details-location-budget-skills-experience-timestamp-if-embedded-and-image-file-counts-render-any-remaining-json-keys-as-a-generic-key-value-list",
+      "title": "In the formatted Admin message view, surface commonly useful fields (when present) as dedicated, clearly labeled rows/sections: type, customerName/name, mobile, requirement/message/details, location, budget, skills, experience, timestamp (if embedded), and image/file counts; render any remaining JSON keys as a generic key/value list.",
       "reqIds": [
-        "REQ-5"
+        "REQ-9"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-adjust-i18n-english-strings-used-by-the-admin-dashboard-for-delete-actions-and-confirmation-prompts-do-not-mention-internet-identity",
-      "title": "Add/adjust i18n English strings used by the Admin dashboard for delete actions and confirmation prompts (do not mention Internet Identity).",
+      "id": "feature-add-adjust-i18n-strings-for-any-new-admin-dashboard-ui-text-introduced-by-the-formatted-raw-toggle-and-formatted-field-labels-ensure-english-strings-are-present-and-used-as-the-default",
+      "title": "Add/adjust i18n strings for any new Admin dashboard UI text introduced by the formatted/raw toggle and formatted field labels; ensure English strings are present and used as the default.",
       "reqIds": [
-        "REQ-6"
+        "REQ-10"
       ],
       "version": 1
     }
@@ -42,34 +42,11 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Admin dashboard should display all data collected from users",
+      "summary": "Display collected data in an easy-to-read, human-friendly format on the admin page (not raw JSON)",
       "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-2",
-      "summary": "Admin should be able to delete collected user data from the admin dashboard",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-3",
-      "summary": "Update backend message storage so each collected user submission has a stable unique identifier and can be listed by the admin with its id, stored message text, and timestamp (using the existing username/password admin gate: adminId=\"Bharat1213\", password=\"bharatranjan1213\").",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Add backend admin APIs to delete collected user submissions by id (and optionally delete all submissions), protected by the same existing admin username/password check.",
-      "reqIds": [
-        "REQ-2"
-      ],
       "status": "pending"
     }
   ],
-  "gameProjectType": "none",
   "projectName": "Work24 Admin Dashboard",
   "clarification_mode": "instant",
   "clarification_rounds": 0

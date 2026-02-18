@@ -1,14 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Let admins view all collected user submissions with stable IDs and timestamps, and delete submissions from the Admin dashboard.
+**Goal:** Make Admin dashboard submissions readable by formatting JSON message content into a structured, human-friendly layout while still allowing access to the raw JSON.
 
 **Planned changes:**
-- Update backend message storage so each submission has a stable unique identifier and timestamp, and expose an admin-protected list API returning (messageId, messageText, timestamp).
-- Add admin-protected backend delete APIs to remove a submission by id (and optionally delete all), with clear errors for unauthorized access or missing ids.
-- Update the Admin page (/admin) to fetch and display the submission list from the backend (timestamp + content) with an English empty state and working Refresh.
-- Add per-row Delete controls with confirmation, showing English error messages on failure and refreshing the list after successful deletion without full page reload.
-- Update React Query hooks to query the admin list (including ids) and perform delete mutations using the existing admin session stored in sessionStorage, invalidating/refetching after deletes.
-- Add/adjust English i18n strings for delete actions and confirmation prompts, with no references to Internet Identity.
+- Update the Admin dashboard “Message” table cell rendering to detect when a message text is a JSON object string, parse it client-side, and display a structured labels + values view instead of raw JSON.
+- Keep current behavior for non-JSON message text (display as plain text).
+- Add a per-row toggle for JSON-parsable messages to switch between “Formatted” and “Raw JSON” views without affecting other rows and without refetching.
+- In formatted view, display commonly useful fields when present (type, customerName/name, mobile, requirement/message/details, location, budget, skills, experience, timestamp, image/file counts) and show remaining keys under an “Other fields” section.
+- Ensure the formatted layout is responsive (wrap long text, avoid overflow in the table cell) and raw JSON is shown as a wrapped monospaced block.
+- Add/adjust i18n keys for any new Admin UI text (e.g., Formatted, Raw JSON, Other fields) with English as the default.
 
-**User-visible outcome:** After admin login, the Admin dashboard shows a live list of collected submissions (with timestamps) and the admin can delete individual submissions (with confirmation), with the list updating immediately after changes.
+**User-visible outcome:** Admins see submissions in a clean, readable format within the message table, can toggle any JSON-based row between formatted and raw views, and non-JSON messages remain unchanged.

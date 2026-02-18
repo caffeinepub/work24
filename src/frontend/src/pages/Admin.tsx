@@ -22,6 +22,7 @@ import { formatIcTime } from '../lib/formatIcTime';
 import { setAdminSession, clearAdminSession, isAdminLoggedIn } from '../lib/adminSession';
 import { useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { AdminMessageRenderer } from '../components/admin/AdminMessageRenderer';
 
 export default function Admin() {
   const { t } = useI18n();
@@ -224,8 +225,8 @@ export default function Admin() {
                       <TableCell className="font-mono text-sm">
                         {formatIcTime(timestamp)}
                       </TableCell>
-                      <TableCell className="whitespace-pre-wrap break-words">
-                        {messageText}
+                      <TableCell className="max-w-2xl">
+                        <AdminMessageRenderer messageText={messageText} />
                       </TableCell>
                       <TableCell className="text-right">
                         <Button

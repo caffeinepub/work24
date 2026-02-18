@@ -1,122 +1,87 @@
 {
   "kind": "build_request",
-  "title": "Admin dashboard: display all collected user submissions and allow admin deletion",
+  "title": "Render admin submissions in a human-friendly format (not raw JSON)",
   "projectName": "Work24 Admin Dashboard",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-1",
-      "text": "Update backend message storage so each collected user submission has a stable unique identifier and can be listed by the admin with its id, stored message text, and timestamp (using the existing username/password admin gate: adminId=\"Bharat1213\", password=\"bharatranjan1213\").",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "all the data collected from user should display here and admin have right to delete the data."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Calling the admin list API returns an array of messages where each entry includes (messageId, messageText, timestamp).",
-        "Existing username/password check remains required for admin list access and uses the exact credentials already implemented.",
-        "Newly added user submissions (via addMessage) appear in the admin list response with unique ids."
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "text": "Add backend admin APIs to delete collected user submissions by id (and optionally delete all submissions), protected by the same existing admin username/password check.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-user-1"
-        ],
-        "quotes": [
-          "admin have right to delete the data."
-        ]
-      },
-      "acceptanceCriteria": [
-        "Deleting a message by id removes it from subsequent admin list results.",
-        "Attempting to delete with wrong admin credentials traps/returns an error and does not delete anything.",
-        "Deleting a non-existent id returns a clear error (trap) and does not affect other records."
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Expand the Admin page (/admin) to display all collected user submissions using the new backend message list (show at minimum timestamp + submission content; keep user-facing text in English).",
+      "id": "REQ-7",
+      "text": "Update the Admin dashboard message table to display collected submission data in a human-friendly, easy-to-read layout instead of showing the raw JSON string in the “Message” column.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-6"
         ],
         "quotes": [
-          "all the data collected from user should display here"
+          "data is in this kind of , make it easy to read and understand.\nnot in this kind of jason?"
         ]
       },
       "acceptanceCriteria": [
-        "After admin login, the Admin dashboard renders a table/list populated from the backend list API (not hardcoded).",
-        "If there is no data, the page shows the existing empty state (or an equivalent English empty state).",
-        "The Refresh button still refetches and updates the list."
+        "When a message’s text value is a JSON object string, the Admin page parses it client-side and renders a structured view (labels + values) rather than showing the raw JSON string.",
+        "When a message’s text value is not valid JSON, the Admin page continues to display it as plain text (current behavior).",
+        "The structured view is readable on mobile and desktop (wraps long text, does not overflow the table cell)."
       ]
     },
     {
-      "id": "REQ-4",
-      "text": "Add delete controls to the Admin dashboard so the admin can delete individual collected submissions from the UI, with a confirmation step, and the UI refreshes after deletion.",
+      "id": "REQ-8",
+      "text": "Add a per-message toggle on the Admin dashboard to switch between “Formatted” view and “Raw JSON” view for messages that can be parsed as JSON.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-6"
         ],
         "quotes": [
-          "admin have right to delete the data."
+          "not in this kind of jason?"
         ]
       },
       "acceptanceCriteria": [
-        "Each listed submission row includes a Delete action.",
-        "Clicking Delete asks for confirmation (dialog or equivalent).",
-        "On successful delete, the deleted submission no longer appears without requiring a full page reload (React Query invalidation/refetch is acceptable).",
-        "On error (e.g., unauthorized), the UI shows an English error message and does not remove the row."
+        "For JSON-parsable messages, the UI includes an explicit control to view the raw JSON text.",
+        "Toggling does not affect other rows and does not require a refetch.",
+        "Raw JSON is displayed in a monospaced, wrapped block to keep it readable."
       ]
     },
     {
-      "id": "REQ-5",
-      "text": "Update React Query hooks to support fetching the admin submission list with ids and performing delete mutations using the current admin session stored in sessionStorage.",
+      "id": "REQ-9",
+      "text": "In the formatted Admin message view, surface commonly useful fields (when present) as dedicated, clearly labeled rows/sections: type, customerName/name, mobile, requirement/message/details, location, budget, skills, experience, timestamp (if embedded), and image/file counts; render any remaining JSON keys as a generic key/value list.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-6"
         ]
       },
       "acceptanceCriteria": [
-        "Admin list query keying remains stable and continues to use the admin session as part of the query key.",
-        "Delete mutation uses the stored adminId/password from the existing admin session helper and calls the new backend delete API.",
-        "After deletion, the admin list query is invalidated/refetched."
+        "If the parsed JSON contains recognized keys, those values are shown with clear labels and sensible formatting (e.g., multi-line text preserved for “requirement/message/details”).",
+        "If the parsed JSON contains other keys, they are still visible under an “Other fields” (or equivalent) section as key/value pairs.",
+        "If fields are missing, the UI does not show empty labels; it only shows fields that exist in that message."
       ]
     },
     {
-      "id": "REQ-6",
-      "text": "Add/adjust i18n English strings used by the Admin dashboard for delete actions and confirmation prompts (do not mention Internet Identity).",
+      "id": "REQ-10",
+      "text": "Add/adjust i18n strings for any new Admin dashboard UI text introduced by the formatted/raw toggle and formatted field labels; ensure English strings are present and used as the default.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-user-1"
+          "msg-6"
+        ],
+        "quotes": [
+          "Use English for any user-facing text in the build request."
         ]
       },
       "acceptanceCriteria": [
-        "Admin delete UI strings (e.g., “Delete”, “Cancel”, “Confirm delete”, “Are you sure?”) are available in English and are wired through the existing i18n mechanism.",
-        "No admin UI text references Internet Identity."
+        "All newly introduced Admin UI labels/buttons (e.g., Formatted, Raw JSON, Other fields) are sourced via the i18n translation function.",
+        "English translations exist for all newly introduced keys."
       ]
     }
   ],
   "constraints": [
-    "Keep the admin credentials exactly as currently implemented: adminId=\"Bharat1213\" and password=\"bharatranjan1213\".",
-    "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
-    "Do not edit files under frontend/src/components/ui or any paths listed as immutable in SYSTEM_CONTEXT.",
-    "Do not introduce third-party authentication; admin access remains username/password via sessionStorage."
+    "Do not change immutable frontend paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui (compose only).",
+    "Do not change backend APIs or message storage format for this request; formatting must be done client-side on the Admin page.",
+    "Keep all user-facing text for new UI elements available in English via i18n."
   ],
   "nonGoals": [
-    "Building real-time updates (no WebSockets/streaming).",
-    "Adding new kinds of user-facing submission forms beyond what already exists.",
-    "Persisting worker/material submissions currently stored in localStorage into the backend (unless separately requested)."
+    "Do not implement new backend endpoints or change the Motoko canister schema/state for formatting purposes.",
+    "Do not add new authentication mechanisms (only the existing admin username/password session is used).",
+    "Do not add real-time updates or websocket-based live feeds."
   ],
   "imageRequirements": {
     "required": [],
