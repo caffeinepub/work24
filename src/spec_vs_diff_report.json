@@ -1,80 +1,61 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-16T14:51:57.230Z",
-  "summary": "Admin page, route, and React Query hook were added, plus backend now has an admin-only query for messages. However, backend authorization does not use a hardcoded principal allowlist and returns traps instead of explicit errors, and the frontend admin nav visibility is not actually restricted to admins. There are also unrequested additions/changes around secret URL parameters and access-control initialization, including modifying an immutable hook file.",
+  "generatedAt": "2026-02-17T17:45:51.562Z",
+  "summary": "Backend and frontend changes largely implement admin listing and deletion of collected messages with stable numeric ids and timestamp. However, deletion-by-id behavior and migration/ID continuity have gaps, and several unrelated frontend/UI/theme/auth cleanup changes appear beyond the BuildRequest.",
   "missing_requirements": [
     {
       "id": "REQ-2",
-      "requirement": "Backend must define a hardcoded admin allowlist of principals and authorize the admin-only messages query against it.",
-      "reason": "backend/main.mo uses an AccessControl state/mixin and permission checks (#admin), but no hardcoded list of admin Principal values is shown.",
+      "requirement": "Deleting a non-existent id returns a clear error (trap) and does not affect other records.",
+      "reason": "Backend `deleteMessage` returns `false` when the id is missing instead of trapping/returning a clear error as required.",
       "evidence": [
-        "backend/main.mo"
+        "backend/main.mo: deleteMessage() switch(messages.get(messageId)) { case null { false }; ... }"
       ]
     },
     {
-      "id": "REQ-2",
-      "requirement": "Admin-only query must return an explicit error response (e.g., Result-style) when unauthorized, not trap/silently empty.",
-      "reason": "getAdminMessages calls Runtime.trap(\"Unauthorized: Only admins can view messages\") rather than returning an error variant/result.",
+      "id": "REQ-1",
+      "requirement": "Newly added user submissions appear in the admin list response with unique ids (stable across upgrades/migrations).",
+      "reason": "A migration module was added, but it sets `nextMessageId = 0` even after assigning ids to migrated messages, which can cause id reuse/overwrites after upgrade and break uniqueness/stability.",
       "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "requirement": "Existing public methods (addMessage, getMessages, etc.) must continue to behave as they do today (no breaking change).",
-      "reason": "addMessage now enforces AccessControl.hasPermission(... #user) and traps when unauthorized, which changes behavior for callers that previously could add messages without this permission gate (and no evidence of preserving prior behavior is shown).",
-      "evidence": [
-        "backend/main.mo"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "requirement": "Admin nav item should only be shown when authenticated and appears to be an admin (e.g., principal in a frontend allowlist matching backend).",
-      "reason": "shouldShowAdminUI explicitly returns true for all authenticated users (\"For now, show admin UI to all authenticated users\"), so the Admin link will appear for any signed-in user, not only admins.",
-      "evidence": [
-        "frontend/src/lib/adminAllowlist.ts",
-        "frontend/src/components/layout/AppHeader.tsx"
+        "backend/migration.mo: run() returns { ...; nextMessageId = 0 }",
+        "backend/main.mo: var nextMessageId = 0; addMessage uses nextMessageId and increments"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Secret URL parameter/sessionStorage utilities for admin tokens (e.g., caffeineAdminToken)",
-      "reason": "BuildRequest did not request URL-param token handling or session persistence utilities; access control was supposed to be via principal allowlist + Internet Identity.",
+      "description": "Added backend migration logic (`backend/migration.mo`) and wired it into the actor.",
+      "reason": "The BuildRequest did not request an upgrade migration module; it only requested stable ids and list/delete APIs.",
       "evidence": [
-        "frontend/src/utils/urlParams.ts"
+        "backend/migration.mo (new file)",
+        "backend/main.mo: (with migration = migration.run)"
       ]
     },
     {
-      "description": "Actor initialization logic that reads a secret token from URL params and calls actor._initializeAccessControlWithSecret(adminToken)",
-      "reason": "Not requested; BuildRequest specified a simple allowlist-based admin check rather than a secret-token based initialization flow, and also disallowed editing immutable hook files.",
+      "description": "Added a backend API to delete all messages (`deleteAllMessages`).",
+      "reason": "Bulk delete was optional (“and optionally delete all submissions”), so this is extra functionality beyond the strict required set (not harmful, but not explicitly requested).",
       "evidence": [
-        "frontend/src/hooks/useActor.ts"
+        "backend/main.mo: public shared func deleteAllMessages(...)"
       ]
     },
     {
-      "description": "Backend authorization framework integration (MixinAuthorization / AccessControl state) beyond a simple hardcoded allowlist check",
-      "reason": "BuildRequest asked for a hardcoded admin allowlist check in backend/main.mo for the new admin-only query; the diff introduces a broader authorization system and permission model instead.",
+      "description": "Removed/changed Internet Identity integration and adjusted admin link visibility based on admin session; added multiple styling/theme/global changes.",
+      "reason": "Not part of the requested admin dashboard list/delete feature set; these appear as broader refactors/feature changes outside the BuildRequest scope.",
       "evidence": [
-        "backend/main.mo"
+        "frontend-file-summaries.txt: \"frontend/src/main.tsx\" (removed InternetIdentityProvider)",
+        "frontend-file-summaries.txt: \"frontend/src/components/layout/AppHeader.tsx\" (Admin link visibility controlled by admin session login state)",
+        "frontend-file-summaries.txt: \"frontend/src/index.css\" and \"frontend/tailwind.config.js\" (theme/styling changes)"
       ]
     }
   ],
-  "confidence": 0.78,
+  "confidence": 0.72,
   "changed_files": [
     "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/components/layout/AppHeader.tsx",
-    "frontend/src/hooks/useActor.ts",
     "frontend/src/hooks/useQueries.ts",
     "frontend/src/i18n/translations.ts",
-    "frontend/src/lib/adminAllowlist.ts",
-    "frontend/src/lib/contactSubmissions.ts",
-    "frontend/src/lib/formatIcTime.ts",
     "frontend/src/pages/Admin.tsx",
-    "frontend/src/utils/urlParams.ts",
     "project_state.json"
   ]
 }

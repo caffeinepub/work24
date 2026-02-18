@@ -1,17 +1,18 @@
 /**
  * Frontend admin allowlist helper
- * This should match the backend admin configuration
  * 
- * Note: This is for UI visibility only. The backend enforces actual authorization.
+ * Note: This module is deprecated in favor of the new username/password admin session model.
+ * Admin access is now controlled via frontend/src/lib/adminSession.ts
+ * 
+ * The backend enforces actual authorization using username/password credentials.
  */
 
 const ADMIN_PRINCIPALS: string[] = [
-  // Add admin principal IDs here
-  // Example: '2vxsx-fae'
+  // Deprecated: Admin access now uses username/password authentication
 ];
 
 /**
- * Checks if the given principal string is in the admin allowlist
+ * @deprecated Use isAdminLoggedIn() from adminSession.ts instead
  */
 export function isAdminPrincipal(principalString: string | undefined): boolean {
   if (!principalString) return false;
@@ -19,12 +20,9 @@ export function isAdminPrincipal(principalString: string | undefined): boolean {
 }
 
 /**
- * Checks if the current user appears to be an admin based on frontend allowlist
- * This is used for conditional UI rendering only
+ * @deprecated Use isAdminLoggedIn() from adminSession.ts instead
  */
 export function shouldShowAdminUI(principalString: string | undefined): boolean {
-  // For now, show admin UI to all authenticated users
-  // The backend will enforce actual authorization
-  // This allows admins to see the link and attempt access
-  return !!principalString;
+  // Deprecated: Admin UI visibility now controlled by admin session login state
+  return false;
 }

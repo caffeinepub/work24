@@ -1,42 +1,40 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Build an admin page to view app data stored in an Internet Computer canister.",
-  "architectural_notes": [
-    "App data is stored in an Internet Computer canister; provide an admin UI to view this stored data (optionally via Candid UI link)."
-  ],
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-create-an-admin-page-that-displays-the-data-stored-in-the-internet-computer-canister-by-listing-the-stored-messages-returned-by-the-backend-each-message-s-text-plus-its-timestamp",
-      "title": "Create an Admin page that displays the data stored in the Internet Computer canister by listing the stored messages returned by the backend (each message’s text plus its timestamp).",
-      "reqIds": [
-        "REQ-1"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-wire-the-admin-page-to-the-new-backend-admin-only-method-and-handle-unauthorized-access-with-clear-ui-feedback",
-      "title": "Wire the Admin page to the new backend admin-only method and handle unauthorized access with clear UI feedback.",
+      "id": "feature-expand-the-admin-page-admin-to-display-all-collected-user-submissions-using-the-new-backend-message-list-show-at-minimum-timestamp-submission-content-keep-user-facing-text-in-english",
+      "title": "Expand the Admin page (/admin) to display all collected user submissions using the new backend message list (show at minimum timestamp + submission content; keep user-facing text in English).",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-expose-navigation-access-to-the-admin-page-in-the-header-without-editing-immutable-hook-files-the-link-should-only-be-shown-when-the-user-is-authenticated-and-appears-to-be-an-admin",
-      "title": "Expose navigation access to the Admin page in the header without editing immutable hook files; the link should only be shown when the user is authenticated and appears to be an admin.",
+      "id": "feature-add-delete-controls-to-the-admin-dashboard-so-the-admin-can-delete-individual-collected-submissions-from-the-ui-with-a-confirmation-step-and-the-ui-refreshes-after-deletion",
+      "title": "Add delete controls to the Admin dashboard so the admin can delete individual collected submissions from the UI, with a confirmation step, and the UI refreshes after deletion.",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-add-i18n-keys-for-the-admin-page-and-admin-navigation-label-with-english-text-at-minimum-using-the-existing-translation-structure",
-      "title": "Add i18n keys for the Admin page and Admin navigation label, with English text at minimum, using the existing translation structure.",
+      "id": "feature-update-react-query-hooks-to-support-fetching-the-admin-submission-list-with-ids-and-performing-delete-mutations-using-the-current-admin-session-stored-in-sessionstorage",
+      "title": "Update React Query hooks to support fetching the admin submission list with ids and performing delete mutations using the current admin session stored in sessionStorage.",
       "reqIds": [
         "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-adjust-i18n-english-strings-used-by-the-admin-dashboard-for-delete-actions-and-confirmation-prompts-do-not-mention-internet-identity",
+      "title": "Add/adjust i18n English strings used by the Admin dashboard for delete actions and confirmation prompts (do not mention Internet Identity).",
+      "reqIds": [
+        "REQ-6"
       ],
       "version": 1
     }
@@ -44,20 +42,35 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Add an admin page for viewing stored canister data (e.g., list/submissions)",
+      "summary": "Admin dashboard should display all data collected from users",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Admin should be able to delete collected user data from the admin dashboard",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Add backend access control for viewing stored data from the admin page by introducing an admin-only query method that returns the stored messages only when the caller principal is in a backend allowlist; otherwise return an explicit error.",
+      "summary": "Update backend message storage so each collected user submission has a stable unique identifier and can be listed by the admin with its id, stored message text, and timestamp (using the existing username/password admin gate: adminId=\"Bharat1213\", password=\"bharatranjan1213\").",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Add backend admin APIs to delete collected user submissions by id (and optionally delete all submissions), protected by the same existing admin username/password check.",
       "reqIds": [
         "REQ-2"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Add admin page to view canister-stored data (messages)",
+  "gameProjectType": "none",
+  "projectName": "Work24 Admin Dashboard",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

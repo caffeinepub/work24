@@ -2,28 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-an-admin-page-that-displays-the-data-stored-in-the-internet-computer-canister-by-listing-the-stored-messages-returned-by-the-backend-each-message-s-text-plus-its-timestamp",
-      "featureTitle": "Create an Admin page that displays the data stored in the Internet Computer canister by listing the stored messages returned by the backend (each message’s text plus its timestamp).",
-      "files": [
-        "frontend/src/lib/formatIcTime.ts",
-        "frontend/src/pages/Admin.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-wire-the-admin-page-to-the-new-backend-admin-only-method-and-handle-unauthorized-access-with-clear-ui-feedback",
-      "featureTitle": "Wire the Admin page to the new backend admin-only method and handle unauthorized access with clear UI feedback.",
+      "featureId": "feature-expand-the-admin-page-admin-to-display-all-collected-user-submissions-using-the-new-backend-message-list-show-at-minimum-timestamp-submission-content-keep-user-facing-text-in-english",
+      "featureTitle": "Expand the Admin page (/admin) to display all collected user submissions using the new backend message list (show at minimum timestamp + submission content; keep user-facing text in English).",
       "files": [
         "frontend/src/hooks/useQueries.ts",
         "frontend/src/pages/Admin.tsx"
@@ -42,12 +22,9 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-expose-navigation-access-to-the-admin-page-in-the-header-without-editing-immutable-hook-files-the-link-should-only-be-shown-when-the-user-is-authenticated-and-appears-to-be-an-admin",
-      "featureTitle": "Expose navigation access to the Admin page in the header without editing immutable hook files; the link should only be shown when the user is authenticated and appears to be an admin.",
+      "featureId": "feature-add-delete-controls-to-the-admin-dashboard-so-the-admin-can-delete-individual-collected-submissions-from-the-ui-with-a-confirmation-step-and-the-ui-refreshes-after-deletion",
+      "featureTitle": "Add delete controls to the Admin dashboard so the admin can delete individual collected submissions from the UI, with a confirmation step, and the UI refreshes after deletion.",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/layout/AppHeader.tsx",
-        "frontend/src/lib/adminAllowlist.ts",
         "frontend/src/pages/Admin.tsx"
       ],
       "components": [
@@ -64,11 +41,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-i18n-keys-for-the-admin-page-and-admin-navigation-label-with-english-text-at-minimum-using-the-existing-translation-structure",
-      "featureTitle": "Add i18n keys for the Admin page and Admin navigation label, with English text at minimum, using the existing translation structure.",
+      "featureId": "feature-update-react-query-hooks-to-support-fetching-the-admin-submission-list-with-ids-and-performing-delete-mutations-using-the-current-admin-session-stored-in-sessionstorage",
+      "featureTitle": "Update React Query hooks to support fetching the admin submission list with ids and performing delete mutations using the current admin session stored in sessionStorage.",
       "files": [
-        "frontend/src/components/layout/AppHeader.tsx",
-        "frontend/src/i18n/translations.ts",
+        "frontend/src/hooks/useQueries.ts",
         "frontend/src/pages/Admin.tsx"
       ],
       "components": [
@@ -81,6 +57,26 @@
       ],
       "testIds": [
         "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-adjust-i18n-english-strings-used-by-the-admin-dashboard-for-delete-actions-and-confirmation-prompts-do-not-mention-internet-identity",
+      "featureTitle": "Add/adjust i18n English strings used by the Admin dashboard for delete actions and confirmation prompts (do not mention Internet Identity).",
+      "files": [
+        "frontend/src/i18n/translations.ts",
+        "frontend/src/pages/Admin.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
       ],
       "confidence": "high"
     }

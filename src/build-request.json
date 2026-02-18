@@ -1,119 +1,135 @@
 {
   "kind": "build_request",
-  "title": "Add admin page to view canister-stored data (messages)",
+  "title": "Admin dashboard: display all collected user submissions and allow admin deletion",
+  "projectName": "Work24 Admin Dashboard",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Create an Admin page that displays the data stored in the Internet Computer canister by listing the stored messages returned by the backend (each message’s text plus its timestamp).",
-      "target": "frontend",
+      "text": "Update backend message storage so each collected user submission has a stable unique identifier and can be listed by the admin with its id, stored message text, and timestamp (using the existing username/password admin gate: adminId=\"Bharat1213\", password=\"bharatranjan1213\").",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-11"
+          "msg-user-1"
         ],
         "quotes": [
-          "then give admin page to see data."
+          "all the data collected from user should display here and admin have right to delete the data."
         ]
       },
       "acceptanceCriteria": [
-        "A new page exists at a stable route (e.g., \"/admin\") and renders inside the existing AppShell layout.",
-        "The page fetches canister messages using the existing React Query pattern (same data source as useGetMessages / actor.getMessages).",
-        "The page renders a readable list/table showing message text and a human-readable timestamp for each record.",
-        "The page includes visible loading and empty states (e.g., “Loading…” and “No data found”).",
-        "The page includes a manual “Refresh” action that re-fetches the messages (React Query refetch / invalidation)."
+        "Calling the admin list API returns an array of messages where each entry includes (messageId, messageText, timestamp).",
+        "Existing username/password check remains required for admin list access and uses the exact credentials already implemented.",
+        "Newly added user submissions (via addMessage) appear in the admin list response with unique ids."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add backend access control for viewing stored data from the admin page by introducing an admin-only query method that returns the stored messages only when the caller principal is in a backend allowlist; otherwise return an explicit error.",
+      "text": "Add backend admin APIs to delete collected user submissions by id (and optionally delete all submissions), protected by the same existing admin username/password check.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-11"
+          "msg-user-1"
         ],
         "quotes": [
-          "then give admin page to see data."
+          "admin have right to delete the data."
         ]
       },
       "acceptanceCriteria": [
-        "backend/main.mo defines an admin allowlist of principals (hardcoded in code) used to authorize access to admin data.",
-        "A new query method exists (e.g., getMessagesAdmin) that checks caller against the allowlist.",
-        "If authorized, the method returns the same message records currently stored (text + timestamp).",
-        "If unauthorized, the method returns an error response (e.g., a Result-style variant) rather than silently returning empty data.",
-        "Existing public methods (addMessage, getMessages, etc.) continue to behave as they do today (no breaking change)."
+        "Deleting a message by id removes it from subsequent admin list results.",
+        "Attempting to delete with wrong admin credentials traps/returns an error and does not delete anything.",
+        "Deleting a non-existent id returns a clear error (trap) and does not affect other records."
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Wire the Admin page to the new backend admin-only method and handle unauthorized access with clear UI feedback.",
-      "target": "both",
+      "text": "Expand the Admin page (/admin) to display all collected user submissions using the new backend message list (show at minimum timestamp + submission content; keep user-facing text in English).",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-11"
+          "msg-user-1"
         ],
         "quotes": [
-          "then give admin page to see data."
+          "all the data collected from user should display here"
         ]
       },
       "acceptanceCriteria": [
-        "The Admin page calls the new admin-only backend query method (not the public getMessages) when an actor is available.",
-        "If the backend returns an unauthorized/forbidden error, the UI shows an “Access denied” message in English and does not show any data.",
-        "If the user is not logged in (no identity/actor), the Admin page shows an English prompt to sign in using Internet Identity before attempting to load data.",
-        "Successful authorized access shows the message list/table without errors."
+        "After admin login, the Admin dashboard renders a table/list populated from the backend list API (not hardcoded).",
+        "If there is no data, the page shows the existing empty state (or an equivalent English empty state).",
+        "The Refresh button still refetches and updates the list."
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Expose navigation access to the Admin page in the header without editing immutable hook files; the link should only be shown when the user is authenticated and appears to be an admin.",
+      "text": "Add delete controls to the Admin dashboard so the admin can delete individual collected submissions from the UI, with a confirmation step, and the UI refreshes after deletion.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-11"
+          "msg-user-1"
         ],
         "quotes": [
-          "then give admin page to see data."
+          "admin have right to delete the data."
         ]
       },
       "acceptanceCriteria": [
-        "App routing includes the Admin route alongside existing routes (no regression to current routes like /contact).",
-        "The header navigation includes an “Admin” entry that navigates to the Admin route.",
-        "The “Admin” nav item is conditionally visible only when the user is authenticated and the app can determine admin eligibility (e.g., by comparing the current principal string to a frontend admin allowlist that matches backend configuration).",
-        "If the user is not eligible, the “Admin” link does not appear in desktop or mobile navigation."
+        "Each listed submission row includes a Delete action.",
+        "Clicking Delete asks for confirmation (dialog or equivalent).",
+        "On successful delete, the deleted submission no longer appears without requiring a full page reload (React Query invalidation/refetch is acceptable).",
+        "On error (e.g., unauthorized), the UI shows an English error message and does not remove the row."
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Add i18n keys for the Admin page and Admin navigation label, with English text at minimum, using the existing translation structure.",
+      "text": "Update React Query hooks to support fetching the admin submission list with ids and performing delete mutations using the current admin session stored in sessionStorage.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-11"
-        ],
-        "quotes": [
-          "then give admin page to see data."
+          "msg-user-1"
         ]
       },
       "acceptanceCriteria": [
-        "New translation keys exist for the Admin nav label and Admin page headings/messages.",
-        "English strings are provided for all new keys.",
-        "If non-English languages are not translated, they fall back to English strings or otherwise do not break rendering (no missing-key crashes)."
+        "Admin list query keying remains stable and continues to use the admin session as part of the query key.",
+        "Delete mutation uses the stored adminId/password from the existing admin session helper and calls the new backend delete API.",
+        "After deletion, the admin list query is invalidated/refetched."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Add/adjust i18n English strings used by the Admin dashboard for delete actions and confirmation prompts (do not mention Internet Identity).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-user-1"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Admin delete UI strings (e.g., “Delete”, “Cancel”, “Confirm delete”, “Are you sure?”) are available in English and are wired through the existing i18n mechanism.",
+        "No admin UI text references Internet Identity."
       ]
     }
   ],
   "constraints": [
+    "Keep the admin credentials exactly as currently implemented: adminId=\"Bharat1213\" and password=\"bharatranjan1213\".",
     "Backend must remain a single Motoko actor in backend/main.mo (no additional backend services).",
-    "Do not modify any frontend files under frontend/src/components/ui (compose them only).",
-    "Do not edit immutable paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useInternetIdentity.tsx, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui.",
-    "Do not remove or break existing routes and navigation items (e.g., the existing /contact page and Contact Us nav item)."
+    "Do not edit files under frontend/src/components/ui or any paths listed as immutable in SYSTEM_CONTEXT.",
+    "Do not introduce third-party authentication; admin access remains username/password via sessionStorage."
   ],
   "nonGoals": [
-    "Building a full CRUD admin console for workers/materials stored in localStorage.",
-    "Adding third-party authentication/roles systems beyond Internet Identity and a simple allowlist.",
-    "Providing a Candid UI link/button (not requested once the user chose an admin page).",
-    "Real-time updates (polling/refresh is sufficient)."
+    "Building real-time updates (no WebSockets/streaming).",
+    "Adding new kinds of user-facing submission forms beyond what already exists.",
+    "Persisting worker/material submissions currently stored in localStorage into the backend (unless separately requested)."
   ],
   "imageRequirements": {
     "required": [],
     "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
   }
 }

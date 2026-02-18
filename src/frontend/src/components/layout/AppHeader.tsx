@@ -3,18 +3,14 @@ import { Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useI18n } from '../../i18n/I18nProvider';
-import { useInternetIdentity } from '../../hooks/useInternetIdentity';
-import { shouldShowAdminUI } from '../../lib/adminAllowlist';
+import { isAdminLoggedIn } from '../../lib/adminSession';
 import LanguageSwitcher from '../settings/LanguageSwitcher';
 
 export default function AppHeader() {
   const { t } = useI18n();
   const navigate = useNavigate();
-  const { identity } = useInternetIdentity();
 
-  const isAuthenticated = !!identity;
-  const principalString = identity?.getPrincipal().toString();
-  const showAdmin = isAuthenticated && shouldShowAdminUI(principalString);
+  const showAdmin = isAdminLoggedIn();
 
   const navItems = [
     { label: t('nav.home'), path: '/' },

@@ -19,7 +19,9 @@ export enum UserRole {
 export interface backendInterface {
     addMessage(message: string): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
-    getAdminMessages(): Promise<Array<[string, Time]>>;
+    deleteAllMessages(adminId: string, password: string): Promise<bigint>;
+    deleteMessage(adminId: string, password: string, messageId: bigint): Promise<boolean>;
+    getAdminMessages(adminId: string, password: string): Promise<Array<[bigint, string, Time]>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
     getUserProfile(user: Principal): Promise<UserProfile | null>;

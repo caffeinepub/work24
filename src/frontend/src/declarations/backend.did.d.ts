@@ -19,7 +19,12 @@ export interface _SERVICE {
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addMessage' : ActorMethod<[string], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
-  'getAdminMessages' : ActorMethod<[], Array<[string, Time]>>,
+  'deleteAllMessages' : ActorMethod<[string, string], bigint>,
+  'deleteMessage' : ActorMethod<[string, string, bigint], boolean>,
+  'getAdminMessages' : ActorMethod<
+    [string, string],
+    Array<[bigint, string, Time]>
+  >,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,

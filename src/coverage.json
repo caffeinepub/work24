@@ -1,38 +1,32 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-16T14:51:57.233Z",
+  "generatedAt": "2026-02-17T17:45:51.566Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 5,
+    "total": 6,
     "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Create an Admin page that displays the data stored in the Internet Computer canister by listing the stored messages returned by the backend (each message’s text plus its timestamp).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Admin.tsx",
-          "frontend/src/lib/formatIcTime.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Admin.tsx",
-          "frontend/src/lib/formatIcTime.ts"
-        ]
+        "summary": "Update backend message storage so each collected user submission has a stable unique identifier and can be listed by the admin with its id, stored message text, and timestamp (using the existing username/password admin gate: adminId=\"Bharat1213\", password=\"bharatranjan1213\").",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Add backend access control for viewing stored data from the admin page by introducing an admin-only query method that returns the stored messages only when the caller principal is in a backend allowlist; otherwise return an explicit error.",
+        "summary": "Add backend admin APIs to delete collected user submissions by id (and optionally delete all submissions), protected by the same existing admin username/password check.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
         "id": "REQ-3",
-        "summary": "Wire the Admin page to the new backend admin-only method and handle unauthorized access with clear UI feedback.",
+        "summary": "Expand the Admin page (/admin) to display all collected user submissions using the new backend message list (show at minimum timestamp + submission content; keep user-facing text in English).",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/hooks/useQueries.ts",
@@ -45,61 +39,57 @@
       },
       {
         "id": "REQ-4",
-        "summary": "Expose navigation access to the Admin page in the header without editing immutable hook files; the link should only be shown when the user is authenticated and appears to be an admin.",
+        "summary": "Add delete controls to the Admin dashboard so the admin can delete individual collected submissions from the UI, with a confirmation step, and the UI refreshes after deletion.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/Admin.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/lib/adminAllowlist.ts",
-          "frontend/src/components/layout/AppHeader.tsx"
+          "frontend/src/pages/Admin.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/Admin.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/lib/adminAllowlist.ts",
-          "frontend/src/components/layout/AppHeader.tsx"
+          "frontend/src/pages/Admin.tsx"
         ]
       },
       {
         "id": "REQ-5",
-        "summary": "Add i18n keys for the Admin page and Admin navigation label, with English text at minimum, using the existing translation structure.",
+        "summary": "Update React Query hooks to support fetching the admin submission list with ids and performing delete mutations using the current admin session stored in sessionStorage.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/Admin.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/hooks/useQueries.ts",
+          "frontend/src/pages/Admin.tsx"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Add/adjust i18n English strings used by the Admin dashboard for delete actions and confirmation prompts (do not mention Internet Identity).",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/i18n/translations.ts",
-          "frontend/src/components/layout/AppHeader.tsx",
           "frontend/src/pages/Admin.tsx"
         ],
         "matchedFiles": [
           "frontend/src/i18n/translations.ts",
-          "frontend/src/components/layout/AppHeader.tsx",
           "frontend/src/pages/Admin.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/authorization/MixinAuthorization.mo",
-    "backend/authorization/access-control.mo",
     "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/layout/AppHeader.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useActor.ts",
     "frontend/src/hooks/useQueries.ts",
     "frontend/src/i18n/translations.ts",
-    "frontend/src/lib/adminAllowlist.ts",
-    "frontend/src/lib/contactSubmissions.ts",
-    "frontend/src/lib/formatIcTime.ts",
     "frontend/src/pages/Admin.tsx",
-    "frontend/src/utils/urlParams.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

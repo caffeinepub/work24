@@ -1,108 +1,84 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Admin messages page (frontend-only)",
+  "title": "Work24 Admin Dashboard: list submissions with ids and allow deletion",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Create an Admin page at /admin that lists canister-stored messages (text + human-readable timestamp) with loading/empty states and a manual refresh action.",
-      "acceptanceCriteria": [
-        "A new page exists at a stable route (e.g., \"/admin\") and renders inside the existing AppShell layout.",
-        "The page fetches canister messages using the existing React Query pattern (same data source as useGetMessages / actor.getMessages).",
-        "The page renders a readable list/table showing message text and a human-readable timestamp for each record.",
-        "The page includes visible loading and empty states (e.g., “Loading…” and “No data found”).",
-        "The page includes a manual “Refresh” action that re-fetches the messages (React Query refetch / invalidation)."
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/Admin.tsx",
-          "operation": "create",
-          "description": "Create an Admin page UI that renders inside the existing AppShell (via routing) and displays a readable list/table of messages (text + formatted timestamp), including loading, empty, and manual refresh states driven by React Query. Use existing shadcn-ui primitives already present in the repo (e.g., Button/Card/Table where available) to compose the layout; do not modify files under frontend/src/components/ui. Verify the component's usage instructions before implementing."
-        },
-        {
-          "path": "frontend/src/lib/formatIcTime.ts",
-          "operation": "create",
-          "description": "Add a small utility to convert IC Time (bigint) to a human-readable timestamp string for the Admin messages list/table."
-        }
-      ]
-    },
-    {
       "id": "REQ-3",
-      "summary": "Use the admin-only backend method for the Admin page data query and provide clear UI feedback for unauthenticated and unauthorized states.",
+      "summary": "Update /admin to render collected submissions from backend list including timestamp and content (and internally use stable ids).",
       "acceptanceCriteria": [
-        "The Admin page calls the new admin-only backend query method (not the public getMessages) when an actor is available.",
-        "If the backend returns an unauthorized/forbidden error, the UI shows an “Access denied” message in English and does not show any data.",
-        "If the user is not logged in (no identity/actor), the Admin page shows an English prompt to sign in using Internet Identity before attempting to load data.",
-        "Successful authorized access shows the message list/table without errors."
+        "After admin login, the Admin dashboard renders a table/list populated from the backend list API (not hardcoded).",
+        "If there is no data, the page shows the existing empty state (or an equivalent English empty state).",
+        "The Refresh button still refetches and updates the list."
       ],
       "file_operations": [
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add a new React Query hook (e.g., useGetAdminMessages) that uses the existing actor from useActor and calls the admin-only backend capability already available in the frontend types (actor.getAdminMessages). Ensure it supports refetch for the Admin page manual refresh behavior."
+          "description": "Update the admin messages query to use the backend’s new tuple shape (messageId, messageText, timestamp) and keep the query key stable while still incorporating the current admin session from sessionStorage."
         },
         {
           "path": "frontend/src/pages/Admin.tsx",
           "operation": "modify",
-          "description": "Wire the Admin page to use the new admin-only React Query hook and gate data loading: show an English Internet Identity sign-in prompt when no identity/actor exists, and show an English “Access denied” state when the admin query fails due to authorization (without rendering any message data)."
+          "description": "Update the admin dashboard table rendering to consume the new message list shape from React Query (use messageId as the row key; display at minimum timestamp + submission content). Use existing shadcn-ui Table/Card/Button components already present; verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Add /admin route and expose an Admin nav link in the header, visible only when authenticated and the user appears admin (frontend allowlist check), without changing immutable hook files.",
+      "summary": "Add per-row delete controls with confirmation and post-delete refresh behavior on the Admin dashboard.",
       "acceptanceCriteria": [
-        "App routing includes the Admin route alongside existing routes (no regression to current routes like /contact).",
-        "The header navigation includes an “Admin” entry that navigates to the Admin route.",
-        "The “Admin” nav item is conditionally visible only when the user is authenticated and the app can determine admin eligibility (e.g., by comparing the current principal string to a frontend admin allowlist that matches backend configuration).",
-        "If the user is not eligible, the “Admin” link does not appear in desktop or mobile navigation."
+        "Each listed submission row includes a Delete action.",
+        "Clicking Delete asks for confirmation (dialog or equivalent).",
+        "On successful delete, the deleted submission no longer appears without requiring a full page reload (React Query invalidation/refetch is acceptable).",
+        "On error (e.g., unauthorized), the UI shows an English error message and does not remove the row."
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/Admin.tsx",
-          "operation": "create",
-          "description": "Create the Admin page component to be routed at /admin (must not be orphaned; will be wired into App routing)."
-        },
-        {
-          "path": "frontend/src/App.tsx",
           "operation": "modify",
-          "description": "Register a stable /admin route in the existing TanStack Router tree and wire it to the Admin page component, ensuring existing routes (including /contact) remain unchanged and continue to work."
-        },
-        {
-          "path": "frontend/src/lib/adminAllowlist.ts",
-          "operation": "create",
-          "description": "Create a small frontend admin allowlist helper that compares the current authenticated principal string to a hardcoded allowlist intended to match the backend configuration, enabling conditional rendering of the Admin navigation item."
-        },
-        {
-          "path": "frontend/src/components/layout/AppHeader.tsx",
-          "operation": "modify",
-          "description": "Add a conditional “Admin” navigation item (desktop + mobile) that navigates to /admin, visible only when authenticated (Internet Identity identity exists) and the user appears to be an admin via the frontend allowlist helper. Use existing shadcn-ui components already imported (e.g., Button/Sheet) by composing them only; do not modify frontend/src/components/ui. Verify the component's usage instructions before implementing."
+          "description": "Add a Delete action per submission row, including a confirmation step (e.g., confirm dialog or equivalent) and UI states for deleting/errors. Ensure the list updates after deletion via React Query invalidation/refetch. Use existing shadcn-ui Button/Alert/Table components already imported; verify the component's usage instructions before implementing."
         }
       ]
     },
     {
       "id": "REQ-5",
-      "summary": "Add i18n keys for the Admin page and Admin navigation label using the existing translation structure (English minimum, no missing-key crashes).",
+      "summary": "Extend React Query hooks to fetch admin list with ids and perform delete mutations using the admin session stored in sessionStorage.",
       "acceptanceCriteria": [
-        "New translation keys exist for the Admin nav label and Admin page headings/messages.",
-        "English strings are provided for all new keys.",
-        "If non-English languages are not translated, they fall back to English strings or otherwise do not break rendering (no missing-key crashes)."
+        "Admin list query keying remains stable and continues to use the admin session as part of the query key.",
+        "Delete mutation uses the stored adminId/password from the existing admin session helper and calls the new backend delete API.",
+        "After deletion, the admin list query is invalidated/refetched."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Add a delete mutation hook that reads adminId/password from the existing sessionStorage helper and calls the backend delete capability using the messageId. On success, invalidate/refetch the admin messages query; on error, surface the error to the caller for English UI messaging."
+        },
+        {
+          "path": "frontend/src/pages/Admin.tsx",
+          "operation": "modify",
+          "description": "Wire the new delete mutation hook into the Delete action, and ensure success triggers list refresh via invalidation/refetch without a full page reload. Use existing shadcn-ui UI primitives already in the file; verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Add/adjust English i18n strings for delete actions and confirmation prompts used in the Admin dashboard (no Internet Identity references).",
+      "acceptanceCriteria": [
+        "Admin delete UI strings (e.g., “Delete”, “Cancel”, “Confirm delete”, “Are you sure?”) are available in English and are wired through the existing i18n mechanism.",
+        "No admin UI text references Internet Identity."
       ],
       "file_operations": [
         {
           "path": "frontend/src/i18n/translations.ts",
           "operation": "modify",
-          "description": "Add new translation keys for Admin navigation and Admin page UI strings (e.g., nav.admin, admin.title, admin.loading, admin.empty, admin.refresh, admin.accessDenied, admin.signInPrompt). Provide English strings at minimum and ensure other languages either include safe fallbacks or otherwise do not break rendering."
-        },
-        {
-          "path": "frontend/src/components/layout/AppHeader.tsx",
-          "operation": "modify",
-          "description": "Update the header to use the new i18n key for the “Admin” label (t('nav.admin')) so the navigation text is localized via the existing translation structure."
+          "description": "Add new admin translation keys for delete UI (e.g., Delete/Cancel/Confirm delete/Are you sure?/Deleting…/Delete failed) in English and wire them for use by the Admin page. Ensure no strings mention Internet Identity."
         },
         {
           "path": "frontend/src/pages/Admin.tsx",
           "operation": "modify",
-          "description": "Update the Admin page to use the new i18n keys for headings and status messages (loading/empty/access denied/sign-in prompt/refresh) via the existing I18nProvider context."
+          "description": "Replace hardcoded delete-related UI text with the new i18n keys via the existing I18nProvider translation function, ensuring all user-facing delete/confirm/error text is in English (and no Internet Identity references). Use existing shadcn-ui Alert/Button components; verify the component's usage instructions before implementing."
         }
       ]
     }

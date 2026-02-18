@@ -202,11 +202,28 @@ const translations: Record<Language, Translations> = {
       loading: 'Loading messages...',
       empty: 'No messages found',
       refresh: 'Refresh',
+      id: 'ID',
       timestamp: 'Timestamp',
       message: 'Message',
+      actions: 'Actions',
       accessDenied: 'Access Denied',
-      accessDeniedDescription: 'You do not have permission to view this page. Only administrators can access this area.',
-      signInPrompt: 'Please sign in with Internet Identity to access the admin dashboard.',
+      accessDeniedDescription: 'Invalid credentials. Please log out and try again.',
+      loginTitle: 'Admin Login',
+      loginDescription: 'Enter your admin credentials to access the dashboard',
+      usernameLabel: 'Username',
+      usernamePlaceholder: 'Enter username',
+      passwordLabel: 'Password',
+      passwordPlaceholder: 'Enter password',
+      loginButton: 'Login',
+      loggingIn: 'Logging in...',
+      logout: 'Logout',
+      deleteConfirmTitle: 'Are you sure?',
+      deleteConfirmDescription: 'This action cannot be undone. This will permanently delete the message from the system.',
+      deleteConfirm: 'Delete',
+      deleteCancel: 'Cancel',
+      deleting: 'Deleting...',
+      deleteSuccess: 'Message deleted successfully',
+      deleteFailed: 'Failed to delete message. Please try again.',
     },
     footer: {
       copyright: '© 2026. Built with',
@@ -306,14 +323,14 @@ const translations: Record<Language, Translations> = {
       phoneLabel: 'फोन नंबर',
       emailLabel: 'ईमेल पता',
       servicesTitle: 'हमारी सेवाएं',
-      servicesDescription: 'हम सभी प्रकार की टर्नकी परियोजनाओं और पूरी साइट के काम को स्वीकार करते हैं। छोटी मरम्मत से लेकर पूर्ण निर्माण परियोजनाओं तक, हम मदद के लिए यहां हैं।',
+      servicesDescription: 'हम सभी प्रकार के टर्नकी प्रोजेक्ट और पूरी साइट का काम स्वीकार करते हैं।',
       responseTime: 'हम आमतौर पर 24 घंटे के भीतर जवाब देते हैं',
     },
     materials: {
       title: 'सामग्री',
       subtitle: 'विश्वसनीय थोक विक्रेताओं से गुणवत्ता सामग्री',
       noMaterials: 'अभी तक कोई सामग्री उपलब्ध नहीं है।',
-      contactButton: 'खरीदने के लिए हमसे संपर्क करें',
+      contactButton: 'खरीदने के लिए संपर्क करें',
       category: 'श्रेणी',
     },
     officialContact: {
@@ -333,7 +350,7 @@ const translations: Record<Language, Translations> = {
       skillsLabel: 'कौशल',
       skillsPlaceholder: 'जैसे, बढ़ईगीरी, प्लंबिंग, इलेक्ट्रिकल',
       experienceLabel: 'अनुभव',
-      experiencePlaceholder: 'वर्षों का अनुभव',
+      experiencePlaceholder: 'अनुभव के वर्ष',
       messageLabel: 'संदेश',
       messagePlaceholder: 'अपने बारे में बताएं...',
       submit: 'आवेदन भेजें',
@@ -346,7 +363,7 @@ const translations: Record<Language, Translations> = {
       experienceRequired: 'अनुभव आवश्यक है',
     },
     architect: {
-      title: 'आर्किटेक्ट परियोजनाएं',
+      title: 'आर्किटेक्ट प्रोजेक्ट',
       subtitle: 'अपनी परियोजना का विवरण जमा करें',
       nameLabel: 'आर्किटेक्ट/कंपनी का नाम',
       namePlaceholder: 'नाम दर्ज करें',
@@ -421,20 +438,37 @@ const translations: Record<Language, Translations> = {
       loading: 'संदेश लोड हो रहे हैं...',
       empty: 'कोई संदेश नहीं मिला',
       refresh: 'रीफ्रेश करें',
+      id: 'आईडी',
       timestamp: 'समय',
       message: 'संदेश',
+      actions: 'कार्रवाई',
       accessDenied: 'पहुंच अस्वीकृत',
-      accessDeniedDescription: 'आपके पास इस पृष्ठ को देखने की अनुमति नहीं है। केवल प्रशासक इस क्षेत्र तक पहुंच सकते हैं।',
-      signInPrompt: 'एडमिन डैशबोर्ड तक पहुंचने के लिए कृपया Internet Identity से साइन इन करें।',
+      accessDeniedDescription: 'अमान्य क्रेडेंशियल। कृपया लॉग आउट करें और पुनः प्रयास करें।',
+      loginTitle: 'एडमिन लॉगिन',
+      loginDescription: 'डैशबोर्ड तक पहुंचने के लिए अपने एडमिन क्रेडेंशियल दर्ज करें',
+      usernameLabel: 'उपयोगकर्ता नाम',
+      usernamePlaceholder: 'उपयोगकर्ता नाम दर्ज करें',
+      passwordLabel: 'पासवर्ड',
+      passwordPlaceholder: 'पासवर्ड दर्ज करें',
+      loginButton: 'लॉगिन',
+      loggingIn: 'लॉगिन हो रहा है...',
+      logout: 'लॉगआउट',
+      deleteConfirmTitle: 'क्या आप सुनिश्चित हैं?',
+      deleteConfirmDescription: 'इस क्रिया को पूर्ववत नहीं किया जा सकता। यह सिस्टम से संदेश को स्थायी रूप से हटा देगा।',
+      deleteConfirm: 'हटाएं',
+      deleteCancel: 'रद्द करें',
+      deleting: 'हटाया जा रहा है...',
+      deleteSuccess: 'संदेश सफलतापूर्वक हटाया गया',
+      deleteFailed: 'संदेश हटाने में विफल। कृपया पुनः प्रयास करें।',
     },
     footer: {
-      copyright: '© 2026. बनाया गया',
+      copyright: '© 2026. प्यार से बनाया गया',
       love: 'प्यार',
-      using: 'का उपयोग करके',
+      using: 'उपयोग करके',
       caffeine: 'caffeine.ai',
       contactTitle: 'संपर्क करें',
       servicesTitle: 'हमारी सेवाएं',
-      servicesDescription: 'हम सभी प्रकार की टर्नकी परियोजनाओं और पूरी साइट के काम को स्वीकार करते हैं।',
+      servicesDescription: 'हम सभी प्रकार के टर्नकी प्रोजेक्ट और पूरी साइट का काम स्वीकार करते हैं।',
       quickLinksTitle: 'त्वरित लिंक',
       contactUsLink: 'संपर्क करें',
     },
@@ -445,11 +479,11 @@ const translations: Record<Language, Translations> = {
   },
   gu: {
     app: {
-      title: 'Work24 - બધું કામ। એક પ્લેટફોર્મ।',
+      title: 'Work24 - બધું કામ. એક પ્લેટફોર્મ.',
     },
     onboarding: {
       welcome: 'Work24 માં આપનું સ્વાગત છે',
-      subtitle: 'બધું કામ। એક પ્લેટફોર્મ।',
+      subtitle: 'બધું કામ. એક પ્લેટફોર્મ.',
       nameLabel: 'તમારું નામ',
       namePlaceholder: 'તમારું નામ દાખલ કરો',
       languageLabel: 'પસંદગીની ભાષા',
@@ -475,9 +509,9 @@ const translations: Record<Language, Translations> = {
     },
     home: {
       hero: {
-        title: 'બધું કામ। એક પ્લેટફોર્મ।',
+        title: 'બધું કામ. એક પ્લેટફોર્મ.',
         subtitle: 'Work24',
-        description: 'કુશળ કામદારો, ગુણવત્તાયુક્ત સામગ્રી અને વ્યાવસાયિક આર્કિટેક્ટ્સ સાથે જોડાઓ।',
+        description: 'કુશળ કામદારો, ગુણવત્તાયુક્ત સામગ્રી અને વ્યાવસાયિક આર્કિટેક્ટ્સ સાથે જોડાઓ.',
       },
       services: {
         title: 'અમારી સેવાઓ',
@@ -495,7 +529,7 @@ const translations: Record<Language, Translations> = {
     },
     serviceDetail: {
       title: 'ઉપલબ્ધ કામદારો',
-      noWorkers: 'આ સેવા માટે હજુ સુધી કોઈ કામદાર ઉપલબ્ધ નથી।',
+      noWorkers: 'આ સેવા માટે હજુ સુધી કોઈ કામદાર ઉપલબ્ધ નથી.',
       contactButton: 'Work24 દ્વારા સંપર્ક કરો',
     },
     worker: {
@@ -504,7 +538,7 @@ const translations: Record<Language, Translations> = {
     },
     contact: {
       title: 'Work24 દ્વારા સંપર્ક કરો',
-      description: 'તમારી વિગતો ભરો અને અમે તમને કામદાર સાથે જોડીશું।',
+      description: 'તમારી વિગતો ભરો અને અમે તમને કામદાર સાથે જોડીશું.',
       nameLabel: 'તમારું નામ',
       namePlaceholder: 'તમારું નામ દાખલ કરો',
       mobileLabel: 'મોબાઇલ નંબર',
@@ -513,7 +547,7 @@ const translations: Record<Language, Translations> = {
       requirementPlaceholder: 'તમને શું જોઈએ છે તે વર્ણવો...',
       submit: 'વિનંતી સબમિટ કરો',
       submitting: 'સબમિટ થઈ રહ્યું છે...',
-      success: 'વિનંતી સફળતાપૂર્વક સબમિટ થઈ! અમે ટૂંક સમયમાં તમારો સંપર્ક કરીશું।',
+      success: 'વિનંતી સફળતાપૂર્વક સબમિટ થઈ! અમે ટૂંક સમયમાં તમારો સંપર્ક કરીશું.',
       nameRequired: 'નામ જરૂરી છે',
       mobileRequired: 'મોબાઇલ નંબર જરૂરી છે',
       mobileInvalid: 'કૃપા કરીને માન્ય 10-અંકનો મોબાઇલ નંબર દાખલ કરો',
@@ -525,14 +559,14 @@ const translations: Record<Language, Translations> = {
       phoneLabel: 'ફોન નંબર',
       emailLabel: 'ઇમેઇલ સરનામું',
       servicesTitle: 'અમારી સેવાઓ',
-      servicesDescription: 'અમે તમામ પ્રકારના ટર્નકી પ્રોજેક્ટ્સ અને સંપૂર્ણ સાઇટ કામ સ્વીકારીએ છીએ। નાની સમારકામથી લઈને સંપૂર્ણ બાંધકામ પ્રોજેક્ટ્સ સુધી, અમે મદદ માટે અહીં છીએ।',
+      servicesDescription: 'અમે તમામ પ્રકારના ટર્નકી પ્રોજેક્ટ્સ અને સંપૂર્ણ સાઇટ કામ સ્વીકારીએ છીએ.',
       responseTime: 'અમે સામાન્ય રીતે 24 કલાકમાં જવાબ આપીએ છીએ',
     },
     materials: {
       title: 'સામગ્રી',
       subtitle: 'વિશ્વસનીય જથ્થાબંધ વિક્રેતાઓ પાસેથી ગુણવત્તાયુક્ત સામગ્રી',
-      noMaterials: 'હજુ સુધી કોઈ સામગ્રી ઉપલબ્ધ નથી।',
-      contactButton: 'ખરીદવા માટે અમારો સંપર્ક કરો',
+      noMaterials: 'હજુ સુધી કોઈ સામગ્રી ઉપલબ્ધ નથી.',
+      contactButton: 'ખરીદવા માટે સંપર્ક કરો',
       category: 'શ્રેણી',
     },
     officialContact: {
@@ -550,14 +584,14 @@ const translations: Record<Language, Translations> = {
       mobileLabel: 'મોબાઇલ નંબર',
       mobilePlaceholder: 'તમારો મોબાઇલ નંબર દાખલ કરો',
       skillsLabel: 'કુશળતા',
-      skillsPlaceholder: 'દા.ત., સુથારીકામ, પ્લમ્બિંગ, ઇલેક્ટ્રિકલ',
+      skillsPlaceholder: 'દા.ત., સુથારી, પ્લમ્બિંગ, ઇલેક્ટ્રિકલ',
       experienceLabel: 'અનુભવ',
-      experiencePlaceholder: 'વર્ષોનો અનુભવ',
+      experiencePlaceholder: 'અનુભવના વર્ષો',
       messageLabel: 'સંદેશ',
       messagePlaceholder: 'તમારા વિશે જણાવો...',
       submit: 'અરજી સબમિટ કરો',
       submitting: 'સબમિટ થઈ રહ્યું છે...',
-      success: 'અરજી સફળતાપૂર્વક સબમિટ થઈ! અમે ટૂંક સમયમાં તમારો સંપર્ક કરીશું।',
+      success: 'અરજી સફળતાપૂર્વક સબમિટ થઈ! અમે ટૂંક સમયમાં તમારો સંપર્ક કરીશું.',
       nameRequired: 'નામ જરૂરી છે',
       mobileRequired: 'મોબાઇલ નંબર જરૂરી છે',
       mobileInvalid: 'કૃપા કરીને માન્ય 10-અંકનો મોબાઇલ નંબર દાખલ કરો',
@@ -570,7 +604,7 @@ const translations: Record<Language, Translations> = {
       nameLabel: 'આર્કિટેક્ટ/કંપનીનું નામ',
       namePlaceholder: 'નામ દાખલ કરો',
       projectTypeLabel: 'પ્રોજેક્ટનો પ્રકાર',
-      projectTypePlaceholder: 'દા.ત., રહેણાંક, વાણિજ્યિક',
+      projectTypePlaceholder: 'દા.ત., રહેણાંક, વ્યાપારી',
       locationLabel: 'સ્થાન',
       locationPlaceholder: 'પ્રોજેક્ટનું સ્થાન',
       budgetLabel: 'બજેટ રેન્જ',
@@ -581,7 +615,7 @@ const translations: Record<Language, Translations> = {
       imagesHelper: 'ડિઝાઇન છબીઓ અપલોડ કરો (વૈકલ્પિક)',
       submit: 'પ્રોજેક્ટ સબમિટ કરો',
       submitting: 'સબમિટ થઈ રહ્યું છે...',
-      success: 'પ્રોજેક્ટ સફળતાપૂર્વક સબમિટ થયો! અમે સમીક્ષા કરીશું અને તમારો સંપર્ક કરીશું।',
+      success: 'પ્રોજેક્ટ સફળતાપૂર્વક સબમિટ થયો! અમે સમીક્ષા કરીશું અને તમારો સંપર્ક કરીશું.',
       nameRequired: 'નામ જરૂરી છે',
       projectTypeRequired: 'પ્રોજેક્ટનો પ્રકાર જરૂરી છે',
       locationRequired: 'સ્થાન જરૂરી છે',
@@ -604,7 +638,7 @@ const translations: Record<Language, Translations> = {
       workImagesHelper: 'તમારા અગાઉના કામની 3-5 છબીઓ અપલોડ કરો',
       submit: 'પ્રોફાઇલ સબમિટ કરો',
       submitting: 'સબમિટ થઈ રહ્યું છે...',
-      success: 'પ્રોફાઇલ સફળતાપૂર્વક સબમિટ થઈ! તમારું કામ હવે દૃશ્યમાન છે।',
+      success: 'પ્રોફાઇલ સફળતાપૂર્વક સબમિટ થઈ! તમારું કામ હવે દેખાય છે.',
       nameRequired: 'નામ જરૂરી છે',
       skillRequired: 'કુશળતા જરૂરી છે',
       categoryRequired: 'શ્રેણી જરૂરી છે',
@@ -627,7 +661,7 @@ const translations: Record<Language, Translations> = {
       imagesHelper: 'સામગ્રીની છબીઓ અપલોડ કરો',
       submit: 'સામગ્રી સબમિટ કરો',
       submitting: 'સબમિટ થઈ રહ્યું છે...',
-      success: 'સામગ્રી સફળતાપૂર્વક સબમિટ થઈ! તે હવે બજારમાં દૃશ્યમાન છે।',
+      success: 'સામગ્રી સફળતાપૂર્વક સબમિટ થઈ! તે હવે બજારમાં દેખાય છે.',
       nameRequired: 'સામગ્રીનું નામ જરૂરી છે',
       categoryRequired: 'શ્રેણી જરૂરી છે',
       locationRequired: 'સ્થાન જરૂરી છે',
@@ -636,24 +670,41 @@ const translations: Record<Language, Translations> = {
     },
     admin: {
       title: 'એડમિન ડેશબોર્ડ',
-      description: 'બધા સંપર્ક વિનંતીઓ અને સબમિશન જુઓ',
+      description: 'બધી સંપર્ક વિનંતીઓ અને સબમિશન જુઓ',
       loading: 'સંદેશા લોડ થઈ રહ્યા છે...',
       empty: 'કોઈ સંદેશા મળ્યા નથી',
       refresh: 'રિફ્રેશ કરો',
+      id: 'આઈડી',
       timestamp: 'સમય',
       message: 'સંદેશ',
+      actions: 'ક્રિયાઓ',
       accessDenied: 'પ્રવેશ નકારાયો',
-      accessDeniedDescription: 'તમને આ પૃષ્ઠ જોવાની પરવાનગી નથી। ફક્ત વ્યવસ્થાપકો આ વિસ્તારને ઍક્સેસ કરી શકે છે।',
-      signInPrompt: 'એડમિન ડેશબોર્ડને ઍક્સેસ કરવા માટે કૃપા કરીને Internet Identity સાથે સાઇન ઇન કરો।',
+      accessDeniedDescription: 'અમાન્ય ઓળખપત્રો. કૃપા કરીને લોગ આઉટ કરો અને ફરી પ્રયાસ કરો.',
+      loginTitle: 'એડમિન લોગિન',
+      loginDescription: 'ડેશબોર્ડ ઍક્સેસ કરવા માટે તમારા એડમિન ઓળખપત્રો દાખલ કરો',
+      usernameLabel: 'વપરાશકર્તા નામ',
+      usernamePlaceholder: 'વપરાશકર્તા નામ દાખલ કરો',
+      passwordLabel: 'પાસવર્ડ',
+      passwordPlaceholder: 'પાસવર્ડ દાખલ કરો',
+      loginButton: 'લોગિન',
+      loggingIn: 'લોગિન થઈ રહ્યું છે...',
+      logout: 'લોગઆઉટ',
+      deleteConfirmTitle: 'શું તમે ખાતરી કરો છો?',
+      deleteConfirmDescription: 'આ ક્રિયા પૂર્વવત્ કરી શકાતી નથી. આ સિસ્ટમમાંથી સંદેશને કાયમી રીતે કાઢી નાખશે.',
+      deleteConfirm: 'કાઢી નાખો',
+      deleteCancel: 'રદ કરો',
+      deleting: 'કાઢી નાખવામાં આવી રહ્યું છે...',
+      deleteSuccess: 'સંદેશ સફળતાપૂર્વક કાઢી નાખ્યો',
+      deleteFailed: 'સંદેશ કાઢી નાખવામાં નિષ્ફળ. કૃપા કરીને ફરી પ્રયાસ કરો.',
     },
     footer: {
-      copyright: '© 2026. બનાવ્યું',
+      copyright: '© 2026. પ્રેમથી બનાવેલ',
       love: 'પ્રેમ',
-      using: 'નો ઉપયોગ કરીને',
+      using: 'ઉપયોગ કરીને',
       caffeine: 'caffeine.ai',
       contactTitle: 'સંપર્ક કરો',
       servicesTitle: 'અમારી સેવાઓ',
-      servicesDescription: 'અમે તમામ પ્રકારના ટર્નકી પ્રોજેક્ટ્સ અને સંપૂર્ણ સાઇટ કામ સ્વીકારીએ છીએ।',
+      servicesDescription: 'અમે તમામ પ્રકારના ટર્નકી પ્રોજેક્ટ્સ અને સંપૂર્ણ સાઇટ કામ સ્વીકારીએ છીએ.',
       quickLinksTitle: 'ઝડપી લિંક્સ',
       contactUsLink: 'સંપર્ક કરો',
     },
@@ -664,26 +715,19 @@ const translations: Record<Language, Translations> = {
   },
 };
 
+export default translations;
+
 export function getTranslation(lang: Language, key: string): string {
   const keys = key.split('.');
-  let value: string | Translations = translations[lang];
-
+  let value: any = translations[lang];
+  
   for (const k of keys) {
-    if (typeof value === 'object' && k in value) {
+    if (value && typeof value === 'object') {
       value = value[k];
     } else {
-      // Fallback to English if key not found
-      value = translations.en;
-      for (const fallbackKey of keys) {
-        if (typeof value === 'object' && fallbackKey in value) {
-          value = value[fallbackKey];
-        } else {
-          return key; // Return key if not found in English either
-        }
-      }
-      break;
+      return key;
     }
   }
-
+  
   return typeof value === 'string' ? value : key;
 }
