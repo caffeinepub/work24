@@ -2,13 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-a-worker-marketplace-platform-where-customers-can-browse-services-view-workers-by-category-and-submit-contact-requests-through-the-platform-rather-than-directly-contacting-workers",
-      "featureTitle": "Create a worker marketplace platform where customers can browse services, view workers by category, and submit contact requests through the platform rather than directly contacting workers",
+      "featureId": "feature-ensure-that-when-a-user-sells-material-via-sellermaterialsubmission-a-message-is-created-and-broadcast-to-all-users-on-the-main-dashboard",
+      "featureTitle": "Ensure that when a user sells material via SellerMaterialSubmission, a message is created and broadcast to all users on the main dashboard",
       "files": [
-        "frontend/src/components/contact/ContactViaWork24Dialog.tsx",
-        "frontend/src/components/workers/WorkerCard.tsx",
-        "frontend/src/pages/HomeServices.tsx",
-        "frontend/src/pages/ServiceDetail.tsx"
+        "frontend/src/pages/HomeServices.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -25,32 +22,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-multi-language-support-for-english-hindi-and-gujarati-with-language-switcher-and-persistent-user-preference-storage",
-      "featureTitle": "Implement multi-language support for English, Hindi, and Gujarati with language switcher and persistent user preference storage",
+      "featureId": "feature-display-all-activity-messages-material-sales-worker-registrations-contact-requests-in-the-admin-dashboard-messagestab",
+      "featureTitle": "Display all activity messages (material sales, worker registrations, contact requests) in the admin dashboard MessagesTab",
       "files": [
-        "frontend/src/components/layout/AppHeader.tsx",
-        "frontend/src/components/settings/LanguageSwitcher.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-worker-submission-form-allowing-workers-to-register-with-name-skill-service-category-location-profile-image-and-minimum-3-work-images",
-      "featureTitle": "Create worker submission form allowing workers to register with name, skill, service category, location, profile image, and minimum 3 work images",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/WorkerSubmission.tsx"
+        "frontend/src/components/admin/MessagesTab.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -67,11 +42,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-create-material-seller-submission-form-for-submitting-materials-with-name-category-description-location-and-images",
-      "featureTitle": "Create material seller submission form for submitting materials with name, category, description, location, and images",
+      "featureId": "feature-create-a-main-dashboard-activity-feed-component-that-displays-recent-messages-and-activities-to-all-users-on-the-home-page",
+      "featureTitle": "Create a main dashboard activity feed component that displays recent messages and activities to all users on the home page",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/SellerMaterialSubmission.tsx"
+        "frontend/src/components/activity/ActivityFeed.tsx",
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -88,56 +63,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-admin-dashboard-with-username-password-authentication-credentials-bharat1213-bharat1213-displaying-separate-tabs-for-materials-workers-and-messages",
-      "featureTitle": "Implement admin dashboard with username/password authentication (credentials: Bharat1213/Bharat1213) displaying separate tabs for materials, workers, and messages",
+      "featureId": "feature-ensure-the-admin-dashboard-summary-cards-reflect-accurate-real-time-counts-including-all-activity-types",
+      "featureTitle": "Ensure the admin dashboard summary cards reflect accurate real-time counts including all activity types",
       "files": [
-        "frontend/src/components/admin/MaterialsTab.tsx",
-        "frontend/src/components/admin/MessagesTab.tsx",
-        "frontend/src/components/admin/WorkersTab.tsx",
-        "frontend/src/components/layout/AppHeader.tsx",
-        "frontend/src/pages/Admin.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-career-application-form-for-job-seekers-to-submit-applications-with-name-mobile-skills-experience-and-message",
-      "featureTitle": "Create career application form for job seekers to submit applications with name, mobile, skills, experience, and message",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/Career.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-architect-project-submission-form-collecting-name-project-type-location-budget-message-and-file-uploads",
-      "featureTitle": "Create architect project submission form collecting name, project type, location, budget, message, and file uploads",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/Architect.tsx"
+        "frontend/src/components/admin/AdminSummaryCards.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -150,90 +79,6 @@
       ],
       "testIds": [
         "REQ-7"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-contact-flow-where-customers-contact-workers-or-material-sellers-through-work24-platform-collecting-customer-name-mobile-and-requirements-without-exposing-direct-contact-information",
-      "featureTitle": "Implement contact flow where customers contact workers or material sellers through Work24 platform, collecting customer name, mobile, and requirements without exposing direct contact information",
-      "files": [
-        "frontend/src/components/contact/ContactViaWork24Dialog.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-8"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-materials-listing-page-displaying-materials-in-a-grid-with-cards-showing-images-name-category-description-and-contact-button",
-      "featureTitle": "Create materials listing page displaying materials in a grid with cards showing images, name, category, description, and contact button",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/components/materials/MaterialCard.tsx",
-        "frontend/src/pages/Materials.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-9"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-implement-onboarding-flow-that-collects-user-name-and-language-preference-validates-input-saves-to-localstorage-and-redirects-to-home-page",
-      "featureTitle": "Implement onboarding flow that collects user name and language preference, validates input, saves to localStorage, and redirects to home page",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/Onboarding.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-10"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-contact-us-page-displaying-official-work24-phone-number-and-email-with-clickable-links-and-service-area-information",
-      "featureTitle": "Create contact us page displaying official Work24 phone number and email with clickable links and service area information",
-      "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/ContactUs.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-11"
       ],
       "confidence": "high"
     }

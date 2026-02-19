@@ -1,58 +1,64 @@
-import { Button } from '@/components/ui/button';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { RefreshCw } from 'lucide-react';
+import React from 'react';
+import { useI18n } from '../../i18n/I18nProvider';
 import { useGetAllMaterials } from '../../hooks/useQueries';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
+import { RefreshCw } from 'lucide-react';
 
 export default function MaterialsTab() {
-  const { data: materials, isLoading, refetch } = useGetAllMaterials();
+  const { t } = useI18n();
+  const { data: materials = [], isLoading, refetch } = useGetAllMaterials();
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold">Material Listings</h2>
-          <p className="text-muted-foreground">View all materials submitted for sale</p>
-        </div>
-        <Button variant="outline" size="sm" onClick={() => refetch()}>
-          <RefreshCw className="h-4 w-4 mr-2" />
-          Refresh
+    <Card className="border-admin-border bg-admin-card">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="text-admin-foreground">{t('admin.materials')}</CardTitle>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => refetch()}
+          disabled={isLoading}
+          className="gap-2 border-admin-border text-admin-foreground hover:bg-admin-accent"
+        >
+          <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+          {t('admin.refresh')}
         </Button>
-      </div>
-
-      {isLoading ? (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">Loading materials...</p>
-        </div>
-      ) : materials && materials.length > 0 ? (
-        <div className="border rounded-lg">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>ID</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Description</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {materials.map((material) => (
-                <TableRow key={material.id.toString()}>
-                  <TableCell className="font-mono text-sm">{material.id.toString()}</TableCell>
-                  <TableCell className="font-medium">{material.name}</TableCell>
-                  <TableCell>{material.category}</TableCell>
-                  <TableCell>{material.location}</TableCell>
-                  <TableCell className="max-w-md truncate">{material.description}</TableCell>
+      </CardHeader>
+      <CardContent>
+        {isLoading ? (
+          <div className="text-center py-8 text-admin-muted">{t('admin.loading')}</div>
+        ) : materials.length === 0 ? (
+          <div className="text-center py-8 text-admin-muted">{t('admin.noMaterials')}</div>
+        ) : (
+          <div className="rounded-md border border-admin-border overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-admin-accent/50 hover:bg-admin-accent/50">
+                  <TableHead className="text-admin-foreground">{t('admin.materialId')}</TableHead>
+                  <TableHead className="text-admin-foreground">{t('admin.materialName')}</TableHead>
+                  <TableHead className="text-admin-foreground">{t('admin.materialCategory')}</TableHead>
+                  <TableHead className="text-admin-foreground">{t('admin.materialLocation')}</TableHead>
+                  <TableHead className="text-admin-foreground">{t('admin.materialDescription')}</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      ) : (
-        <div className="text-center py-8">
-          <p className="text-muted-foreground">No materials submitted yet</p>
-        </div>
-      )}
-    </div>
+              </TableHeader>
+              <TableBody>
+                {materials.map((material) => (
+                  <TableRow key={material.id.toString()} className="border-admin-border">
+                    <TableCell className="text-admin-foreground">{material.id.toString()}</TableCell>
+                    <TableCell className="text-admin-foreground font-medium">{material.name}</TableCell>
+                    <TableCell className="text-admin-muted">{material.category}</TableCell>
+                    <TableCell className="text-admin-muted">{material.location}</TableCell>
+                    <TableCell className="text-admin-muted max-w-md truncate">
+                      {material.description}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 }

@@ -1,230 +1,147 @@
 {
   "kind": "build_request",
-  "title": "Rebuild Work24 application from scratch",
-  "projectName": "Work24",
+  "title": "Fix activity notifications and real-time message display across dashboards",
   "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Create a worker marketplace platform where customers can browse services, view workers by category, and submit contact requests through the platform rather than directly contacting workers",
+      "text": "Ensure that when a user sells material via SellerMaterialSubmission, a message is created and broadcast to all users on the main dashboard",
       "target": "both",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
         ],
         "quotes": [
-          "make this app again from starting"
+          "when someone sell material, ragister as worker, it's not showing in main dashboard to all users"
         ]
       },
       "acceptanceCriteria": [
-        "Home page displays service categories with navigation",
-        "Service detail pages show workers filtered by category",
-        "Contact forms route through Work24 platform, not direct worker contact"
+        "Material sale submissions create a message entry visible to all users",
+        "Message appears in the main dashboard activity feed immediately after submission",
+        "Message content includes material name, category, and seller information"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Implement multi-language support for English, Hindi, and Gujarati with language switcher and persistent user preference storage",
-      "target": "frontend",
+      "text": "Ensure that when a user registers as a worker via WorkerSubmission, a message is created and broadcast to all users on the main dashboard",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
+        ],
+        "quotes": [
+          "when someone sell material, ragister as worker, it's not showing in main dashboard to all users"
         ]
       },
       "acceptanceCriteria": [
-        "Language switcher in header allows switching between English, Hindi, and Gujarati",
-        "Selected language persists in localStorage",
-        "All UI text uses translation keys from i18n system"
+        "Worker registration submissions create a message entry visible to all users",
+        "Message appears in the main dashboard activity feed immediately after submission",
+        "Message content includes worker name, skill, category, and location"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Create worker submission form allowing workers to register with name, skill, service category, location, profile image, and minimum 3 work images",
+      "text": "Display all activity messages (material sales, worker registrations, contact requests) in the admin dashboard MessagesTab",
       "target": "both",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
+        ],
+        "quotes": [
+          "also not showing in admmin dashboard"
         ]
       },
       "acceptanceCriteria": [
-        "Form validates minimum 3 work images are uploaded",
-        "Images are converted to base64 format",
-        "Submission includes auto-generated submitter ID",
-        "Data is persisted to backend"
+        "Admin MessagesTab shows all message types including material sales and worker registrations",
+        "Messages are properly categorized and display source information",
+        "Admin can see the complete activity history with timestamps"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Create material seller submission form for submitting materials with name, category, description, location, and images",
-      "target": "both",
+      "text": "Create a main dashboard activity feed component that displays recent messages and activities to all users on the home page",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
+        ],
+        "quotes": [
+          "not showing in main dashboard to all users"
         ]
       },
       "acceptanceCriteria": [
-        "Form collects material details and images",
-        "Images are converted to base64 format",
-        "Submission includes submitter attribution information",
-        "Data is persisted to backend"
+        "Activity feed component is visible on the main home page (HomeServices)",
+        "Feed displays recent material sales, worker registrations, and other activities",
+        "Feed updates automatically when new activities occur",
+        "Activities are displayed in reverse chronological order"
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Implement admin dashboard with username/password authentication (credentials: Bharat1213/Bharat1213) displaying separate tabs for materials, workers, and messages",
-      "target": "both",
+      "text": "Update backend to automatically create and store messages when materials are submitted via submitMaterial",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
+        ],
+        "quotes": [
+          "when someone sell material, ragister as worker, it's not showing in main dashboard"
         ]
       },
       "acceptanceCriteria": [
-        "Admin login form validates against hardcoded credentials Bharat1213/Bharat1213",
-        "Materials tab shows table with name, category, location, submitter attribution, and description",
-        "Workers tab shows table with skills, service categories, locations, and submitter information",
-        "Messages tab shows system messages with delete functionality",
-        "Each tab displays submitter information (name and ID) for tracking who posted each item"
+        "submitMaterial function creates a message entry with material details",
+        "Message is stored in the messages collection",
+        "Message includes submitter ID and timestamp"
       ]
     },
     {
       "id": "REQ-6",
-      "text": "Create career application form for job seekers to submit applications with name, mobile, skills, experience, and message",
-      "target": "both",
+      "text": "Update backend to automatically create and store messages when workers are registered via submitWorker",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
+        ],
+        "quotes": [
+          "when someone sell material, ragister as worker, it's not showing in main dashboard"
         ]
       },
       "acceptanceCriteria": [
-        "Form validates Indian mobile numbers (10 digits starting with 6-9)",
-        "Submissions are sent to backend as contact messages",
-        "Admin can view career submissions in messages tab"
+        "submitWorker function creates a message entry with worker details",
+        "Message is stored in the messages collection",
+        "Message includes submitter ID and timestamp"
       ]
     },
     {
       "id": "REQ-7",
-      "text": "Create architect project submission form collecting name, project type, location, budget, message, and file uploads",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Form accepts file uploads for project documents",
-        "Submissions are sent to backend as contact messages",
-        "Admin can view architect submissions in messages tab"
-      ]
-    },
-    {
-      "id": "REQ-8",
-      "text": "Implement contact flow where customers contact workers or material sellers through Work24 platform, collecting customer name, mobile, and requirements without exposing direct contact information",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Contact dialogs sanitize worker/material data to remove direct contact information",
-        "Contact submissions include reference to the worker or material being inquired about",
-        "Submissions are stored in backend for admin review"
-      ]
-    },
-    {
-      "id": "REQ-9",
-      "text": "Create materials listing page displaying materials in a grid with cards showing images, name, category, description, and contact button",
+      "text": "Ensure the admin dashboard summary cards reflect accurate real-time counts including all activity types",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-latest"
+          "msg-4"
+        ],
+        "quotes": [
+          "also not showing in admmin dashboard"
         ]
       },
       "acceptanceCriteria": [
-        "Materials are fetched from backend and displayed in grid layout",
-        "Each material card shows sanitized information",
-        "Contact button opens dialog for platform-mediated contact"
-      ]
-    },
-    {
-      "id": "REQ-10",
-      "text": "Implement onboarding flow that collects user name and language preference, validates input, saves to localStorage, and redirects to home page",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Onboarding page is shown on first visit",
-        "User name and language preference are validated before submission",
-        "Preferences are saved to localStorage",
-        "User is redirected to home page after completion"
-      ]
-    },
-    {
-      "id": "REQ-11",
-      "text": "Create contact us page displaying official Work24 phone number and email with clickable links and service area information",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Page displays phone number as tel: link",
-        "Page displays email as mailto: link",
-        "Service area information is clearly presented"
-      ]
-    },
-    {
-      "id": "REQ-12",
-      "text": "Implement role-based access control in backend with admin permissions for viewing all submissions and managing data",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Backend validates admin credentials before allowing access to admin operations",
-        "Admin can query all workers, materials, and messages",
-        "Admin can delete messages",
-        "Non-admin users cannot access admin-only operations"
-      ]
-    },
-    {
-      "id": "REQ-13",
-      "text": "Apply a consistent visual design theme with off-white base color, orange primary color, and green accent color using OKLCH color system with light and dark mode support",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-latest"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Color scheme uses off-white base, orange primary, and green accent throughout the application",
-        "Theme supports both light and dark modes",
-        "Tailwind CSS configuration uses OKLCH color space for consistent color rendering"
+        "Summary cards show correct counts for messages, workers, materials, and total activity",
+        "Counts update when new activities are added",
+        "All message types are included in the message count"
       ]
     }
   ],
   "constraints": [
-    "Use single-actor Motoko backend architecture with all logic in main.mo",
-    "Do not expose worker or material seller direct contact information to customers",
-    "Admin credentials must be Bharat1213/Bharat1213",
-    "Indian mobile number validation must accept 10 digits starting with 6-9",
-    "Worker submissions must include minimum 3 work images",
-    "All images must be converted to base64 format for storage",
-    "Maintain submitter attribution (ID and name) for all user-submitted content"
+    "Do not modify the Internet Identity authentication system",
+    "Do not change the single-actor backend architecture",
+    "Preserve existing UI component structure in frontend/src/components/ui",
+    "Maintain compatibility with existing translation system across English, Hindi, and Gujarati"
   ],
   "nonGoals": [
-    "Real-time messaging between customers and workers",
-    "Payment processing integration",
-    "Worker rating and review system",
-    "Automated matching algorithm between customers and workers",
-    "Push notifications for new contact requests",
-    "Mobile app versions"
+    "Real-time WebSocket notifications",
+    "Push notifications to user devices",
+    "Email notifications for activities",
+    "Advanced filtering or search in activity feeds"
   ],
   "imageRequirements": {
     "required": [],

@@ -101,6 +101,7 @@ export interface _SERVICE {
     [string, string, string, string, ExternalBlob, Array<ExternalBlob>],
     undefined
   >,
+  'adminLogin' : ActorMethod<[string, string], boolean>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'deleteAllMessages' : ActorMethod<[], bigint>,
   'deleteMessage' : ActorMethod<[bigint], boolean>,
@@ -109,6 +110,7 @@ export interface _SERVICE {
   'getAllCareerApplications' : ActorMethod<[], Array<CareerApplication>>,
   'getAllContactRequests' : ActorMethod<[], Array<ContactRequest>>,
   'getAllMaterials' : ActorMethod<[], Array<Material>>,
+  'getAllMessages' : ActorMethod<[], Array<Message>>,
   'getAllWorkers' : ActorMethod<[], Array<Worker>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,

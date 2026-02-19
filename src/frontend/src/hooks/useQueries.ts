@@ -16,6 +16,19 @@ export function useGetAdminMessages() {
   });
 }
 
+export function useGetAllMessages() {
+  const { actor, isFetching } = useActor();
+
+  return useQuery<Message[]>({
+    queryKey: ['messages'],
+    queryFn: async () => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.getAllMessages();
+    },
+    enabled: !!actor && !isFetching,
+  });
+}
+
 export function useDeleteMessage() {
   const { actor } = useActor();
   const queryClient = useQueryClient();
@@ -31,6 +44,7 @@ export function useDeleteMessage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
+      queryClient.invalidateQueries({ queryKey: ['messages'] });
     },
   });
 }
@@ -99,6 +113,8 @@ export function useAddWorker() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['workers'] });
+      queryClient.invalidateQueries({ queryKey: ['messages'] });
+      queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
     },
   });
 }
@@ -126,6 +142,8 @@ export function useAddMaterial() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] });
+      queryClient.invalidateQueries({ queryKey: ['messages'] });
+      queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
     },
   });
 }
@@ -153,13 +171,13 @@ export function useSubmitContactRequest() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
+      queryClient.invalidateQueries({ queryKey: ['messages'] });
     },
   });
 }
 
 export function useSubmitCareerApplication() {
   const { actor } = useActor();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: {
@@ -178,15 +196,11 @@ export function useSubmitCareerApplication() {
         data.message
       );
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
-    },
   });
 }
 
 export function useSubmitArchitectProject() {
   const { actor } = useActor();
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (data: {
@@ -207,8 +221,16 @@ export function useSubmitArchitectProject() {
         data.files
       );
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
+  });
+}
+
+export function useAdminLogin() {
+  const { actor } = useActor();
+
+  return useMutation({
+    mutationFn: async (credentials: { username: string; password: string }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.adminLogin(credentials.username, credentials.password);
     },
   });
 }

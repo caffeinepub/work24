@@ -18,6 +18,10 @@ actor {
   include MixinAuthorization(accessControlState);
   include MixinStorage();
 
+  // Admin credentials
+  let ADMIN_USERNAME = "admin";
+  let ADMIN_PASSWORD = "demo123";
+
   // Type definitions
   public type Message = {
     id : Nat;
@@ -99,7 +103,10 @@ actor {
 
   // Message functions
   public shared ({ caller }) func addMessage(message : Text) : async () {
-    // Any user including guests can add messages
+    if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
+      Runtime.trap("Unauthorized: Only admins can add messages directly\n");
+    };
+    
     let newMessage : Message = {
       id = nextMessageId;
       text = message;
@@ -111,15 +118,20 @@ actor {
 
   public query ({ caller }) func getAdminMessages() : async [Message] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can access messages");
+      Runtime.trap("Unauthorized: Only admins can access messages\n");
     };
 
     messages.values().toArray();
   };
 
+  public query ({ caller }) func getAllMessages() : async [Message] {
+    // Public access to all messages for main dashboard
+    messages.values().toArray();
+  };
+
   public shared ({ caller }) func deleteMessage(messageId : Nat) : async Bool {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can delete messages");
+      Runtime.trap("Unauthorized: Only admins can delete messages\n");
     };
 
     switch (messages.get(messageId)) {
@@ -133,7 +145,7 @@ actor {
 
   public shared ({ caller }) func deleteAllMessages() : async Nat {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can delete all messages");
+      Runtime.trap("Unauthorized: Only admins can delete all messages\n");
     };
 
     let count = messages.size();
@@ -141,12 +153,23 @@ actor {
     count;
   };
 
+  func createAndStoreMessage(message : Text) {
+    let newMessage : Message = {
+      id = nextMessageId;
+      text = message;
+      timestamp = Time.now();
+    };
+    messages.add(nextMessageId, newMessage);
+    nextMessageId += 1;
+  };
+
   // Worker functions
   public shared ({ caller }) func addWorker(name : Text, skill : Text, category : Text, location : Text, profileImage : Storage.ExternalBlob, workImages : [Storage.ExternalBlob]) : async () {
-    // Any user including guests can submit worker registration
+    // Public access - any user including guests can register as a worker
     if (workImages.size() < 3) {
-      Runtime.trap("At least 3 work images are required");
+      Runtime.trap("At least 3 work images are required\n");
     };
+
     let newWorker : Worker = {
       id = nextWorkerId;
       name;
@@ -158,11 +181,12 @@ actor {
       timestamp = Time.now();
     };
     workers.add(nextWorkerId, newWorker);
+    createAndStoreMessage("New worker registered: " # name # " - " # skill);
     nextWorkerId += 1;
   };
 
   public query ({ caller }) func getWorkersByCategory(category : Text) : async [Worker] {
-    // Public browsing - no authentication required
+    // Public access - anyone can view workers
     let filteredWorkers = List.empty<Worker>();
     for ((_, worker) in workers.entries()) {
       if (worker.category == category) {
@@ -173,13 +197,13 @@ actor {
   };
 
   public query ({ caller }) func getAllWorkers() : async [Worker] {
-    // Public browsing - no authentication required
+    // Public access - anyone can view workers
     workers.values().toArray();
   };
 
   // Material functions
   public shared ({ caller }) func addMaterial(name : Text, category : Text, description : Text, location : Text, images : [Storage.ExternalBlob]) : async () {
-    // Any user including guests can submit material seller registration
+    // Public access - any user including guests can submit materials for sale
     let newMaterial : Material = {
       id = nextMaterialId;
       name;
@@ -190,17 +214,18 @@ actor {
       timestamp = Time.now();
     };
     materials.add(nextMaterialId, newMaterial);
+    createAndStoreMessage("New material submitted for sale: " # name # " - " # category);
     nextMaterialId += 1;
   };
 
   public query ({ caller }) func getAllMaterials() : async [Material] {
-    // Public browsing - no authentication required
+    // Public access - anyone can view materials
     materials.values().toArray();
   };
 
   // Career application functions
   public shared ({ caller }) func submitCareerApplication(name : Text, mobile : Text, skills : Text, experience : Text, message : Text) : async () {
-    // Any user including guests can submit career applications
+    // Public access - anyone can submit career applications
     let newApplication : CareerApplication = {
       id = nextCareerApplicationId;
       name;
@@ -216,7 +241,7 @@ actor {
 
   public query ({ caller }) func getAllCareerApplications() : async [CareerApplication] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can view career applications");
+      Runtime.trap("Unauthorized: Only admins can view career applications\n");
     };
 
     careerApplications.values().toArray();
@@ -224,7 +249,7 @@ actor {
 
   // Architect project functions
   public shared ({ caller }) func submitArchitectProject(name : Text, projectType : Text, location : Text, budget : Text, message : Text, files : [Storage.ExternalBlob]) : async () {
-    // Any user including guests can submit architect projects
+    // Public access - anyone can submit architect projects
     let newProject : ArchitectProject = {
       id = nextArchitectProjectId;
       name;
@@ -241,7 +266,7 @@ actor {
 
   public query ({ caller }) func getAllArchitectProjects() : async [ArchitectProject] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can view architect projects");
+      Runtime.trap("Unauthorized: Only admins can view architect projects\n");
     };
 
     architectProjects.values().toArray();
@@ -249,7 +274,7 @@ actor {
 
   // Contact request functions
   public shared ({ caller }) func submitContactRequest(customerName : Text, mobile : Text, requirements : Text, targetId : Nat, targetType : Text) : async () {
-    // Any user including guests can submit contact requests
+    // Public access - anyone can submit contact requests
     let newRequest : ContactRequest = {
       id = nextContactRequestId;
       customerName;
@@ -265,7 +290,7 @@ actor {
 
   public query ({ caller }) func getAllContactRequests() : async [ContactRequest] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can view contact requests");
+      Runtime.trap("Unauthorized: Only admins can view contact requests\n");
     };
 
     contactRequests.values().toArray();
@@ -274,22 +299,28 @@ actor {
   // User profile functions
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access profiles");
+      Runtime.trap("Unauthorized: Only users can access profiles\n");
     };
     userProfiles.get(caller);
   };
 
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
     if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
-      Runtime.trap("Unauthorized: Can only view your own profile");
+      Runtime.trap("Unauthorized: Can only view your own profile\n");
     };
     userProfiles.get(user);
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can save profiles");
+      Runtime.trap("Unauthorized: Only users can save profiles\n");
     };
     userProfiles.add(caller, profile);
+  };
+
+  // Simple admin login function
+  public shared ({ caller }) func adminLogin(username : Text, password : Text) : async Bool {
+    // Public access - anyone can attempt login
+    username == ADMIN_USERNAME and password == ADMIN_PASSWORD;
   };
 };

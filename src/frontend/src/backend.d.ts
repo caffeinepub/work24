@@ -79,6 +79,7 @@ export interface backendInterface {
     addMaterial(name: string, category: string, description: string, location: string, images: Array<ExternalBlob>): Promise<void>;
     addMessage(message: string): Promise<void>;
     addWorker(name: string, skill: string, category: string, location: string, profileImage: ExternalBlob, workImages: Array<ExternalBlob>): Promise<void>;
+    adminLogin(username: string, password: string): Promise<boolean>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteAllMessages(): Promise<bigint>;
     deleteMessage(messageId: bigint): Promise<boolean>;
@@ -87,6 +88,7 @@ export interface backendInterface {
     getAllCareerApplications(): Promise<Array<CareerApplication>>;
     getAllContactRequests(): Promise<Array<ContactRequest>>;
     getAllMaterials(): Promise<Array<Material>>;
+    getAllMessages(): Promise<Array<Message>>;
     getAllWorkers(): Promise<Array<Worker>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;

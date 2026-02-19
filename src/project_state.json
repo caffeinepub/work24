@@ -1,119 +1,106 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "New project",
-  "architectural_notes": [],
-  "known_issues": [],
-  "isFixRequest": false,
+  "summary": "Dashboard application with messaging and activity tracking system",
+  "architectural_notes": [
+    "System includes language switching functionality",
+    "System has admin dashboard with styling",
+    "Real-time activity updates required for main and admin dashboards",
+    "Activity types include: messages, material sales, worker registrations"
+  ],
+  "known_issues": [
+    "Messages not received when users send activity/messages",
+    "Material sale activities not showing in main dashboard for all users",
+    "Worker registration activities not showing in main dashboard for all users",
+    "Activities not appearing in admin dashboard",
+    "Build failed on version 14 deployment"
+  ],
+  "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-create-a-worker-marketplace-platform-where-customers-can-browse-services-view-workers-by-category-and-submit-contact-requests-through-the-platform-rather-than-directly-contacting-workers",
-      "title": "Create a worker marketplace platform where customers can browse services, view workers by category, and submit contact requests through the platform rather than directly contacting workers",
+      "id": "feature-ensure-that-when-a-user-sells-material-via-sellermaterialsubmission-a-message-is-created-and-broadcast-to-all-users-on-the-main-dashboard",
+      "title": "Ensure that when a user sells material via SellerMaterialSubmission, a message is created and broadcast to all users on the main dashboard",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-multi-language-support-for-english-hindi-and-gujarati-with-language-switcher-and-persistent-user-preference-storage",
-      "title": "Implement multi-language support for English, Hindi, and Gujarati with language switcher and persistent user preference storage",
-      "reqIds": [
-        "REQ-2"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-worker-submission-form-allowing-workers-to-register-with-name-skill-service-category-location-profile-image-and-minimum-3-work-images",
-      "title": "Create worker submission form allowing workers to register with name, skill, service category, location, profile image, and minimum 3 work images",
+      "id": "feature-display-all-activity-messages-material-sales-worker-registrations-contact-requests-in-the-admin-dashboard-messagestab",
+      "title": "Display all activity messages (material sales, worker registrations, contact requests) in the admin dashboard MessagesTab",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-create-material-seller-submission-form-for-submitting-materials-with-name-category-description-location-and-images",
-      "title": "Create material seller submission form for submitting materials with name, category, description, location, and images",
+      "id": "feature-create-a-main-dashboard-activity-feed-component-that-displays-recent-messages-and-activities-to-all-users-on-the-home-page",
+      "title": "Create a main dashboard activity feed component that displays recent messages and activities to all users on the home page",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-implement-admin-dashboard-with-username-password-authentication-credentials-bharat1213-bharat1213-displaying-separate-tabs-for-materials-workers-and-messages",
-      "title": "Implement admin dashboard with username/password authentication (credentials: Bharat1213/Bharat1213) displaying separate tabs for materials, workers, and messages",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-career-application-form-for-job-seekers-to-submit-applications-with-name-mobile-skills-experience-and-message",
-      "title": "Create career application form for job seekers to submit applications with name, mobile, skills, experience, and message",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-architect-project-submission-form-collecting-name-project-type-location-budget-message-and-file-uploads",
-      "title": "Create architect project submission form collecting name, project type, location, budget, message, and file uploads",
+      "id": "feature-ensure-the-admin-dashboard-summary-cards-reflect-accurate-real-time-counts-including-all-activity-types",
+      "title": "Ensure the admin dashboard summary cards reflect accurate real-time counts including all activity types",
       "reqIds": [
         "REQ-7"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-contact-flow-where-customers-contact-workers-or-material-sellers-through-work24-platform-collecting-customer-name-mobile-and-requirements-without-exposing-direct-contact-information",
-      "title": "Implement contact flow where customers contact workers or material sellers through Work24 platform, collecting customer name, mobile, and requirements without exposing direct contact information",
-      "reqIds": [
-        "REQ-8"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-materials-listing-page-displaying-materials-in-a-grid-with-cards-showing-images-name-category-description-and-contact-button",
-      "title": "Create materials listing page displaying materials in a grid with cards showing images, name, category, description, and contact button",
-      "reqIds": [
-        "REQ-9"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-implement-onboarding-flow-that-collects-user-name-and-language-preference-validates-input-saves-to-localstorage-and-redirects-to-home-page",
-      "title": "Implement onboarding flow that collects user name and language preference, validates input, saves to localStorage, and redirects to home page",
-      "reqIds": [
-        "REQ-10"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-contact-us-page-displaying-official-work24-phone-number-and-email-with-clickable-links-and-service-area-information",
-      "title": "Create contact us page displaying official Work24 phone number and email with clickable links and service area information",
-      "reqIds": [
-        "REQ-11"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [
     {
-      "id": "AR-12",
-      "summary": "Implement role-based access control in backend with admin permissions for viewing all submissions and managing data",
+      "id": "AR-1",
+      "summary": "Fix real-time message reception and activity notifications",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Fix material sale notifications not appearing in main dashboard",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "Fix worker registration notifications not appearing in main dashboard",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Fix activity notifications not appearing in admin dashboard",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Ensure that when a user registers as a worker via WorkerSubmission, a message is created and broadcast to all users on the main dashboard",
       "reqIds": [
-        "REQ-12"
+        "REQ-2"
       ],
       "status": "pending"
     },
     {
-      "id": "AR-13",
-      "summary": "Apply a consistent visual design theme with off-white base color, orange primary color, and green accent color using OKLCH color system with light and dark mode support",
+      "id": "AR-9",
+      "summary": "Update backend to automatically create and store messages when materials are submitted via submitMaterial",
       "reqIds": [
-        "REQ-13"
+        "REQ-5"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Update backend to automatically create and store messages when workers are registered via submitWorker",
+      "reqIds": [
+        "REQ-6"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Work24",
+  "projectName": "Fix activity notifications and real-time message display across dashboards",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

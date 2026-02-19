@@ -172,6 +172,7 @@ export interface backendInterface {
     addMaterial(name: string, category: string, description: string, location: string, images: Array<ExternalBlob>): Promise<void>;
     addMessage(message: string): Promise<void>;
     addWorker(name: string, skill: string, category: string, location: string, profileImage: ExternalBlob, workImages: Array<ExternalBlob>): Promise<void>;
+    adminLogin(username: string, password: string): Promise<boolean>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteAllMessages(): Promise<bigint>;
     deleteMessage(messageId: bigint): Promise<boolean>;
@@ -180,6 +181,7 @@ export interface backendInterface {
     getAllCareerApplications(): Promise<Array<CareerApplication>>;
     getAllContactRequests(): Promise<Array<ContactRequest>>;
     getAllMaterials(): Promise<Array<Material>>;
+    getAllMessages(): Promise<Array<Message>>;
     getAllWorkers(): Promise<Array<Worker>>;
     getCallerUserProfile(): Promise<UserProfile | null>;
     getCallerUserRole(): Promise<UserRole>;
@@ -334,6 +336,20 @@ export class Backend implements backendInterface {
             return result;
         }
     }
+    async adminLogin(arg0: string, arg1: string): Promise<boolean> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.adminLogin(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.adminLogin(arg0, arg1);
+            return result;
+        }
+    }
     async assignCallerUserRole(arg0: Principal, arg1: UserRole): Promise<void> {
         if (this.processError) {
             try {
@@ -444,6 +460,20 @@ export class Backend implements backendInterface {
         } else {
             const result = await this.actor.getAllMaterials();
             return from_candid_vec_n17(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getAllMessages(): Promise<Array<Message>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getAllMessages();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getAllMessages();
+            return result;
         }
     }
     async getAllWorkers(): Promise<Array<Worker>> {

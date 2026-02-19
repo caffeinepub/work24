@@ -1,232 +1,103 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-18T16:39:47.550Z",
+  "generatedAt": "2026-02-19T16:21:03.183Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 13,
-    "implemented": 11,
+    "total": 7,
+    "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Create a worker marketplace platform where customers can browse services, view workers by category, and submit contact requests through the platform rather than directly contacting workers",
+        "summary": "Ensure that when a user sells material via SellerMaterialSubmission, a message is created and broadcast to all users on the main dashboard",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/HomeServices.tsx",
-          "frontend/src/pages/ServiceDetail.tsx",
-          "frontend/src/components/contact/ContactViaWork24Dialog.tsx",
-          "frontend/src/components/workers/WorkerCard.tsx"
+          "frontend/src/pages/SellerMaterialSubmission.tsx",
+          "frontend/src/pages/HomeServices.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/HomeServices.tsx",
-          "frontend/src/pages/ServiceDetail.tsx",
-          "frontend/src/components/contact/ContactViaWork24Dialog.tsx",
-          "frontend/src/components/workers/WorkerCard.tsx"
+          "frontend/src/pages/HomeServices.tsx"
         ]
       },
       {
-        "id": "REQ-10",
-        "summary": "Implement onboarding flow that collects user name and language preference, validates input, saves to localStorage, and redirects to home page",
+        "id": "REQ-2",
+        "summary": "Ensure that when a user registers as a worker via WorkerSubmission, a message is created and broadcast to all users on the main dashboard",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/pages/WorkerSubmission.tsx"
+        ],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Display all activity messages (material sales, worker registrations, contact requests) in the admin dashboard MessagesTab",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/Onboarding.tsx",
-          "frontend/src/App.tsx",
-          "frontend/src/lib/localPreferences.ts"
+          "frontend/src/components/admin/MessagesTab.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/Onboarding.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/admin/MessagesTab.tsx"
         ]
       },
       {
-        "id": "REQ-11",
-        "summary": "Create contact us page displaying official Work24 phone number and email with clickable links and service area information",
+        "id": "REQ-4",
+        "summary": "Create a main dashboard activity feed component that displays recent messages and activities to all users on the home page",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/ContactUs.tsx",
-          "frontend/src/lib/officialContact.ts",
-          "frontend/src/App.tsx"
+          "frontend/src/components/activity/ActivityFeed.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/ContactUs.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/activity/ActivityFeed.tsx",
+          "frontend/src/hooks/useQueries.ts"
         ]
       },
       {
-        "id": "REQ-12",
-        "summary": "Implement role-based access control in backend with admin permissions for viewing all submissions and managing data",
+        "id": "REQ-5",
+        "summary": "Update backend to automatically create and store messages when materials are submitted via submitMaterial",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-13",
-        "summary": "Apply a consistent visual design theme with off-white base color, orange primary color, and green accent color using OKLCH color system with light and dark mode support",
-        "status": "missing",
-        "plannedFiles": [
-          "frontend/src/index.css",
-          "frontend/tailwind.config.js",
-          "frontend/src/components/layout/AppShell.tsx",
-          "frontend/src/components/common/Work24Card.tsx"
-        ],
+        "id": "REQ-6",
+        "summary": "Update backend to automatically create and store messages when workers are registered via submitWorker",
+        "status": "unknown",
+        "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-2",
-        "summary": "Implement multi-language support for English, Hindi, and Gujarati with language switcher and persistent user preference storage",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/settings/LanguageSwitcher.tsx",
-          "frontend/src/i18n/translations.ts",
-          "frontend/src/i18n/I18nProvider.tsx",
-          "frontend/src/components/layout/AppHeader.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/settings/LanguageSwitcher.tsx",
-          "frontend/src/components/layout/AppHeader.tsx"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Create worker submission form allowing workers to register with name, skill, service category, location, profile image, and minimum 3 work images",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/WorkerSubmission.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/WorkerSubmission.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Create material seller submission form for submitting materials with name, category, description, location, and images",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/SellerMaterialSubmission.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/SellerMaterialSubmission.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Implement admin dashboard with username/password authentication (credentials: Bharat1213/Bharat1213) displaying separate tabs for materials, workers, and messages",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Admin.tsx",
-          "frontend/src/components/admin/MaterialsTab.tsx",
-          "frontend/src/components/admin/WorkersTab.tsx",
-          "frontend/src/components/admin/MessagesTab.tsx",
-          "frontend/src/components/admin/AdminMessageRenderer.tsx",
-          "frontend/src/lib/adminSession.ts",
-          "frontend/src/components/layout/AppHeader.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Admin.tsx",
-          "frontend/src/components/admin/MaterialsTab.tsx",
-          "frontend/src/components/admin/WorkersTab.tsx",
-          "frontend/src/components/admin/MessagesTab.tsx",
-          "frontend/src/components/layout/AppHeader.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Create career application form for job seekers to submit applications with name, mobile, skills, experience, and message",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Career.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Career.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
         "id": "REQ-7",
-        "summary": "Create architect project submission form collecting name, project type, location, budget, message, and file uploads",
+        "summary": "Ensure the admin dashboard summary cards reflect accurate real-time counts including all activity types",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/Architect.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/admin/AdminSummaryCards.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/Architect.tsx",
-          "frontend/src/App.tsx"
-        ]
-      },
-      {
-        "id": "REQ-8",
-        "summary": "Implement contact flow where customers contact workers or material sellers through Work24 platform, collecting customer name, mobile, and requirements without exposing direct contact information",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/contact/ContactViaWork24Dialog.tsx",
-          "frontend/src/lib/safety/noDirectContact.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/contact/ContactViaWork24Dialog.tsx"
-        ]
-      },
-      {
-        "id": "REQ-9",
-        "summary": "Create materials listing page displaying materials in a grid with cards showing images, name, category, description, and contact button",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/Materials.tsx",
-          "frontend/src/components/materials/MaterialCard.tsx",
-          "frontend/src/App.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/Materials.tsx",
-          "frontend/src/components/materials/MaterialCard.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/components/admin/AdminSummaryCards.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
-    "backend/blob-storage/Mixin.mo",
-    "backend/blob-storage/Storage.mo",
     "backend/main.mo",
     "backend/migration.mo",
     "build-request.json",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/admin/MaterialsTab.tsx",
+    "frontend/src/components/activity/ActivityFeed.tsx",
+    "frontend/src/components/admin/AdminSummaryCards.tsx",
     "frontend/src/components/admin/MessagesTab.tsx",
-    "frontend/src/components/admin/WorkersTab.tsx",
-    "frontend/src/components/contact/ContactViaWork24Dialog.tsx",
-    "frontend/src/components/layout/AppFooter.tsx",
-    "frontend/src/components/layout/AppHeader.tsx",
-    "frontend/src/components/materials/MaterialCard.tsx",
-    "frontend/src/components/settings/LanguageSwitcher.tsx",
-    "frontend/src/components/workers/WorkerCard.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/lib/formatIcTime.ts",
-    "frontend/src/pages/Admin.tsx",
-    "frontend/src/pages/Architect.tsx",
-    "frontend/src/pages/Career.tsx",
-    "frontend/src/pages/ContactUs.tsx",
     "frontend/src/pages/HomeServices.tsx",
-    "frontend/src/pages/Materials.tsx",
-    "frontend/src/pages/Onboarding.tsx",
-    "frontend/src/pages/SellerMaterialSubmission.tsx",
-    "frontend/src/pages/ServiceDetail.tsx",
-    "frontend/src/pages/WorkerSubmission.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
