@@ -1,66 +1,115 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Worker marketplace platform with admin panel tracking materials/services posted by workers",
-  "architectural_notes": [
-    "Admin panel tracks worker-to-material/service associations",
-    "Tab-based navigation in admin interface"
-  ],
+  "summary": "New project",
+  "architectural_notes": [],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-store-the-worker-identity-name-and-id-with-each-material-submission-so-the-system-can-track-which-worker-uploaded-which-material",
-      "title": "Store the worker identity (name and ID) with each material submission so the system can track which worker uploaded which material",
+      "id": "feature-create-a-worker-marketplace-platform-where-customers-can-browse-services-view-workers-by-category-and-submit-contact-requests-through-the-platform-rather-than-directly-contacting-workers",
+      "title": "Create a worker marketplace platform where customers can browse services, view workers by category, and submit contact requests through the platform rather than directly contacting workers",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-store-the-worker-identity-name-and-id-with-each-service-worker-profile-submission-so-the-system-can-track-attribution",
-      "title": "Store the worker identity (name and ID) with each service/worker profile submission so the system can track attribution",
+      "id": "feature-implement-multi-language-support-for-english-hindi-and-gujarati-with-language-switcher-and-persistent-user-preference-storage",
+      "title": "Implement multi-language support for English, Hindi, and Gujarati with language switcher and persistent user preference storage",
       "reqIds": [
         "REQ-2"
       ],
       "version": 1
     },
     {
-      "id": "feature-display-worker-attribution-information-name-and-id-for-each-material-in-the-admin-panel-so-the-website-owner-knows-who-uploaded-it",
-      "title": "Display worker attribution information (name and ID) for each material in the admin panel so the website owner knows who uploaded it",
+      "id": "feature-create-worker-submission-form-allowing-workers-to-register-with-name-skill-service-category-location-profile-image-and-minimum-3-work-images",
+      "title": "Create worker submission form allowing workers to register with name, skill, service category, location, profile image, and minimum 3 work images",
       "reqIds": [
         "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-display-worker-attribution-information-name-and-id-for-each-service-posting-in-the-admin-panel",
-      "title": "Display worker attribution information (name and ID) for each service posting in the admin panel",
+      "id": "feature-create-material-seller-submission-form-for-submitting-materials-with-name-category-description-location-and-images",
+      "title": "Create material seller submission form for submitting materials with name, category, description, location, and images",
       "reqIds": [
         "REQ-4"
       ],
       "version": 1
     },
     {
-      "id": "feature-organize-admin-panel-data-into-separate-tabs-one-for-materials-one-for-services-workers-and-one-for-general-contact-messages",
-      "title": "Organize admin panel data into separate tabs: one for materials, one for services/workers, and one for general contact messages",
+      "id": "feature-implement-admin-dashboard-with-username-password-authentication-credentials-bharat1213-bharat1213-displaying-separate-tabs-for-materials-workers-and-messages",
+      "title": "Implement admin dashboard with username/password authentication (credentials: Bharat1213/Bharat1213) displaying separate tabs for materials, workers, and messages",
       "reqIds": [
         "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-career-application-form-for-job-seekers-to-submit-applications-with-name-mobile-skills-experience-and-message",
+      "title": "Create career application form for job seekers to submit applications with name, mobile, skills, experience, and message",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-architect-project-submission-form-collecting-name-project-type-location-budget-message-and-file-uploads",
+      "title": "Create architect project submission form collecting name, project type, location, budget, message, and file uploads",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-contact-flow-where-customers-contact-workers-or-material-sellers-through-work24-platform-collecting-customer-name-mobile-and-requirements-without-exposing-direct-contact-information",
+      "title": "Implement contact flow where customers contact workers or material sellers through Work24 platform, collecting customer name, mobile, and requirements without exposing direct contact information",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-materials-listing-page-displaying-materials-in-a-grid-with-cards-showing-images-name-category-description-and-contact-button",
+      "title": "Create materials listing page displaying materials in a grid with cards showing images, name, category, description, and contact button",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-onboarding-flow-that-collects-user-name-and-language-preference-validates-input-saves-to-localstorage-and-redirects-to-home-page",
+      "title": "Implement onboarding flow that collects user name and language preference, validates input, saves to localStorage, and redirects to home page",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-contact-us-page-displaying-official-work24-phone-number-and-email-with-clickable-links-and-service-area-information",
+      "title": "Create contact us page displaying official Work24 phone number and email with clickable links and service area information",
+      "reqIds": [
+        "REQ-11"
       ],
       "version": 1
     }
   ],
   "new_feature_requests": [
     {
-      "id": "AR-1",
-      "summary": "Display which worker posted each material/service in admin panel",
-      "reqIds": [],
+      "id": "AR-12",
+      "summary": "Implement role-based access control in backend with admin permissions for viewing all submissions and managing data",
+      "reqIds": [
+        "REQ-12"
+      ],
       "status": "pending"
     },
     {
-      "id": "AR-2",
-      "summary": "Organize admin data into separate tabs",
-      "reqIds": [],
+      "id": "AR-13",
+      "summary": "Apply a consistent visual design theme with off-white base color, orange primary color, and green accent color using OKLCH color system with light and dark mode support",
+      "reqIds": [
+        "REQ-13"
+      ],
       "status": "pending"
     }
   ],

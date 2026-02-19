@@ -1,73 +1,72 @@
 import { useState } from 'react';
-import { Worker } from '../../types/workers';
-import Work24Card from '../common/Work24Card';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
-import { useI18n } from '../../i18n/I18nProvider';
-import { sanitizeWorkerData } from '../../lib/safety/noDirectContact';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Worker } from '../../backend';
+import ContactViaWork24Dialog from '../contact/ContactViaWork24Dialog';
 
 interface WorkerCardProps {
   worker: Worker;
-  onContact: (worker: Worker) => void;
 }
 
-export default function WorkerCard({ worker, onContact }: WorkerCardProps) {
-  const { t } = useI18n();
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  
-  const safeWorker = sanitizeWorkerData(worker);
+export default function WorkerCard({ worker }: WorkerCardProps) {
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
+  const [galleryOpen, setGalleryOpen] = useState(false);
 
   return (
-    <Work24Card className="h-full">
-      <div className="p-4 space-y-4">
-        <div className="flex items-start space-x-4">
+    <>
+      <div className="bg-card border border-border rounded-lg overflow-hidden hover:shadow-medium hover:border-primary transition-all">
+        <div className="aspect-square relative">
           <img
-            src={safeWorker.profileImage}
-            alt={safeWorker.name}
-            className="h-16 w-16 rounded-full object-cover border-2 border-primary"
+            src={worker.profileImage.getDirectURL()}
+            alt={worker.name}
+            className="w-full h-full object-cover"
           />
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-lg truncate">{safeWorker.name}</h3>
-            <p className="text-sm text-muted-foreground">{safeWorker.skill}</p>
-          </div>
         </div>
+        <div className="p-4 space-y-3">
+          <div>
+            <h3 className="text-lg font-semibold">{worker.name}</h3>
+            <p className="text-sm text-muted-foreground">{worker.skill}</p>
+            <p className="text-sm text-muted-foreground">{worker.location}</p>
+          </div>
 
-        <div>
-          <p className="text-sm font-medium mb-2">{t('worker.workGallery')}</p>
-          <div className="grid grid-cols-3 gap-2">
-            {safeWorker.workImages.slice(0, 3).map((img: string, idx: number) => (
-              <Dialog key={idx}>
-                <DialogTrigger asChild>
-                  <button
-                    onClick={() => setSelectedImage(img)}
-                    className="aspect-square rounded-md overflow-hidden hover:opacity-80 transition-opacity"
-                  >
-                    <img
-                      src={img}
-                      alt={`Work ${idx + 1}`}
-                      className="h-full w-full object-cover"
-                    />
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="max-w-3xl">
-                  <img
-                    src={img}
-                    alt={`Work ${idx + 1}`}
-                    className="w-full h-auto rounded-lg"
-                  />
-                </DialogContent>
-              </Dialog>
+          {worker.workImages.length > 0 && (
+            <Button variant="outline" size="sm" className="w-full" onClick={() => setGalleryOpen(true)}>
+              View Work ({worker.workImages.length} photos)
+            </Button>
+          )}
+
+          <Button className="w-full" onClick={() => setContactDialogOpen(true)}>
+            Contact via Work24
+          </Button>
+        </div>
+      </div>
+
+      <ContactViaWork24Dialog
+        open={contactDialogOpen}
+        onOpenChange={setContactDialogOpen}
+        targetId={worker.id}
+        targetType="worker"
+        targetName={worker.name}
+      />
+
+      <Dialog open={galleryOpen} onOpenChange={setGalleryOpen}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>{worker.name}'s Work</DialogTitle>
+          </DialogHeader>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-h-[70vh] overflow-y-auto">
+            {worker.workImages.map((image, index) => (
+              <div key={index} className="aspect-square relative rounded-lg overflow-hidden">
+                <img
+                  src={image.getDirectURL()}
+                  alt={`Work ${index + 1}`}
+                  className="w-full h-full object-cover"
+                />
+              </div>
             ))}
           </div>
-        </div>
-
-        <Button
-          onClick={() => onContact(worker)}
-          className="w-full bg-primary hover:bg-primary/90"
-        >
-          {t('serviceDetail.contactButton')}
-        </Button>
-      </div>
-    </Work24Card>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }

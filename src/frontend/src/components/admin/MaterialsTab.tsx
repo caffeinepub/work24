@@ -1,81 +1,56 @@
-import { RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Badge } from '@/components/ui/badge';
-import { useI18n } from '../../i18n/I18nProvider';
-import { useGetMaterials } from '../../hooks/useQueries';
+import { RefreshCw } from 'lucide-react';
+import { useGetAllMaterials } from '../../hooks/useQueries';
 
 export default function MaterialsTab() {
-  const { t } = useI18n();
-  const { data: materials, isLoading, refetch, isFetching } = useGetMaterials();
+  const { data: materials, isLoading, refetch } = useGetAllMaterials();
 
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">{t('admin.materialsTitle')}</h2>
-          <p className="text-muted-foreground">{t('admin.materialsDescription')}</p>
+          <h2 className="text-2xl font-semibold">Material Listings</h2>
+          <p className="text-muted-foreground">View all materials submitted for sale</p>
         </div>
-        <Button
-          onClick={() => refetch()}
-          disabled={isFetching}
-          variant="outline"
-          size="sm"
-        >
-          <RefreshCw className={`h-4 w-4 mr-2 ${isFetching ? 'animate-spin' : ''}`} />
-          {t('admin.refresh')}
+        <Button variant="outline" size="sm" onClick={() => refetch()}>
+          <RefreshCw className="h-4 w-4 mr-2" />
+          Refresh
         </Button>
       </div>
 
       {isLoading ? (
-        <div className="text-center py-8 text-muted-foreground">
-          {t('admin.loading')}
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">Loading materials...</p>
         </div>
-      ) : !materials || materials.length === 0 ? (
-        <div className="text-center py-8 text-muted-foreground">
-          {t('admin.noMaterials')}
-        </div>
-      ) : (
-        <div className="rounded-md border">
+      ) : materials && materials.length > 0 ? (
+        <div className="border rounded-lg">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>{t('admin.materialName')}</TableHead>
-                <TableHead>{t('admin.category')}</TableHead>
-                <TableHead>{t('admin.location')}</TableHead>
-                <TableHead>{t('admin.submittedBy')}</TableHead>
-                <TableHead>{t('admin.description')}</TableHead>
+                <TableHead>ID</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Location</TableHead>
+                <TableHead>Description</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {materials.map((material) => (
-                <TableRow key={material.id}>
+                <TableRow key={material.id.toString()}>
+                  <TableCell className="font-mono text-sm">{material.id.toString()}</TableCell>
                   <TableCell className="font-medium">{material.name}</TableCell>
-                  <TableCell>
-                    <Badge variant="secondary">{material.category}</Badge>
-                  </TableCell>
-                  <TableCell>{material.location || t('admin.notProvided')}</TableCell>
-                  <TableCell>
-                    {material.submittedBy ? (
-                      <div className="space-y-1">
-                        <div className="font-medium">{material.submittedBy.name}</div>
-                        <div className="text-xs text-muted-foreground font-mono">
-                          {material.submittedBy.id}
-                        </div>
-                      </div>
-                    ) : (
-                      <span className="text-muted-foreground italic">{t('admin.unknown')}</span>
-                    )}
-                  </TableCell>
-                  <TableCell className="max-w-md">
-                    <div className="line-clamp-2 text-sm text-muted-foreground">
-                      {material.description}
-                    </div>
-                  </TableCell>
+                  <TableCell>{material.category}</TableCell>
+                  <TableCell>{material.location}</TableCell>
+                  <TableCell className="max-w-md truncate">{material.description}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
+        </div>
+      ) : (
+        <div className="text-center py-8">
+          <p className="text-muted-foreground">No materials submitted yet</p>
         </div>
       )}
     </div>

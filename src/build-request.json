@@ -1,113 +1,230 @@
 {
   "kind": "build_request",
-  "title": "Add worker attribution and tab organization to admin panel",
+  "title": "Rebuild Work24 application from scratch",
   "projectName": "Work24",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Store the worker identity (name and ID) with each material submission so the system can track which worker uploaded which material",
+      "text": "Create a worker marketplace platform where customers can browse services, view workers by category, and submit contact requests through the platform rather than directly contacting workers",
       "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-latest"
         ],
         "quotes": [
-          "if someone will upload material and another one want to buy, he will contact the website owner, but website owner don't know who uploaded the material"
+          "make this app again from starting"
         ]
       },
       "acceptanceCriteria": [
-        "Material submissions include worker name and ID fields",
-        "Worker information is persisted with the material data",
-        "Backend stores the association between materials and workers"
+        "Home page displays service categories with navigation",
+        "Service detail pages show workers filtered by category",
+        "Contact forms route through Work24 platform, not direct worker contact"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Store the worker identity (name and ID) with each service/worker profile submission so the system can track attribution",
-      "target": "both",
+      "text": "Implement multi-language support for English, Hindi, and Gujarati with language switcher and persistent user preference storage",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "show, which material or service posted by which worker"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Worker profile submissions include submitter identification",
-        "Attribution data is stored with each service listing",
-        "Backend maintains the link between workers and their postings"
+        "Language switcher in header allows switching between English, Hindi, and Gujarati",
+        "Selected language persists in localStorage",
+        "All UI text uses translation keys from i18n system"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Display worker attribution information (name and ID) for each material in the admin panel so the website owner knows who uploaded it",
-      "target": "frontend",
+      "text": "Create worker submission form allowing workers to register with name, skill, service category, location, profile image, and minimum 3 work images",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "show, which material or service posted by which worker",
-          "website owner don't know who uploaded the material"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Admin panel displays worker name for each material entry",
-        "Worker ID is visible in the material details",
-        "Attribution information is clearly labeled and easy to identify"
+        "Form validates minimum 3 work images are uploaded",
+        "Images are converted to base64 format",
+        "Submission includes auto-generated submitter ID",
+        "Data is persisted to backend"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Display worker attribution information (name and ID) for each service posting in the admin panel",
-      "target": "frontend",
+      "text": "Create material seller submission form for submitting materials with name, category, description, location, and images",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "show, which material or service posted by which worker"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Admin panel shows who posted each service/worker profile",
-        "Worker attribution is displayed alongside service data",
-        "Information is formatted consistently with material attribution"
+        "Form collects material details and images",
+        "Images are converted to base64 format",
+        "Submission includes submitter attribution information",
+        "Data is persisted to backend"
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Organize admin panel data into separate tabs: one for materials, one for services/workers, and one for general contact messages",
-      "target": "frontend",
+      "text": "Implement admin dashboard with username/password authentication (credentials: Bharat1213/Bharat1213) displaying separate tabs for materials, workers, and messages",
+      "target": "both",
       "source": {
         "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "all data in saperate tabs in admin"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Admin panel uses a tabbed interface with at least three tabs",
-        "Materials tab shows all material submissions with worker attribution",
-        "Services tab shows all worker/service postings with attribution",
-        "Messages tab shows contact form submissions and other messages",
-        "User can switch between tabs without losing data",
-        "Active tab is visually indicated"
+        "Admin login form validates against hardcoded credentials Bharat1213/Bharat1213",
+        "Materials tab shows table with name, category, location, submitter attribution, and description",
+        "Workers tab shows table with skills, service categories, locations, and submitter information",
+        "Messages tab shows system messages with delete functionality",
+        "Each tab displays submitter information (name and ID) for tracking who posted each item"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Create career application form for job seekers to submit applications with name, mobile, skills, experience, and message",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Form validates Indian mobile numbers (10 digits starting with 6-9)",
+        "Submissions are sent to backend as contact messages",
+        "Admin can view career submissions in messages tab"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Create architect project submission form collecting name, project type, location, budget, message, and file uploads",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Form accepts file uploads for project documents",
+        "Submissions are sent to backend as contact messages",
+        "Admin can view architect submissions in messages tab"
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "text": "Implement contact flow where customers contact workers or material sellers through Work24 platform, collecting customer name, mobile, and requirements without exposing direct contact information",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Contact dialogs sanitize worker/material data to remove direct contact information",
+        "Contact submissions include reference to the worker or material being inquired about",
+        "Submissions are stored in backend for admin review"
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "text": "Create materials listing page displaying materials in a grid with cards showing images, name, category, description, and contact button",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Materials are fetched from backend and displayed in grid layout",
+        "Each material card shows sanitized information",
+        "Contact button opens dialog for platform-mediated contact"
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "text": "Implement onboarding flow that collects user name and language preference, validates input, saves to localStorage, and redirects to home page",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Onboarding page is shown on first visit",
+        "User name and language preference are validated before submission",
+        "Preferences are saved to localStorage",
+        "User is redirected to home page after completion"
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "text": "Create contact us page displaying official Work24 phone number and email with clickable links and service area information",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Page displays phone number as tel: link",
+        "Page displays email as mailto: link",
+        "Service area information is clearly presented"
+      ]
+    },
+    {
+      "id": "REQ-12",
+      "text": "Implement role-based access control in backend with admin permissions for viewing all submissions and managing data",
+      "target": "backend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Backend validates admin credentials before allowing access to admin operations",
+        "Admin can query all workers, materials, and messages",
+        "Admin can delete messages",
+        "Non-admin users cannot access admin-only operations"
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "text": "Apply a consistent visual design theme with off-white base color, orange primary color, and green accent color using OKLCH color system with light and dark mode support",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Color scheme uses off-white base, orange primary, and green accent throughout the application",
+        "Theme supports both light and dark modes",
+        "Tailwind CSS configuration uses OKLCH color space for consistent color rendering"
       ]
     }
   ],
   "constraints": [
-    "Do not change the existing admin authentication mechanism (username/password: Bharat1213)",
-    "Maintain backward compatibility with existing stored materials and workers data",
-    "Preserve the current message storage format in the backend"
+    "Use single-actor Motoko backend architecture with all logic in main.mo",
+    "Do not expose worker or material seller direct contact information to customers",
+    "Admin credentials must be Bharat1213/Bharat1213",
+    "Indian mobile number validation must accept 10 digits starting with 6-9",
+    "Worker submissions must include minimum 3 work images",
+    "All images must be converted to base64 format for storage",
+    "Maintain submitter attribution (ID and name) for all user-submitted content"
   ],
   "nonGoals": [
-    "Implementing direct buyer-seller communication within the platform",
-    "Adding payment or transaction processing features",
-    "Creating separate admin accounts for different roles"
+    "Real-time messaging between customers and workers",
+    "Payment processing integration",
+    "Worker rating and review system",
+    "Automated matching algorithm between customers and workers",
+    "Push notifications for new contact requests",
+    "Mobile app versions"
   ],
   "imageRequirements": {
     "required": [],

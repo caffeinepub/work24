@@ -1,42 +1,47 @@
-import { Material } from '../../types/materials';
-import Work24Card from '../common/Work24Card';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { useI18n } from '../../i18n/I18nProvider';
-import { sanitizeMaterialData } from '../../lib/safety/noDirectContact';
+import { Material } from '../../backend';
+import ContactViaWork24Dialog from '../contact/ContactViaWork24Dialog';
 
 interface MaterialCardProps {
   material: Material;
-  onContact: () => void;
 }
 
-export default function MaterialCard({ material, onContact }: MaterialCardProps) {
-  const { t } = useI18n();
-  const safeMaterial = sanitizeMaterialData(material);
+export default function MaterialCard({ material }: MaterialCardProps) {
+  const [contactDialogOpen, setContactDialogOpen] = useState(false);
 
   return (
-    <Work24Card className="h-full">
-      <div className="aspect-video overflow-hidden">
-        <img
-          src={safeMaterial.images[0]}
-          alt={safeMaterial.name}
-          className="h-full w-full object-cover"
-        />
-      </div>
-      <div className="p-4 space-y-3">
-        <div>
-          <h3 className="font-semibold text-lg">{safeMaterial.name}</h3>
-          <p className="text-sm text-muted-foreground">
-            {t('materials.category')}: {safeMaterial.category}
-          </p>
+    <>
+      <div className="bg-card border border-border rounded-lg overflow-hidden hover:shadow-medium hover:border-primary transition-all">
+        {material.images.length > 0 && (
+          <div className="aspect-square relative">
+            <img
+              src={material.images[0].getDirectURL()}
+              alt={material.name}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
+        <div className="p-4 space-y-3">
+          <div>
+            <h3 className="text-lg font-semibold">{material.name}</h3>
+            <p className="text-sm text-primary font-medium">{material.category}</p>
+            <p className="text-sm text-muted-foreground">{material.location}</p>
+          </div>
+          <p className="text-sm line-clamp-2">{material.description}</p>
+          <Button className="w-full" onClick={() => setContactDialogOpen(true)}>
+            Contact Us to Buy
+          </Button>
         </div>
-        <p className="text-sm line-clamp-2">{safeMaterial.description}</p>
-        <Button
-          onClick={onContact}
-          className="w-full bg-accent hover:bg-accent/90"
-        >
-          {t('materials.contactButton')}
-        </Button>
       </div>
-    </Work24Card>
+
+      <ContactViaWork24Dialog
+        open={contactDialogOpen}
+        onOpenChange={setContactDialogOpen}
+        targetId={material.id}
+        targetType="material"
+        targetName={material.name}
+      />
+    </>
   );
 }

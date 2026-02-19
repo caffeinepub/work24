@@ -8,25 +8,141 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
+export const _CaffeineStorageCreateCertificateResult = IDL.Record({
+  'method' : IDL.Text,
+  'blob_hash' : IDL.Text,
+});
+export const _CaffeineStorageRefillInformation = IDL.Record({
+  'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const _CaffeineStorageRefillResult = IDL.Record({
+  'success' : IDL.Opt(IDL.Bool),
+  'topped_up_amount' : IDL.Opt(IDL.Nat),
+});
+export const ExternalBlob = IDL.Vec(IDL.Nat8);
 export const UserRole = IDL.Variant({
   'admin' : IDL.Null,
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
 export const Time = IDL.Int;
+export const Message = IDL.Record({
+  'id' : IDL.Nat,
+  'text' : IDL.Text,
+  'timestamp' : Time,
+});
+export const ArchitectProject = IDL.Record({
+  'id' : IDL.Nat,
+  'files' : IDL.Vec(ExternalBlob),
+  'projectType' : IDL.Text,
+  'name' : IDL.Text,
+  'message' : IDL.Text,
+  'timestamp' : Time,
+  'budget' : IDL.Text,
+  'location' : IDL.Text,
+});
+export const CareerApplication = IDL.Record({
+  'id' : IDL.Nat,
+  'name' : IDL.Text,
+  'experience' : IDL.Text,
+  'message' : IDL.Text,
+  'timestamp' : Time,
+  'mobile' : IDL.Text,
+  'skills' : IDL.Text,
+});
+export const ContactRequest = IDL.Record({
+  'id' : IDL.Nat,
+  'customerName' : IDL.Text,
+  'timestamp' : Time,
+  'targetType' : IDL.Text,
+  'mobile' : IDL.Text,
+  'requirements' : IDL.Text,
+  'targetId' : IDL.Nat,
+});
+export const Material = IDL.Record({
+  'id' : IDL.Nat,
+  'name' : IDL.Text,
+  'description' : IDL.Text,
+  'timestamp' : Time,
+  'category' : IDL.Text,
+  'location' : IDL.Text,
+  'images' : IDL.Vec(ExternalBlob),
+});
+export const Worker = IDL.Record({
+  'id' : IDL.Nat,
+  'profileImage' : ExternalBlob,
+  'name' : IDL.Text,
+  'skill' : IDL.Text,
+  'timestamp' : Time,
+  'category' : IDL.Text,
+  'location' : IDL.Text,
+  'workImages' : IDL.Vec(ExternalBlob),
+});
 export const UserProfile = IDL.Record({ 'name' : IDL.Text });
 
 export const idlService = IDL.Service({
+  '_caffeineStorageBlobIsLive' : IDL.Func(
+      [IDL.Vec(IDL.Nat8)],
+      [IDL.Bool],
+      ['query'],
+    ),
+  '_caffeineStorageBlobsToDelete' : IDL.Func(
+      [],
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      ['query'],
+    ),
+  '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+      [IDL.Vec(IDL.Vec(IDL.Nat8))],
+      [],
+      [],
+    ),
+  '_caffeineStorageCreateCertificate' : IDL.Func(
+      [IDL.Text],
+      [_CaffeineStorageCreateCertificateResult],
+      [],
+    ),
+  '_caffeineStorageRefillCashier' : IDL.Func(
+      [IDL.Opt(_CaffeineStorageRefillInformation)],
+      [_CaffeineStorageRefillResult],
+      [],
+    ),
+  '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
   '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+  'addMaterial' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Vec(ExternalBlob)],
+      [],
+      [],
+    ),
   'addMessage' : IDL.Func([IDL.Text], [], []),
+  'addWorker' : IDL.Func(
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        IDL.Text,
+        ExternalBlob,
+        IDL.Vec(ExternalBlob),
+      ],
+      [],
+      [],
+    ),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
   'deleteAllMessages' : IDL.Func([], [IDL.Nat], []),
   'deleteMessage' : IDL.Func([IDL.Nat], [IDL.Bool], []),
-  'getAdminMessages' : IDL.Func(
+  'getAdminMessages' : IDL.Func([], [IDL.Vec(Message)], ['query']),
+  'getAllArchitectProjects' : IDL.Func(
       [],
-      [IDL.Vec(IDL.Tuple(IDL.Nat, IDL.Text, Time))],
+      [IDL.Vec(ArchitectProject)],
       ['query'],
     ),
+  'getAllCareerApplications' : IDL.Func(
+      [],
+      [IDL.Vec(CareerApplication)],
+      ['query'],
+    ),
+  'getAllContactRequests' : IDL.Func([], [IDL.Vec(ContactRequest)], ['query']),
+  'getAllMaterials' : IDL.Func([], [IDL.Vec(Material)], ['query']),
+  'getAllWorkers' : IDL.Func([], [IDL.Vec(Worker)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getUserProfile' : IDL.Func(
@@ -34,32 +150,168 @@ export const idlService = IDL.Service({
       [IDL.Opt(UserProfile)],
       ['query'],
     ),
+  'getWorkersByCategory' : IDL.Func([IDL.Text], [IDL.Vec(Worker)], ['query']),
   'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
   'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+  'submitArchitectProject' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Vec(ExternalBlob)],
+      [],
+      [],
+    ),
+  'submitCareerApplication' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [],
+      [],
+    ),
+  'submitContactRequest' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Text],
+      [],
+      [],
+    ),
 });
 
 export const idlInitArgs = [];
 
 export const idlFactory = ({ IDL }) => {
+  const _CaffeineStorageCreateCertificateResult = IDL.Record({
+    'method' : IDL.Text,
+    'blob_hash' : IDL.Text,
+  });
+  const _CaffeineStorageRefillInformation = IDL.Record({
+    'proposed_top_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const _CaffeineStorageRefillResult = IDL.Record({
+    'success' : IDL.Opt(IDL.Bool),
+    'topped_up_amount' : IDL.Opt(IDL.Nat),
+  });
+  const ExternalBlob = IDL.Vec(IDL.Nat8);
   const UserRole = IDL.Variant({
     'admin' : IDL.Null,
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
   const Time = IDL.Int;
+  const Message = IDL.Record({
+    'id' : IDL.Nat,
+    'text' : IDL.Text,
+    'timestamp' : Time,
+  });
+  const ArchitectProject = IDL.Record({
+    'id' : IDL.Nat,
+    'files' : IDL.Vec(ExternalBlob),
+    'projectType' : IDL.Text,
+    'name' : IDL.Text,
+    'message' : IDL.Text,
+    'timestamp' : Time,
+    'budget' : IDL.Text,
+    'location' : IDL.Text,
+  });
+  const CareerApplication = IDL.Record({
+    'id' : IDL.Nat,
+    'name' : IDL.Text,
+    'experience' : IDL.Text,
+    'message' : IDL.Text,
+    'timestamp' : Time,
+    'mobile' : IDL.Text,
+    'skills' : IDL.Text,
+  });
+  const ContactRequest = IDL.Record({
+    'id' : IDL.Nat,
+    'customerName' : IDL.Text,
+    'timestamp' : Time,
+    'targetType' : IDL.Text,
+    'mobile' : IDL.Text,
+    'requirements' : IDL.Text,
+    'targetId' : IDL.Nat,
+  });
+  const Material = IDL.Record({
+    'id' : IDL.Nat,
+    'name' : IDL.Text,
+    'description' : IDL.Text,
+    'timestamp' : Time,
+    'category' : IDL.Text,
+    'location' : IDL.Text,
+    'images' : IDL.Vec(ExternalBlob),
+  });
+  const Worker = IDL.Record({
+    'id' : IDL.Nat,
+    'profileImage' : ExternalBlob,
+    'name' : IDL.Text,
+    'skill' : IDL.Text,
+    'timestamp' : Time,
+    'category' : IDL.Text,
+    'location' : IDL.Text,
+    'workImages' : IDL.Vec(ExternalBlob),
+  });
   const UserProfile = IDL.Record({ 'name' : IDL.Text });
   
   return IDL.Service({
+    '_caffeineStorageBlobIsLive' : IDL.Func(
+        [IDL.Vec(IDL.Nat8)],
+        [IDL.Bool],
+        ['query'],
+      ),
+    '_caffeineStorageBlobsToDelete' : IDL.Func(
+        [],
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        ['query'],
+      ),
+    '_caffeineStorageConfirmBlobDeletion' : IDL.Func(
+        [IDL.Vec(IDL.Vec(IDL.Nat8))],
+        [],
+        [],
+      ),
+    '_caffeineStorageCreateCertificate' : IDL.Func(
+        [IDL.Text],
+        [_CaffeineStorageCreateCertificateResult],
+        [],
+      ),
+    '_caffeineStorageRefillCashier' : IDL.Func(
+        [IDL.Opt(_CaffeineStorageRefillInformation)],
+        [_CaffeineStorageRefillResult],
+        [],
+      ),
+    '_caffeineStorageUpdateGatewayPrincipals' : IDL.Func([], [], []),
     '_initializeAccessControlWithSecret' : IDL.Func([IDL.Text], [], []),
+    'addMaterial' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Vec(ExternalBlob)],
+        [],
+        [],
+      ),
     'addMessage' : IDL.Func([IDL.Text], [], []),
+    'addWorker' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          ExternalBlob,
+          IDL.Vec(ExternalBlob),
+        ],
+        [],
+        [],
+      ),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
     'deleteAllMessages' : IDL.Func([], [IDL.Nat], []),
     'deleteMessage' : IDL.Func([IDL.Nat], [IDL.Bool], []),
-    'getAdminMessages' : IDL.Func(
+    'getAdminMessages' : IDL.Func([], [IDL.Vec(Message)], ['query']),
+    'getAllArchitectProjects' : IDL.Func(
         [],
-        [IDL.Vec(IDL.Tuple(IDL.Nat, IDL.Text, Time))],
+        [IDL.Vec(ArchitectProject)],
         ['query'],
       ),
+    'getAllCareerApplications' : IDL.Func(
+        [],
+        [IDL.Vec(CareerApplication)],
+        ['query'],
+      ),
+    'getAllContactRequests' : IDL.Func(
+        [],
+        [IDL.Vec(ContactRequest)],
+        ['query'],
+      ),
+    'getAllMaterials' : IDL.Func([], [IDL.Vec(Material)], ['query']),
+    'getAllWorkers' : IDL.Func([], [IDL.Vec(Worker)], ['query']),
     'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfile)], ['query']),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getUserProfile' : IDL.Func(
@@ -67,8 +319,31 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(UserProfile)],
         ['query'],
       ),
+    'getWorkersByCategory' : IDL.Func([IDL.Text], [IDL.Vec(Worker)], ['query']),
     'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
     'saveCallerUserProfile' : IDL.Func([UserProfile], [], []),
+    'submitArchitectProject' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Text,
+          IDL.Vec(ExternalBlob),
+        ],
+        [],
+        [],
+      ),
+    'submitCareerApplication' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [],
+        [],
+      ),
+    'submitContactRequest' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Nat, IDL.Text],
+        [],
+        [],
+      ),
   });
 };
 

@@ -3,11 +3,10 @@ import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import Work24FormField from '../components/common/Work24FormField';
+import { Label } from '@/components/ui/label';
 import { useI18n } from '../i18n/I18nProvider';
 import { Language } from '../i18n/translations';
 import { setOnboardingComplete } from '../lib/localPreferences';
-import { validateRequired } from '../lib/validation';
 
 export default function Onboarding() {
   const { t, setLanguage } = useI18n();
@@ -20,9 +19,8 @@ export default function Onboarding() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const nameError = validateRequired(name, t);
-    if (nameError) {
-      setError(nameError);
+    if (!name.trim()) {
+      setError('Name is required');
       return;
     }
 
@@ -40,45 +38,42 @@ export default function Onboarding() {
             alt="Work24" 
             className="h-20 w-auto mx-auto"
           />
-          <h1 className="text-3xl font-bold">{t('onboarding.welcome')}</h1>
-          <p className="text-xl text-primary font-semibold">{t('onboarding.subtitle')}</p>
+          <h1 className="text-3xl font-bold">Welcome to Work24</h1>
+          <p className="text-xl text-primary font-semibold">Let's get started</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-card p-6 rounded-lg shadow-medium space-y-6">
-          <Work24FormField
-            label={t('onboarding.nameLabel')}
-            error={error}
-            required
-          >
+          <div className="space-y-2">
+            <Label htmlFor="name">Your Name *</Label>
             <Input
+              id="name"
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
                 setError(null);
               }}
-              placeholder={t('onboarding.namePlaceholder')}
+              placeholder="Enter your name"
               className="text-base"
             />
-          </Work24FormField>
+            {error && <p className="text-sm text-destructive">{error}</p>}
+          </div>
 
-          <Work24FormField
-            label={t('onboarding.languageLabel')}
-            required
-          >
+          <div className="space-y-2">
+            <Label htmlFor="language">Preferred Language *</Label>
             <Select value={selectedLanguage} onValueChange={(val) => setSelectedLanguage(val as Language)}>
-              <SelectTrigger className="text-base">
-                <SelectValue placeholder={t('onboarding.languageSelect')} />
+              <SelectTrigger id="language" className="text-base">
+                <SelectValue placeholder="Select a language" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="en">{t('languages.en')}</SelectItem>
-                <SelectItem value="hi">{t('languages.hi')}</SelectItem>
-                <SelectItem value="gu">{t('languages.gu')}</SelectItem>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="hi">हिंदी</SelectItem>
+                <SelectItem value="gu">ગુજરાતી</SelectItem>
               </SelectContent>
             </Select>
-          </Work24FormField>
+          </div>
 
           <Button type="submit" className="w-full text-base h-11">
-            {t('onboarding.continue')}
+            Get Started
           </Button>
         </form>
       </div>

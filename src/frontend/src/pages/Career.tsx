@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import Work24FormField from '../components/common/Work24FormField';
-import { useI18n } from '../i18n/I18nProvider';
-import { validateRequired, validateMobile } from '../lib/validation';
-import { useSubmitContact } from '../lib/contactSubmissions';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { useI18n } from '../i18n/I18nProvider';
+import { useSubmitCareerApplication } from '../hooks/useQueries';
+import { validateMobile } from '../lib/validation';
 
 export default function Career() {
   const { t } = useI18n();
-  const submitContact = useSubmitContact();
-  
+  const submitMutation = useSubmitCareerApplication();
+
   const [formData, setFormData] = useState({
     name: '',
     mobile: '',
@@ -19,115 +19,112 @@ export default function Career() {
     experience: '',
     message: '',
   });
-  
-  const [errors, setErrors] = useState<Record<string, string | null>>({});
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const newErrors: Record<string, string | null> = {
-      name: validateRequired(formData.name, t),
-      mobile: validateMobile(formData.mobile, t),
-      skills: validateRequired(formData.skills, t),
-      experience: validateRequired(formData.experience, t),
-    };
+    const newErrors: Record<string, string> = {};
     
-    setErrors(newErrors);
-    
-    if (Object.values(newErrors).some(err => err !== null)) {
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    const mobileError = validateMobile(formData.mobile, t);
+    if (mobileError) newErrors.mobile = mobileError;
+    if (!formData.skills.trim()) newErrors.skills = 'Skills are required';
+    if (!formData.experience.trim()) newErrors.experience = 'Experience is required';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
     try {
-      await submitContact.mutateAsync({
-        type: 'career',
-        origin: 'career',
-        customerName: formData.name,
-        mobile: formData.mobile,
-        requirement: `Skills: ${formData.skills}\nExperience: ${formData.experience}\nMessage: ${formData.message}`,
-      });
-      
-      toast.success(t('career.success'));
+      await submitMutation.mutateAsync(formData);
+      toast.success('Application submitted successfully! We will contact you soon.');
       setFormData({ name: '', mobile: '', skills: '', experience: '', message: '' });
+      setErrors({});
     } catch (error) {
       toast.error('Failed to submit application. Please try again.');
     }
   };
 
   return (
-    <div className="container py-8 max-w-2xl">
-      <div className="space-y-2 mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold">{t('career.title')}</h1>
-        <p className="text-lg text-muted-foreground">{t('career.subtitle')}</p>
+    <div className="container max-w-2xl py-8 space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">Join Work24</h1>
+        <p className="text-muted-foreground">Become a part of our skilled workforce</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-card p-6 rounded-lg shadow-soft">
-        <Work24FormField
-          label={t('career.nameLabel')}
-          error={errors.name}
-          required
-        >
+      <form onSubmit={handleSubmit} className="bg-card p-6 rounded-lg shadow-medium space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="name">Full Name *</Label>
           <Input
+            id="name"
             value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            placeholder={t('career.namePlaceholder')}
+            onChange={(e) => {
+              setFormData({ ...formData, name: e.target.value });
+              setErrors({ ...errors, name: '' });
+            }}
+            placeholder="Enter your full name"
           />
-        </Work24FormField>
+          {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
+        </div>
 
-        <Work24FormField
-          label={t('career.mobileLabel')}
-          error={errors.mobile}
-          required
-        >
+        <div className="space-y-2">
+          <Label htmlFor="mobile">Mobile Number *</Label>
           <Input
-            type="tel"
+            id="mobile"
             value={formData.mobile}
-            onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-            placeholder={t('career.mobilePlaceholder')}
+            onChange={(e) => {
+              setFormData({ ...formData, mobile: e.target.value });
+              setErrors({ ...errors, mobile: '' });
+            }}
+            placeholder="Enter your mobile number"
           />
-        </Work24FormField>
+          {errors.mobile && <p className="text-sm text-destructive">{errors.mobile}</p>}
+        </div>
 
-        <Work24FormField
-          label={t('career.skillsLabel')}
-          error={errors.skills}
-          required
-        >
+        <div className="space-y-2">
+          <Label htmlFor="skills">Your Skill *</Label>
           <Input
+            id="skills"
             value={formData.skills}
-            onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
-            placeholder={t('career.skillsPlaceholder')}
+            onChange={(e) => {
+              setFormData({ ...formData, skills: e.target.value });
+              setErrors({ ...errors, skills: '' });
+            }}
+            placeholder="e.g., Carpenter, Electrician, Plumber"
           />
-        </Work24FormField>
+          {errors.skills && <p className="text-sm text-destructive">{errors.skills}</p>}
+        </div>
 
-        <Work24FormField
-          label={t('career.experienceLabel')}
-          error={errors.experience}
-          required
-        >
+        <div className="space-y-2">
+          <Label htmlFor="experience">Years of Experience *</Label>
           <Input
+            id="experience"
             value={formData.experience}
-            onChange={(e) => setFormData({ ...formData, experience: e.target.value })}
-            placeholder={t('career.experiencePlaceholder')}
+            onChange={(e) => {
+              setFormData({ ...formData, experience: e.target.value });
+              setErrors({ ...errors, experience: '' });
+            }}
+            placeholder="Enter years of experience"
           />
-        </Work24FormField>
+          {errors.experience && <p className="text-sm text-destructive">{errors.experience}</p>}
+        </div>
 
-        <Work24FormField
-          label={t('career.messageLabel')}
-        >
+        <div className="space-y-2">
+          <Label htmlFor="message">Additional Message (Optional)</Label>
           <Textarea
+            id="message"
             value={formData.message}
             onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-            placeholder={t('career.messagePlaceholder')}
+            placeholder="Tell us more about yourself"
             rows={4}
           />
-        </Work24FormField>
+        </div>
 
-        <Button
-          type="submit"
-          className="w-full"
-          disabled={submitContact.isPending}
-        >
-          {submitContact.isPending ? t('career.submitting') : t('career.submit')}
+        <Button type="submit" className="w-full" disabled={submitMutation.isPending}>
+          {submitMutation.isPending ? 'Submitting...' : 'Submit Application'}
         </Button>
       </form>
     </div>

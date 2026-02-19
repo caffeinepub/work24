@@ -1,193 +1,154 @@
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import Work24FormField from '../components/common/Work24FormField';
-import { useI18n } from '../i18n/I18nProvider';
-import { validateRequired } from '../lib/validation';
-import { addMaterial } from '../lib/materialsStorage';
-import { getUserName, getSubmitterId } from '../lib/localPreferences';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { ExternalBlob } from '../backend';
+import { useI18n } from '../i18n/I18nProvider';
+import { useAddMaterial } from '../hooks/useQueries';
 
 export default function SellerMaterialSubmission() {
   const { t } = useI18n();
-  const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const addMaterialMutation = useAddMaterial();
+
   const [formData, setFormData] = useState({
     name: '',
     category: '',
     description: '',
     location: '',
-    images: [] as File[],
   });
 
-  const [errors, setErrors] = useState({
-    name: '',
-    category: '',
-    description: '',
-    location: '',
-    images: '',
-  });
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setErrors(prev => ({ ...prev, [field]: '' }));
-  };
+  const [images, setImages] = useState<File[]>([]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length > 0) {
-      setFormData(prev => ({ ...prev, images: files }));
-      setErrors(prev => ({ ...prev, images: '' }));
+    if (e.target.files) {
+      setImages(Array.from(e.target.files));
+      setErrors({ ...errors, images: '' });
     }
-  };
-
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const newErrors = {
-      name: validateRequired(formData.name, t) || '',
-      category: validateRequired(formData.category, t) || '',
-      description: validateRequired(formData.description, t) || '',
-      location: validateRequired(formData.location, t) || '',
-      images: formData.images.length > 0 ? '' : t('sellerSubmission.imagesRequired'),
-    };
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name.trim()) newErrors.name = 'Material name is required';
+    if (!formData.category.trim()) newErrors.category = 'Category is required';
+    if (!formData.description.trim()) newErrors.description = 'Description is required';
+    if (!formData.location.trim()) newErrors.location = 'Location is required';
+    if (images.length === 0) newErrors.images = 'At least one photo is required';
 
-    setErrors(newErrors);
-
-    if (Object.values(newErrors).some(error => error !== '')) {
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
-      const imagesBase64 = await Promise.all(
-        formData.images.map(file => fileToBase64(file))
+      const imageBlobs = await Promise.all(
+        images.map(async (file) => {
+          const arrayBuffer = await file.arrayBuffer();
+          return ExternalBlob.fromBytes(new Uint8Array(arrayBuffer));
+        })
       );
 
-      // Get submitter information
-      const submitterName = getUserName() || 'Anonymous';
-      const submitterId = getSubmitterId();
-
-      addMaterial({
-        name: formData.name,
-        category: formData.category,
-        description: formData.description,
-        location: formData.location,
-        images: imagesBase64,
-        submittedBy: {
-          name: submitterName,
-          id: submitterId,
-        },
+      await addMaterialMutation.mutateAsync({
+        ...formData,
+        images: imageBlobs,
       });
 
-      toast.success(t('sellerSubmission.success'));
-      
-      setTimeout(() => {
-        navigate({ to: '/materials' });
-      }, 1500);
+      toast.success('Material submitted successfully!');
+      setFormData({ name: '', category: '', description: '', location: '' });
+      setImages([]);
+      setErrors({});
     } catch (error) {
-      console.error('Error submitting material:', error);
       toast.error('Failed to submit material. Please try again.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="container py-12">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4">{t('sellerSubmission.title')}</h1>
-          <p className="text-lg text-muted-foreground">{t('sellerSubmission.subtitle')}</p>
+    <div className="container max-w-2xl py-8 space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">Sell Material</h1>
+        <p className="text-muted-foreground">List your construction materials for sale</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="bg-card p-6 rounded-lg shadow-medium space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="name">Material Name *</Label>
+          <Input
+            id="name"
+            value={formData.name}
+            onChange={(e) => {
+              setFormData({ ...formData, name: e.target.value });
+              setErrors({ ...errors, name: '' });
+            }}
+            placeholder="e.g., Cement, Bricks, Steel"
+          />
+          {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 bg-card p-8 rounded-lg border shadow-soft">
-          <Work24FormField
-            label={t('sellerSubmission.nameLabel')}
-            error={errors.name}
-            required
-          >
-            <Input
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              placeholder={t('sellerSubmission.namePlaceholder')}
-            />
-          </Work24FormField>
+        <div className="space-y-2">
+          <Label htmlFor="category">Category *</Label>
+          <Input
+            id="category"
+            value={formData.category}
+            onChange={(e) => {
+              setFormData({ ...formData, category: e.target.value });
+              setErrors({ ...errors, category: '' });
+            }}
+            placeholder="e.g., Building Material, Hardware"
+          />
+          {errors.category && <p className="text-sm text-destructive">{errors.category}</p>}
+        </div>
 
-          <Work24FormField
-            label={t('sellerSubmission.categoryLabel')}
-            error={errors.category}
-            required
-          >
-            <Input
-              value={formData.category}
-              onChange={(e) => handleInputChange('category', e.target.value)}
-              placeholder={t('sellerSubmission.categoryPlaceholder')}
-            />
-          </Work24FormField>
+        <div className="space-y-2">
+          <Label htmlFor="location">Location *</Label>
+          <Input
+            id="location"
+            value={formData.location}
+            onChange={(e) => {
+              setFormData({ ...formData, location: e.target.value });
+              setErrors({ ...errors, location: '' });
+            }}
+            placeholder="Enter your city or area"
+          />
+          {errors.location && <p className="text-sm text-destructive">{errors.location}</p>}
+        </div>
 
-          <Work24FormField
-            label={t('sellerSubmission.locationLabel')}
-            error={errors.location}
-            required
-          >
-            <Input
-              value={formData.location}
-              onChange={(e) => handleInputChange('location', e.target.value)}
-              placeholder={t('sellerSubmission.locationPlaceholder')}
-            />
-          </Work24FormField>
+        <div className="space-y-2">
+          <Label htmlFor="description">Description *</Label>
+          <Textarea
+            id="description"
+            value={formData.description}
+            onChange={(e) => {
+              setFormData({ ...formData, description: e.target.value });
+              setErrors({ ...errors, description: '' });
+            }}
+            placeholder="Describe the material, quantity, condition, etc."
+            rows={4}
+          />
+          {errors.description && <p className="text-sm text-destructive">{errors.description}</p>}
+        </div>
 
-          <Work24FormField
-            label={t('sellerSubmission.descriptionLabel')}
-            error={errors.description}
-            required
-          >
-            <Textarea
-              value={formData.description}
-              onChange={(e) => handleInputChange('description', e.target.value)}
-              placeholder={t('sellerSubmission.descriptionPlaceholder')}
-              rows={4}
-            />
-          </Work24FormField>
+        <div className="space-y-2">
+          <Label htmlFor="images">Material Photos *</Label>
+          <Input
+            id="images"
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImagesChange}
+          />
+          <p className="text-sm text-muted-foreground">Upload photos of the material</p>
+          {errors.images && <p className="text-sm text-destructive">{errors.images}</p>}
+        </div>
 
-          <Work24FormField
-            label={t('sellerSubmission.imagesLabel')}
-            helper={t('sellerSubmission.imagesHelper')}
-            error={errors.images}
-            required
-          >
-            <Input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImagesChange}
-            />
-            {formData.images.length > 0 && (
-              <p className="text-sm text-muted-foreground mt-2">
-                {formData.images.length} {formData.images.length === 1 ? 'image' : 'images'} selected
-              </p>
-            )}
-          </Work24FormField>
-
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? t('sellerSubmission.submitting') : t('sellerSubmission.submit')}
-          </Button>
-        </form>
-      </div>
+        <Button type="submit" className="w-full" disabled={addMaterialMutation.isPending}>
+          {addMaterialMutation.isPending ? 'Submitting...' : 'Submit Material'}
+        </Button>
+      </form>
     </div>
   );
 }

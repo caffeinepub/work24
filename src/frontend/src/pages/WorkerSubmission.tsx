@@ -1,229 +1,186 @@
 import { useState } from 'react';
-import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import Work24FormField from '../components/common/Work24FormField';
-import { useI18n } from '../i18n/I18nProvider';
-import { validateRequired } from '../lib/validation';
-import { addWorker } from '../lib/workersStorage';
-import { getUserName, getSubmitterId } from '../lib/localPreferences';
-import { services } from '../lib/servicesCatalog';
 import { toast } from 'sonner';
+import { ExternalBlob } from '../backend';
+import { useI18n } from '../i18n/I18nProvider';
+import { useAddWorker } from '../hooks/useQueries';
+import { services } from '../lib/servicesCatalog';
 
 export default function WorkerSubmission() {
   const { t } = useI18n();
-  const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  
+  const addWorkerMutation = useAddWorker();
+
   const [formData, setFormData] = useState({
     name: '',
     skill: '',
-    serviceCategory: '',
+    category: '',
     location: '',
-    profileImage: null as File | null,
-    workImages: [] as File[],
   });
 
-  const [errors, setErrors] = useState({
-    name: '',
-    skill: '',
-    serviceCategory: '',
-    location: '',
-    profileImage: '',
-    workImages: '',
-  });
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setErrors(prev => ({ ...prev, [field]: '' }));
-  };
+  const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [workImages, setWorkImages] = useState<File[]>([]);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleProfileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setFormData(prev => ({ ...prev, profileImage: file }));
-      setErrors(prev => ({ ...prev, profileImage: '' }));
+    if (e.target.files && e.target.files[0]) {
+      setProfileImage(e.target.files[0]);
+      setErrors({ ...errors, profileImage: '' });
     }
   };
 
   const handleWorkImagesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    if (files.length > 0) {
-      setFormData(prev => ({ ...prev, workImages: files }));
-      setErrors(prev => ({ ...prev, workImages: '' }));
+    if (e.target.files) {
+      setWorkImages(Array.from(e.target.files));
+      setErrors({ ...errors, workImages: '' });
     }
-  };
-
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const newErrors = {
-      name: validateRequired(formData.name, t) || '',
-      skill: validateRequired(formData.skill, t) || '',
-      serviceCategory: validateRequired(formData.serviceCategory, t) || '',
-      location: validateRequired(formData.location, t) || '',
-      profileImage: formData.profileImage ? '' : t('workerSubmission.profileImageRequired'),
-      workImages: formData.workImages.length >= 3 ? '' : t('workerSubmission.workImagesRequired'),
-    };
+    const newErrors: Record<string, string> = {};
+    
+    if (!formData.name.trim()) newErrors.name = 'Name is required';
+    if (!formData.skill.trim()) newErrors.skill = 'Skill is required';
+    if (!formData.category) newErrors.category = 'Category is required';
+    if (!formData.location.trim()) newErrors.location = 'Location is required';
+    if (!profileImage) newErrors.profileImage = 'Profile photo is required';
+    if (workImages.length < 3) newErrors.workImages = 'At least 3 work photos are required';
 
-    setErrors(newErrors);
-
-    if (Object.values(newErrors).some(error => error !== '')) {
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
-    setIsSubmitting(true);
-
     try {
-      const profileImageBase64 = await fileToBase64(formData.profileImage!);
-      const workImagesBase64 = await Promise.all(
-        formData.workImages.map(file => fileToBase64(file))
+      const profileArrayBuffer = await profileImage!.arrayBuffer();
+      const profileBlob = ExternalBlob.fromBytes(new Uint8Array(profileArrayBuffer));
+
+      const workBlobs = await Promise.all(
+        workImages.map(async (file) => {
+          const arrayBuffer = await file.arrayBuffer();
+          return ExternalBlob.fromBytes(new Uint8Array(arrayBuffer));
+        })
       );
 
-      // Get submitter information
-      const submitterName = getUserName() || 'Anonymous';
-      const submitterId = getSubmitterId();
-
-      addWorker({
-        name: formData.name,
-        skill: formData.skill,
-        serviceCategory: formData.serviceCategory,
-        location: formData.location,
-        profileImage: profileImageBase64,
-        workImages: workImagesBase64,
-        submittedBy: {
-          name: submitterName,
-          id: submitterId,
-        },
+      await addWorkerMutation.mutateAsync({
+        ...formData,
+        profileImage: profileBlob,
+        workImages: workBlobs,
       });
 
-      toast.success(t('workerSubmission.success'));
-      
-      setTimeout(() => {
-        navigate({ to: `/service/${formData.serviceCategory}` });
-      }, 1500);
+      toast.success('Profile submitted successfully!');
+      setFormData({ name: '', skill: '', category: '', location: '' });
+      setProfileImage(null);
+      setWorkImages([]);
+      setErrors({});
     } catch (error) {
-      console.error('Error submitting worker profile:', error);
       toast.error('Failed to submit profile. Please try again.');
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="container py-12">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4">{t('workerSubmission.title')}</h1>
-          <p className="text-lg text-muted-foreground">{t('workerSubmission.subtitle')}</p>
+    <div className="container max-w-2xl py-8 space-y-8">
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">Register as a Worker</h1>
+        <p className="text-muted-foreground">Join our network of skilled professionals</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="bg-card p-6 rounded-lg shadow-medium space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="name">Your Name *</Label>
+          <Input
+            id="name"
+            value={formData.name}
+            onChange={(e) => {
+              setFormData({ ...formData, name: e.target.value });
+              setErrors({ ...errors, name: '' });
+            }}
+            placeholder="Enter your full name"
+          />
+          {errors.name && <p className="text-sm text-destructive">{errors.name}</p>}
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6 bg-card p-8 rounded-lg border shadow-soft">
-          <Work24FormField
-            label={t('workerSubmission.nameLabel')}
-            error={errors.name}
-            required
-          >
-            <Input
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              placeholder={t('workerSubmission.namePlaceholder')}
-            />
-          </Work24FormField>
+        <div className="space-y-2">
+          <Label htmlFor="skill">Your Skill *</Label>
+          <Input
+            id="skill"
+            value={formData.skill}
+            onChange={(e) => {
+              setFormData({ ...formData, skill: e.target.value });
+              setErrors({ ...errors, skill: '' });
+            }}
+            placeholder="e.g., Carpenter, Electrician"
+          />
+          {errors.skill && <p className="text-sm text-destructive">{errors.skill}</p>}
+        </div>
 
-          <Work24FormField
-            label={t('workerSubmission.skillLabel')}
-            error={errors.skill}
-            required
-          >
-            <Input
-              value={formData.skill}
-              onChange={(e) => handleInputChange('skill', e.target.value)}
-              placeholder={t('workerSubmission.skillPlaceholder')}
-            />
-          </Work24FormField>
+        <div className="space-y-2">
+          <Label htmlFor="category">Service Category *</Label>
+          <Select value={formData.category} onValueChange={(val) => {
+            setFormData({ ...formData, category: val });
+            setErrors({ ...errors, category: '' });
+          }}>
+            <SelectTrigger id="category">
+              <SelectValue placeholder="Select a service category" />
+            </SelectTrigger>
+            <SelectContent>
+              {services.map((service) => (
+                <SelectItem key={service.id} value={service.id}>
+                  {t(service.nameKey)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {errors.category && <p className="text-sm text-destructive">{errors.category}</p>}
+        </div>
 
-          <Work24FormField
-            label={t('workerSubmission.categoryLabel')}
-            error={errors.serviceCategory}
-            required
-          >
-            <Select
-              value={formData.serviceCategory}
-              onValueChange={(value) => handleInputChange('serviceCategory', value)}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={t('workerSubmission.categorySelect')} />
-              </SelectTrigger>
-              <SelectContent>
-                {services.map((service) => (
-                  <SelectItem key={service.id} value={service.id}>
-                    {t(service.nameKey)}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </Work24FormField>
+        <div className="space-y-2">
+          <Label htmlFor="location">Location *</Label>
+          <Input
+            id="location"
+            value={formData.location}
+            onChange={(e) => {
+              setFormData({ ...formData, location: e.target.value });
+              setErrors({ ...errors, location: '' });
+            }}
+            placeholder="Enter your city or area"
+          />
+          {errors.location && <p className="text-sm text-destructive">{errors.location}</p>}
+        </div>
 
-          <Work24FormField
-            label={t('workerSubmission.locationLabel')}
-            error={errors.location}
-            required
-          >
-            <Input
-              value={formData.location}
-              onChange={(e) => handleInputChange('location', e.target.value)}
-              placeholder={t('workerSubmission.locationPlaceholder')}
-            />
-          </Work24FormField>
+        <div className="space-y-2">
+          <Label htmlFor="profileImage">Profile Photo *</Label>
+          <Input
+            id="profileImage"
+            type="file"
+            accept="image/*"
+            onChange={handleProfileImageChange}
+          />
+          <p className="text-sm text-muted-foreground">Upload a clear photo of yourself</p>
+          {errors.profileImage && <p className="text-sm text-destructive">{errors.profileImage}</p>}
+        </div>
 
-          <Work24FormField
-            label={t('workerSubmission.profileImageLabel')}
-            helper={t('workerSubmission.profileImageHelper')}
-            error={errors.profileImage}
-            required
-          >
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={handleProfileImageChange}
-            />
-          </Work24FormField>
+        <div className="space-y-2">
+          <Label htmlFor="workImages">Work Photos *</Label>
+          <Input
+            id="workImages"
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleWorkImagesChange}
+          />
+          <p className="text-sm text-muted-foreground">Upload at least 3 photos of your work</p>
+          {errors.workImages && <p className="text-sm text-destructive">{errors.workImages}</p>}
+        </div>
 
-          <Work24FormField
-            label={t('workerSubmission.workImagesLabel')}
-            helper={t('workerSubmission.workImagesHelper')}
-            error={errors.workImages}
-            required
-          >
-            <Input
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleWorkImagesChange}
-            />
-            {formData.workImages.length > 0 && (
-              <p className="text-sm text-muted-foreground mt-2">
-                {formData.workImages.length} {formData.workImages.length === 1 ? 'image' : 'images'} selected
-              </p>
-            )}
-          </Work24FormField>
-
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
-            {isSubmitting ? t('workerSubmission.submitting') : t('workerSubmission.submit')}
-          </Button>
-        </form>
-      </div>
+        <Button type="submit" className="w-full" disabled={addWorkerMutation.isPending}>
+          {addWorkerMutation.isPending ? 'Submitting...' : 'Submit Profile'}
+        </Button>
+      </form>
     </div>
   );
 }

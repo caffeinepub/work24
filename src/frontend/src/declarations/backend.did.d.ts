@@ -10,23 +10,124 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface ArchitectProject {
+  'id' : bigint,
+  'files' : Array<ExternalBlob>,
+  'projectType' : string,
+  'name' : string,
+  'message' : string,
+  'timestamp' : Time,
+  'budget' : string,
+  'location' : string,
+}
+export interface CareerApplication {
+  'id' : bigint,
+  'name' : string,
+  'experience' : string,
+  'message' : string,
+  'timestamp' : Time,
+  'mobile' : string,
+  'skills' : string,
+}
+export interface ContactRequest {
+  'id' : bigint,
+  'customerName' : string,
+  'timestamp' : Time,
+  'targetType' : string,
+  'mobile' : string,
+  'requirements' : string,
+  'targetId' : bigint,
+}
+export type ExternalBlob = Uint8Array;
+export interface Material {
+  'id' : bigint,
+  'name' : string,
+  'description' : string,
+  'timestamp' : Time,
+  'category' : string,
+  'location' : string,
+  'images' : Array<ExternalBlob>,
+}
+export interface Message { 'id' : bigint, 'text' : string, 'timestamp' : Time }
 export type Time = bigint;
 export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
+export interface Worker {
+  'id' : bigint,
+  'profileImage' : ExternalBlob,
+  'name' : string,
+  'skill' : string,
+  'timestamp' : Time,
+  'category' : string,
+  'location' : string,
+  'workImages' : Array<ExternalBlob>,
+}
+export interface _CaffeineStorageCreateCertificateResult {
+  'method' : string,
+  'blob_hash' : string,
+}
+export interface _CaffeineStorageRefillInformation {
+  'proposed_top_up_amount' : [] | [bigint],
+}
+export interface _CaffeineStorageRefillResult {
+  'success' : [] | [boolean],
+  'topped_up_amount' : [] | [bigint],
+}
 export interface _SERVICE {
+  '_caffeineStorageBlobIsLive' : ActorMethod<[Uint8Array], boolean>,
+  '_caffeineStorageBlobsToDelete' : ActorMethod<[], Array<Uint8Array>>,
+  '_caffeineStorageConfirmBlobDeletion' : ActorMethod<
+    [Array<Uint8Array>],
+    undefined
+  >,
+  '_caffeineStorageCreateCertificate' : ActorMethod<
+    [string],
+    _CaffeineStorageCreateCertificateResult
+  >,
+  '_caffeineStorageRefillCashier' : ActorMethod<
+    [[] | [_CaffeineStorageRefillInformation]],
+    _CaffeineStorageRefillResult
+  >,
+  '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
+  'addMaterial' : ActorMethod<
+    [string, string, string, string, Array<ExternalBlob>],
+    undefined
+  >,
   'addMessage' : ActorMethod<[string], undefined>,
+  'addWorker' : ActorMethod<
+    [string, string, string, string, ExternalBlob, Array<ExternalBlob>],
+    undefined
+  >,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'deleteAllMessages' : ActorMethod<[], bigint>,
   'deleteMessage' : ActorMethod<[bigint], boolean>,
-  'getAdminMessages' : ActorMethod<[], Array<[bigint, string, Time]>>,
+  'getAdminMessages' : ActorMethod<[], Array<Message>>,
+  'getAllArchitectProjects' : ActorMethod<[], Array<ArchitectProject>>,
+  'getAllCareerApplications' : ActorMethod<[], Array<CareerApplication>>,
+  'getAllContactRequests' : ActorMethod<[], Array<ContactRequest>>,
+  'getAllMaterials' : ActorMethod<[], Array<Material>>,
+  'getAllWorkers' : ActorMethod<[], Array<Worker>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'getWorkersByCategory' : ActorMethod<[string], Array<Worker>>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'submitArchitectProject' : ActorMethod<
+    [string, string, string, string, string, Array<ExternalBlob>],
+    undefined
+  >,
+  'submitCareerApplication' : ActorMethod<
+    [string, string, string, string, string],
+    undefined
+  >,
+  'submitContactRequest' : ActorMethod<
+    [string, string, string, bigint, string],
+    undefined
+  >,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

@@ -1,41 +1,33 @@
-import { useState } from 'react';
 import { useI18n } from '../i18n/I18nProvider';
-import { getMaterials } from '../lib/materialsStorage';
+import { useGetAllMaterials } from '../hooks/useQueries';
 import MaterialCard from '../components/materials/MaterialCard';
-import Work24OfficialContactPanel from '../components/contact/Work24OfficialContactPanel';
 
 export default function Materials() {
   const { t } = useI18n();
-  const materials = getMaterials();
-  const [contactPanelOpen, setContactPanelOpen] = useState(false);
+  const { data: materials, isLoading } = useGetAllMaterials();
 
   return (
     <div className="container py-8 space-y-8">
       <div className="space-y-2">
-        <h1 className="text-3xl md:text-4xl font-bold">{t('materials.title')}</h1>
-        <p className="text-lg text-muted-foreground">{t('materials.subtitle')}</p>
+        <h1 className="text-3xl font-bold">Materials for Sale</h1>
+        <p className="text-muted-foreground">Browse available construction materials</p>
       </div>
 
-      {materials.length === 0 ? (
+      {isLoading ? (
         <div className="text-center py-16">
-          <p className="text-lg text-muted-foreground">{t('materials.noMaterials')}</p>
+          <p className="text-muted-foreground">Loading materials...</p>
         </div>
-      ) : (
+      ) : materials && materials.length > 0 ? (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {materials.map((material) => (
-            <MaterialCard
-              key={material.id}
-              material={material}
-              onContact={() => setContactPanelOpen(true)}
-            />
+            <MaterialCard key={material.id.toString()} material={material} />
           ))}
         </div>
+      ) : (
+        <div className="text-center py-16">
+          <p className="text-lg text-muted-foreground">No materials available yet.</p>
+        </div>
       )}
-
-      <Work24OfficialContactPanel
-        open={contactPanelOpen}
-        onOpenChange={setContactPanelOpen}
-      />
     </div>
   );
 }

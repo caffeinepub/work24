@@ -19,7 +19,7 @@ function RootComponent() {
   const isOnboarded = getOnboardingStatus();
 
   useEffect(() => {
-    document.title = t('app.title');
+    document.title = 'Work24 - Your Trusted Partner for Home Services';
   }, [t]);
 
   if (!isOnboarded) {

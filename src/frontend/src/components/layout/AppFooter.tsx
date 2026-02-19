@@ -1,72 +1,72 @@
-import { Heart, Phone, Mail } from 'lucide-react';
+import { Phone, Mail, Heart } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
-import { useI18n } from '../../i18n/I18nProvider';
-import { OFFICIAL_PHONE_DISPLAY, OFFICIAL_EMAIL, OFFICIAL_PHONE_LINK, OFFICIAL_EMAIL_LINK } from '../../lib/officialContact';
+import { OFFICIAL_PHONE_DISPLAY, OFFICIAL_PHONE_LINK, OFFICIAL_EMAIL, OFFICIAL_EMAIL_LINK } from '../../lib/officialContact';
 
 export default function AppFooter() {
-  const { t } = useI18n();
+  const currentYear = new Date().getFullYear();
+  const appIdentifier = encodeURIComponent(window.location.hostname || 'work24-app');
 
   return (
-    <footer className="border-t bg-muted/30 py-12 mt-16">
-      <div className="container">
-        <div className="grid gap-8 md:grid-cols-3 mb-8">
-          <div>
-            <h3 className="font-semibold mb-4">{t('footer.contactTitle')}</h3>
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm">
+    <footer className="border-t bg-muted/30 mt-auto">
+      <div className="container py-8">
+        <div className="grid md:grid-cols-3 gap-8">
+          {/* Contact Info */}
+          <div className="space-y-3">
+            <h3 className="font-semibold text-lg">Contact Us</h3>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center gap-2">
                 <Phone className="h-4 w-4 text-primary" />
-                <a href={OFFICIAL_PHONE_LINK} className="hover:text-primary hover:underline">
+                <a href={OFFICIAL_PHONE_LINK} className="hover:text-primary transition-colors">
                   {OFFICIAL_PHONE_DISPLAY}
                 </a>
               </div>
-              <div className="flex items-center space-x-2 text-sm">
+              <div className="flex items-center gap-2">
                 <Mail className="h-4 w-4 text-primary" />
-                <a href={OFFICIAL_EMAIL_LINK} className="hover:text-primary hover:underline break-all">
+                <a href={OFFICIAL_EMAIL_LINK} className="hover:text-primary transition-colors">
                   {OFFICIAL_EMAIL}
                 </a>
               </div>
             </div>
           </div>
 
-          <div>
-            <h3 className="font-semibold mb-4">{t('footer.servicesTitle')}</h3>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              {t('footer.servicesDescription')}
+          {/* Services */}
+          <div className="space-y-3">
+            <h3 className="font-semibold text-lg">Our Services</h3>
+            <p className="text-sm text-muted-foreground">
+              Complete turnkey projects for all your home service needs
             </p>
           </div>
 
-          <div>
-            <h3 className="font-semibold mb-4">{t('footer.quickLinksTitle')}</h3>
-            <div className="space-y-2">
-              <Link to="/contact" className="block text-sm hover:text-primary hover:underline">
-                {t('footer.contactUsLink')}
+          {/* Quick Links */}
+          <div className="space-y-3">
+            <h3 className="font-semibold text-lg">Quick Links</h3>
+            <div className="flex flex-col space-y-2 text-sm">
+              <Link to="/" className="hover:text-primary transition-colors">
+                Home
               </Link>
-              <Link to="/career" className="block text-sm hover:text-primary hover:underline">
-                {t('nav.career')}
+              <Link to="/materials" className="hover:text-primary transition-colors">
+                Materials
               </Link>
-              <Link to="/materials" className="block text-sm hover:text-primary hover:underline">
-                {t('nav.materials')}
+              <Link to="/contact" className="hover:text-primary transition-colors">
+                Contact Us
               </Link>
             </div>
           </div>
         </div>
 
-        <div className="border-t pt-8">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center">
-            <p className="text-sm text-muted-foreground">
-              {t('footer.copyright')}{' '}
-              <Heart className="inline h-4 w-4 text-destructive fill-destructive" />{' '}
-              {t('footer.using')}{' '}
-              <a
-                href="https://caffeine.ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-medium text-primary hover:underline"
-              >
-                {t('footer.caffeine')}
-              </a>
-            </p>
-          </div>
+        <div className="mt-8 pt-6 border-t text-center text-sm text-muted-foreground">
+          <p>© {currentYear} Work24. All rights reserved.</p>
+          <p className="mt-2 flex items-center justify-center gap-1">
+            Built with <Heart className="h-4 w-4 text-red-500 fill-red-500" /> using{' '}
+            <a
+              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${appIdentifier}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              caffeine.ai
+            </a>
+          </p>
         </div>
       </div>
     </footer>

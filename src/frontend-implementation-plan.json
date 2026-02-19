@@ -1,118 +1,332 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add worker attribution and tab organization to admin panel",
+  "title": "Work24 Worker Marketplace - Frontend Implementation",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Store worker identity with material submissions for tracking purposes",
+      "summary": "Create worker marketplace platform with service browsing, worker viewing by category, and platform-mediated contact requests",
       "acceptanceCriteria": [
-        "Material submissions include worker name and ID fields",
-        "Worker information is persisted with the material data",
-        "Backend stores the association between materials and workers"
+        "Home page displays service categories with navigation",
+        "Service detail pages show workers filtered by category",
+        "Contact forms route through Work24 platform, not direct worker contact"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/types/materials.ts",
+          "path": "frontend/src/pages/HomeServices.tsx",
           "operation": "modify",
-          "description": "Extend the Material interface to include submittedBy field containing worker name and ID. Add optional fields to maintain backward compatibility with existing stored materials."
+          "description": "Update home page to display service categories grid with navigation to service detail pages. Use the servicesCatalog from frontend/src/lib/servicesCatalog.ts to render service cards with icons and translated names. Each card should navigate to /services/:serviceId using TanStack Router."
         },
         {
-          "path": "frontend/src/pages/SellerMaterialSubmission.tsx",
+          "path": "frontend/src/pages/ServiceDetail.tsx",
           "operation": "modify",
-          "description": "Update the material submission form to capture and store the worker name and ID when a new material is submitted. Retrieve worker identity from local preferences or prompt if not available, then include it in the material object before saving to storage."
+          "description": "Update service detail page to fetch workers by category from backend using the getAllWorkers backend capability and filter by service category. Display workers in a grid using WorkerCard components. Include the ContactViaWork24Dialog for platform-mediated contact that sanitizes worker data using noDirectContact.ts helpers."
         },
         {
-          "path": "frontend/src/lib/materialsStorage.ts",
+          "path": "frontend/src/components/contact/ContactViaWork24Dialog.tsx",
           "operation": "modify",
-          "description": "Update the addMaterial function to accept and persist the new submittedBy field containing worker name and ID with each material entry."
+          "description": "Ensure contact dialog sanitizes worker/material data to prevent exposing direct contact information. Use the sanitizeWorkerForContact function from frontend/src/lib/safety/noDirectContact.ts. Submit contact requests via the submitContactRequest backend capability with targetType 'worker' or 'material'."
+        },
+        {
+          "path": "frontend/src/components/workers/WorkerCard.tsx",
+          "operation": "modify",
+          "description": "Update worker card to display profile image, name, skill, work images gallery (up to 3 images), and contact button. Use ExternalBlob.getDirectURL() for image rendering. Contact button opens ContactViaWork24Dialog with sanitized worker data."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Store worker identity with service/worker profile submissions for attribution tracking",
+      "summary": "Implement multi-language support for English, Hindi, and Gujarati with language switcher and persistent user preference storage",
       "acceptanceCriteria": [
-        "Worker profile submissions include submitter identification",
-        "Attribution data is stored with each service listing",
-        "Backend maintains the link between workers and their postings"
+        "Language switcher in header allows switching between English, Hindi, and Gujarati",
+        "Selected language persists in localStorage",
+        "All UI text uses translation keys from i18n system"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/types/workers.ts",
+          "path": "frontend/src/components/settings/LanguageSwitcher.tsx",
           "operation": "modify",
-          "description": "Extend the Worker interface to include submittedBy field containing the submitter's name and ID. Add optional fields to maintain backward compatibility with existing worker profiles."
+          "description": "Verify language switcher dropdown supports English, Hindi, and Gujarati options. Ensure selected language is saved to localStorage via localPreferences.ts and updates the i18n context. Display current language with proper labels."
         },
         {
-          "path": "frontend/src/pages/WorkerSubmission.tsx",
+          "path": "frontend/src/i18n/translations.ts",
           "operation": "modify",
-          "description": "Update the worker profile submission form to capture and store the submitter identity when a worker profile is created. Retrieve submitter name and ID from local preferences or prompt if not available, then include it in the worker object before saving to storage."
+          "description": "Complete translation dictionary for all UI text across English, Hindi, and Gujarati. Ensure keys cover navigation, forms, admin sections, error messages, and all user-facing text. Organize by feature area (services, materials, career, architect, admin, etc.)."
         },
         {
-          "path": "frontend/src/lib/workersStorage.ts",
+          "path": "frontend/src/i18n/I18nProvider.tsx",
           "operation": "modify",
-          "description": "Update the addWorker function to accept and persist the new submittedBy field containing submitter name and ID with each worker profile entry."
+          "description": "Verify I18nProvider manages language state, persists to localStorage, provides translation function to all components, and updates document language attribute for accessibility."
+        },
+        {
+          "path": "frontend/src/components/layout/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Ensure header includes LanguageSwitcher component in both desktop and mobile navigation. Verify all header text uses translation keys from i18n system."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Display worker attribution information for each material in the admin panel",
+      "summary": "Create worker submission form allowing workers to register with name, skill, service category, location, profile image, and minimum 3 work images",
       "acceptanceCriteria": [
-        "Admin panel displays worker name for each material entry",
-        "Worker ID is visible in the material details",
-        "Attribution information is clearly labeled and easy to identify"
+        "Form validates minimum 3 work images are uploaded",
+        "Images are converted to base64 format",
+        "Submission includes auto-generated submitter ID",
+        "Data is persisted to backend"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/admin/MaterialsTab.tsx",
-          "operation": "create",
-          "description": "Create a new component that displays all materials in a table or card layout. Show material name, category, description, and worker attribution (name and ID) for each entry. Include a column or section clearly labeled 'Submitted By' showing the worker name and ID. Handle materials without attribution gracefully by showing 'Unknown' or similar placeholder."
+          "path": "frontend/src/pages/WorkerSubmission.tsx",
+          "operation": "modify",
+          "description": "Update worker submission form to collect name, skill, service category, location, profile image, and work images. Validate minimum 3 work images before submission. Convert images to ExternalBlob using ExternalBlob.fromBytes(). Include submitter ID from localPreferences.ts. Submit via addWorker backend capability. Show upload progress for images using withUploadProgress(). Display success/error feedback with i18n messages."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Verify /submissions/worker route is registered and navigates to WorkerSubmission page. Ensure route is accessible from navigation menu."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Display worker attribution information for each service posting in the admin panel",
+      "summary": "Create material seller submission form for submitting materials with name, category, description, location, and images",
       "acceptanceCriteria": [
-        "Admin panel shows who posted each service/worker profile",
-        "Worker attribution is displayed alongside service data",
-        "Information is formatted consistently with material attribution"
+        "Form collects material details and images",
+        "Images are converted to base64 format",
+        "Submission includes submitter attribution information",
+        "Data is persisted to backend"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/admin/WorkersTab.tsx",
-          "operation": "create",
-          "description": "Create a new component that displays all worker profiles in a table or card layout. Show worker name, skill, service category, and submitter attribution (name and ID) for each entry. Include a column or section clearly labeled 'Submitted By' showing the submitter name and ID. Format attribution consistently with MaterialsTab and handle missing attribution gracefully."
+          "path": "frontend/src/pages/SellerMaterialSubmission.tsx",
+          "operation": "modify",
+          "description": "Update material submission form to collect name, category, description, location, and images. Convert images to ExternalBlob using ExternalBlob.fromBytes(). Include submitter ID and name from localPreferences.ts. Submit via addMaterial backend capability. Show upload progress for images using withUploadProgress(). Display success/error feedback with i18n messages."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Verify /submissions/material route is registered and navigates to SellerMaterialSubmission page. Ensure route is accessible from navigation menu."
         }
       ]
     },
     {
       "id": "REQ-5",
-      "summary": "Organize admin panel data into separate tabs for materials, services, and messages",
+      "summary": "Implement admin dashboard with username/password authentication (credentials: Bharat1213/Bharat1213) displaying separate tabs for materials, workers, and messages",
       "acceptanceCriteria": [
-        "Admin panel uses a tabbed interface with at least three tabs",
-        "Materials tab shows all material submissions with worker attribution",
-        "Services tab shows all worker/service postings with attribution",
-        "Messages tab shows contact form submissions and other messages",
-        "User can switch between tabs without losing data",
-        "Active tab is visually indicated"
+        "Admin login form validates against hardcoded credentials Bharat1213/Bharat1213",
+        "Materials tab shows table with name, category, location, submitter attribution, and description",
+        "Workers tab shows table with skills, service categories, locations, and submitter information",
+        "Messages tab shows system messages with delete functionality",
+        "Each tab displays submitter information (name and ID) for tracking who posted each item"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/admin/MessagesTab.tsx",
-          "operation": "create",
-          "description": "Extract the current messages table functionality from Admin.tsx into a dedicated MessagesTab component. Include the existing message display, delete functionality, and refresh capability with source badges and timestamps."
-        },
-        {
           "path": "frontend/src/pages/Admin.tsx",
           "operation": "modify",
-          "description": "Restructure the admin page to use a tabbed interface with three tabs: Materials, Workers/Services, and Messages. Use the shadcn Tabs component to implement the tab navigation. Wire in MaterialsTab, WorkersTab, and MessagesTab components as tab content. Ensure the login form remains as the entry point before showing tabs. Maintain the active tab state and provide clear visual indication of which tab is selected. Preserve the existing admin authentication mechanism (username/password: Bharat1213)."
+          "description": "Update admin dashboard with login form validating credentials Bharat1213/Bharat1213. Store session using adminSession.ts. After login, display tabs for Materials, Workers, and Messages. Use authorization component to verify admin access via isCallerAdmin backend capability. Ensure logout clears session and query cache."
         },
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/components/admin/MaterialsTab.tsx",
           "operation": "modify",
-          "description": "Add React Query hooks for fetching materials and workers data from localStorage. Create useGetMaterials and useGetWorkers hooks that return the stored data with proper typing including the new submittedBy fields. These hooks should work alongside the existing admin messages hooks."
+          "description": "Update materials tab to fetch materials via getAllMaterials backend capability. Display table with columns: name, category, location, submitter name, submitter ID, and description. Include refresh button. Use ExternalBlob.getDirectURL() for image thumbnails."
+        },
+        {
+          "path": "frontend/src/components/admin/WorkersTab.tsx",
+          "operation": "modify",
+          "description": "Update workers tab to fetch workers via getAllWorkers backend capability. Display table with columns: name, skill, service category, location, submitter name, and submitter ID. Include refresh button. Use ExternalBlob.getDirectURL() for profile image thumbnails."
+        },
+        {
+          "path": "frontend/src/components/admin/MessagesTab.tsx",
+          "operation": "modify",
+          "description": "Update messages tab to fetch admin messages via getAdminMessages backend capability. Display table with message content, timestamp (formatted using formatIcTime), and delete button. Use AdminMessageRenderer for formatted message display with JSON parsing. Implement delete via deleteMessage backend capability with confirmation dialog. Include refresh and delete all buttons."
+        },
+        {
+          "path": "frontend/src/components/admin/AdminMessageRenderer.tsx",
+          "operation": "modify",
+          "description": "Update admin message renderer to parse JSON messages and display formatted view with field categorization (customer, worker, material, architect, career). Show source badges and localized labels. Provide toggle between formatted and raw JSON view."
+        },
+        {
+          "path": "frontend/src/lib/adminSession.ts",
+          "operation": "modify",
+          "description": "Verify admin session manager stores/retrieves adminId and password in sessionStorage. Provide isAdminSessionValid(), setAdminSession(), and clearAdminSession() functions."
+        },
+        {
+          "path": "frontend/src/components/layout/AppHeader.tsx",
+          "operation": "modify",
+          "description": "Add conditional admin link in header navigation that displays only when admin session is valid (check via adminSession.ts). Link navigates to /admin route."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Create career application form for job seekers to submit applications with name, mobile, skills, experience, and message",
+      "acceptanceCriteria": [
+        "Form validates Indian mobile numbers (10 digits starting with 6-9)",
+        "Submissions are sent to backend as contact messages",
+        "Admin can view career submissions in messages tab"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Career.tsx",
+          "operation": "modify",
+          "description": "Update career application form to collect name, mobile, skills, experience, and message. Validate mobile using validateIndianMobile from frontend/src/lib/validation.ts. Submit via submitCareerApplication backend capability. Display success/error feedback with i18n messages."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Verify /career route is registered and navigates to Career page. Ensure route is accessible from navigation menu."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Create architect project submission form collecting name, project type, location, budget, message, and file uploads",
+      "acceptanceCriteria": [
+        "Form accepts file uploads for project documents",
+        "Submissions are sent to backend as contact messages",
+        "Admin can view architect submissions in messages tab"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Architect.tsx",
+          "operation": "modify",
+          "description": "Update architect project form to collect name, project type, location, budget, message, and file uploads. Convert files to ExternalBlob using ExternalBlob.fromBytes(). Submit via submitArchitectProject backend capability. Show upload progress using withUploadProgress(). Display success/error feedback with i18n messages."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Verify /architect route is registered and navigates to Architect page. Ensure route is accessible from navigation menu."
+        }
+      ]
+    },
+    {
+      "id": "REQ-8",
+      "summary": "Implement contact flow where customers contact workers or material sellers through Work24 platform, collecting customer name, mobile, and requirements without exposing direct contact information",
+      "acceptanceCriteria": [
+        "Contact dialogs sanitize worker/material data to remove direct contact information",
+        "Contact submissions include reference to the worker or material being inquired about",
+        "Submissions are stored in backend for admin review"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/contact/ContactViaWork24Dialog.tsx",
+          "operation": "modify",
+          "description": "Ensure contact dialog sanitizes worker/material data using sanitizeWorkerForContact and sanitizeMaterialForContact from frontend/src/lib/safety/noDirectContact.ts before display. Collect customer name, mobile (validated with validateIndianMobile), and requirements. Submit via submitContactRequest backend capability with targetId, targetType ('worker' or 'material'), and sanitized reference data. Display success/error feedback."
+        },
+        {
+          "path": "frontend/src/lib/safety/noDirectContact.ts",
+          "operation": "modify",
+          "description": "Verify sanitization functions remove direct contact fields (phone, email, whatsapp, etc.) from worker and material objects. Define allowed fields for safe display. Ensure sanitized objects are safe for customer viewing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-9",
+      "summary": "Create materials listing page displaying materials in a grid with cards showing images, name, category, description, and contact button",
+      "acceptanceCriteria": [
+        "Materials are fetched from backend and displayed in grid layout",
+        "Each material card shows sanitized information",
+        "Contact button opens dialog for platform-mediated contact"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Materials.tsx",
+          "operation": "modify",
+          "description": "Update materials page to fetch materials via getAllMaterials backend capability. Display materials in responsive grid using MaterialCard components. Include Work24OfficialContactPanel for official contact information. Use ExternalBlob.getDirectURL() for material images."
+        },
+        {
+          "path": "frontend/src/components/materials/MaterialCard.tsx",
+          "operation": "modify",
+          "description": "Update material card to display material image (first from array), name, category, description, and contact button. Use ExternalBlob.getDirectURL() for image rendering. Contact button opens ContactViaWork24Dialog with sanitized material data from noDirectContact.ts."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Verify /materials route is registered and navigates to Materials page. Ensure route is accessible from navigation menu."
+        }
+      ]
+    },
+    {
+      "id": "REQ-10",
+      "summary": "Implement onboarding flow that collects user name and language preference, validates input, saves to localStorage, and redirects to home page",
+      "acceptanceCriteria": [
+        "Onboarding page is shown on first visit",
+        "User name and language preference are validated before submission",
+        "Preferences are saved to localStorage",
+        "User is redirected to home page after completion"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/Onboarding.tsx",
+          "operation": "modify",
+          "description": "Update onboarding page to collect user name and language preference (English, Hindi, Gujarati). Validate required fields using validateRequired from frontend/src/lib/validation.ts. Save preferences via localPreferences.ts (setUserName, setLanguagePreference, setOnboardingCompleted). After saving, navigate to / using TanStack Router. Use i18n for all UI text."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Update app routing to check onboarding status using hasCompletedOnboarding from frontend/src/lib/localPreferences.ts. If not completed, redirect to /onboarding route. After onboarding completion, navigate to home page. Wrap app with I18nProvider to support language switching."
+        },
+        {
+          "path": "frontend/src/lib/localPreferences.ts",
+          "operation": "modify",
+          "description": "Verify local preferences module provides functions for onboarding status (hasCompletedOnboarding, setOnboardingCompleted), user name (getUserName, setUserName), language preference (getLanguagePreference, setLanguagePreference), and submitter ID (getSubmitterId, generateSubmitterId). Use localStorage for persistence."
+        }
+      ]
+    },
+    {
+      "id": "REQ-11",
+      "summary": "Create contact us page displaying official Work24 phone number and email with clickable links and service area information",
+      "acceptanceCriteria": [
+        "Page displays phone number as tel: link",
+        "Page displays email as mailto: link",
+        "Service area information is clearly presented"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ContactUs.tsx",
+          "operation": "modify",
+          "description": "Update contact us page to display official Work24 phone number (as tel: link) and email (as mailto: link) using constants from frontend/src/lib/officialContact.ts. Include service area information (coverage regions). Use i18n for all labels and descriptive text. Apply Work24 theme styling from index.css."
+        },
+        {
+          "path": "frontend/src/lib/officialContact.ts",
+          "operation": "modify",
+          "description": "Verify official contact module exports WORK24_PHONE, WORK24_EMAIL constants with formatted display strings and clickable links (tel: and mailto:)."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Verify /contact route is registered and navigates to ContactUs page. Ensure route is accessible from navigation menu and footer."
+        }
+      ]
+    },
+    {
+      "id": "REQ-13",
+      "summary": "Apply a consistent visual design theme with off-white base color, orange primary color, and green accent color using OKLCH color system with light and dark mode support",
+      "acceptanceCriteria": [
+        "Color scheme uses off-white base, orange primary, and green accent throughout the application",
+        "Theme supports both light and dark modes",
+        "Tailwind CSS configuration uses OKLCH color space for consistent color rendering"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/index.css",
+          "operation": "modify",
+          "description": "Verify CSS variables define Work24 theme using OKLCH color system: off-white base (background, card), orange primary (main brand color), green accent (secondary/accent color). Ensure both light and dark mode variants are defined with proper contrast ratios. Apply Tailwind base styles."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Verify Tailwind configuration extends theme with Work24 color variables from index.css. Map CSS variables to Tailwind color utilities (bg-base, text-primary, border-accent, etc.). Configure OKLCH-compatible color space settings. Include plugins for typography, animations, and container queries."
+        },
+        {
+          "path": "frontend/src/components/layout/AppShell.tsx",
+          "operation": "modify",
+          "description": "Verify AppShell applies theme classes to root layout container for consistent color scheme across all pages. Use bg-base for background and proper text color classes."
+        },
+        {
+          "path": "frontend/src/components/common/Work24Card.tsx",
+          "operation": "modify",
+          "description": "Verify Work24Card component uses theme colors from Tailwind config (bg-card, border-primary, hover:shadow-accent, etc.). Ensure cards have consistent styling with hover effects and transitions."
         }
       ]
     }

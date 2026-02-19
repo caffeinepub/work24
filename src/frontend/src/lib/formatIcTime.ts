@@ -1,15 +1,8 @@
-import type { Time } from '../backend';
-
-/**
- * Converts IC Time (bigint nanoseconds since epoch) to a human-readable timestamp string
- */
-export function formatIcTime(time: Time): string {
-  // Convert nanoseconds to milliseconds
-  const milliseconds = Number(time / BigInt(1_000_000));
+export function formatIcTime(icTime: bigint): string {
+  const milliseconds = Number(icTime / 1_000_000n);
   const date = new Date(milliseconds);
   
-  // Format: "Feb 16, 2026, 10:30:45 AM"
-  return date.toLocaleString('en-US', {
+  const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -17,5 +10,7 @@ export function formatIcTime(time: Time): string {
     minute: '2-digit',
     second: '2-digit',
     hour12: true,
-  });
+  };
+  
+  return date.toLocaleString('en-US', options);
 }

@@ -13,17 +13,17 @@ export default function AppHeader() {
   const showAdmin = isAdminLoggedIn();
 
   const navItems = [
-    { label: t('nav.home'), path: '/' },
-    { label: t('nav.materials'), path: '/materials' },
-    { label: t('nav.career'), path: '/career' },
-    { label: t('nav.architect'), path: '/architect' },
-    { label: t('nav.workerSubmission'), path: '/worker-submission' },
-    { label: t('nav.sellerSubmission'), path: '/seller-submission' },
-    { label: t('nav.contact'), path: '/contact' },
+    { label: 'Home', path: '/' },
+    { label: 'Materials', path: '/materials' },
+    { label: 'Career', path: '/career' },
+    { label: 'Architect', path: '/architect' },
+    { label: 'Register Worker', path: '/worker-submission' },
+    { label: 'Sell Material', path: '/seller-submission' },
+    { label: 'Contact', path: '/contact' },
   ];
 
   if (showAdmin) {
-    navItems.push({ label: t('nav.admin'), path: '/admin' });
+    navItems.push({ label: 'Admin', path: '/admin' });
   }
 
   return (

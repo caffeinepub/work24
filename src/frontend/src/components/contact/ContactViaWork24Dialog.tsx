@@ -1,70 +1,65 @@
 import { useState } from 'react';
-import { Worker } from '../../types/workers';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import Work24FormField from '../common/Work24FormField';
-import { useI18n } from '../../i18n/I18nProvider';
-import { validateRequired, validateMobile } from '../../lib/validation';
-import { useSubmitContact } from '../../lib/contactSubmissions';
+import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
+import { useSubmitContactRequest } from '../../hooks/useQueries';
+import { validateMobile } from '../../lib/validation';
+import { useI18n } from '../../i18n/I18nProvider';
 
 interface ContactViaWork24DialogProps {
-  worker: Worker | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  targetId: bigint;
+  targetType: 'worker' | 'material';
+  targetName: string;
 }
 
 export default function ContactViaWork24Dialog({
-  worker,
   open,
   onOpenChange,
+  targetId,
+  targetType,
+  targetName,
 }: ContactViaWork24DialogProps) {
   const { t } = useI18n();
-  const submitContact = useSubmitContact();
-  
+  const submitMutation = useSubmitContactRequest();
+
   const [formData, setFormData] = useState({
-    name: '',
+    customerName: '',
     mobile: '',
-    requirement: '',
+    requirements: '',
   });
-  
-  const [errors, setErrors] = useState<Record<string, string | null>>({});
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    const newErrors: Record<string, string | null> = {
-      name: validateRequired(formData.name, t),
-      mobile: validateMobile(formData.mobile, t),
-      requirement: validateRequired(formData.requirement, t),
-    };
-    
-    setErrors(newErrors);
-    
-    if (Object.values(newErrors).some(err => err !== null)) {
+
+    const newErrors: Record<string, string> = {};
+
+    if (!formData.customerName.trim()) newErrors.customerName = 'Name is required';
+    const mobileError = validateMobile(formData.mobile, t);
+    if (mobileError) newErrors.mobile = mobileError;
+    if (!formData.requirements.trim()) newErrors.requirements = 'Requirements are required';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
       return;
     }
 
     try {
-      await submitContact.mutateAsync({
-        type: 'worker',
-        origin: 'worker-contact',
-        workerName: worker?.name,
-        customerName: formData.name,
-        mobile: formData.mobile,
-        requirement: formData.requirement,
+      await submitMutation.mutateAsync({
+        ...formData,
+        targetId,
+        targetType,
       });
-      
-      toast.success(t('contact.success'));
-      setFormData({ name: '', mobile: '', requirement: '' });
+
+      toast.success('Request submitted successfully! We will contact you soon.');
+      setFormData({ customerName: '', mobile: '', requirements: '' });
+      setErrors({});
       onOpenChange(false);
     } catch (error) {
       toast.error('Failed to submit request. Please try again.');
@@ -73,58 +68,66 @@ export default function ContactViaWork24Dialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t('contact.title')}</DialogTitle>
-          <DialogDescription>{t('contact.description')}</DialogDescription>
+          <DialogTitle>Contact via Work24</DialogTitle>
+          <DialogDescription>
+            Fill in your details to inquire about {targetName}
+          </DialogDescription>
         </DialogHeader>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Work24FormField
-            label={t('contact.nameLabel')}
-            error={errors.name}
-            required
-          >
+          <div className="space-y-2">
+            <Label htmlFor="customerName">Your Name *</Label>
             <Input
-              value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              placeholder={t('contact.namePlaceholder')}
+              id="customerName"
+              value={formData.customerName}
+              onChange={(e) => {
+                setFormData({ ...formData, customerName: e.target.value });
+                setErrors({ ...errors, customerName: '' });
+              }}
+              placeholder="Enter your name"
             />
-          </Work24FormField>
+            {errors.customerName && <p className="text-sm text-destructive">{errors.customerName}</p>}
+          </div>
 
-          <Work24FormField
-            label={t('contact.mobileLabel')}
-            error={errors.mobile}
-            required
-          >
+          <div className="space-y-2">
+            <Label htmlFor="mobile">Mobile Number *</Label>
             <Input
-              type="tel"
+              id="mobile"
               value={formData.mobile}
-              onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-              placeholder={t('contact.mobilePlaceholder')}
+              onChange={(e) => {
+                setFormData({ ...formData, mobile: e.target.value });
+                setErrors({ ...errors, mobile: '' });
+              }}
+              placeholder="Enter your mobile number"
             />
-          </Work24FormField>
+            {errors.mobile && <p className="text-sm text-destructive">{errors.mobile}</p>}
+          </div>
 
-          <Work24FormField
-            label={t('contact.requirementLabel')}
-            error={errors.requirement}
-            required
-          >
+          <div className="space-y-2">
+            <Label htmlFor="requirements">Your Requirements *</Label>
             <Textarea
-              value={formData.requirement}
-              onChange={(e) => setFormData({ ...formData, requirement: e.target.value })}
-              placeholder={t('contact.requirementPlaceholder')}
+              id="requirements"
+              value={formData.requirements}
+              onChange={(e) => {
+                setFormData({ ...formData, requirements: e.target.value });
+                setErrors({ ...errors, requirements: '' });
+              }}
+              placeholder="Describe what you need"
               rows={4}
             />
-          </Work24FormField>
+            {errors.requirements && <p className="text-sm text-destructive">{errors.requirements}</p>}
+          </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={submitContact.isPending}
-          >
-            {submitContact.isPending ? t('contact.submitting') : t('contact.submit')}
-          </Button>
+          <div className="flex gap-2">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="flex-1">
+              Cancel
+            </Button>
+            <Button type="submit" className="flex-1" disabled={submitMutation.isPending}>
+              {submitMutation.isPending ? 'Submitting...' : 'Submit Request'}
+            </Button>
+          </div>
         </form>
       </DialogContent>
     </Dialog>
