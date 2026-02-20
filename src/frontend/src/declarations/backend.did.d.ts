@@ -101,7 +101,6 @@ export interface _SERVICE {
     [string, string, string, string, ExternalBlob, Array<ExternalBlob>],
     undefined
   >,
-  'adminLogin' : ActorMethod<[string, string], boolean>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
   'deleteAllMessages' : ActorMethod<[], bigint>,
   'deleteMessage' : ActorMethod<[bigint], boolean>,

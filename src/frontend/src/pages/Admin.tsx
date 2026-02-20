@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { useI18n } from '../i18n/I18nProvider';
-import { useAdminLogin } from '../hooks/useQueries';
+import { useVerifyAdminAccess } from '../hooks/useQueries';
 import { getAdminSession, setAdminSession, clearAdminSession } from '../lib/adminSession';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
@@ -23,27 +23,59 @@ export default function Admin() {
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!getAdminSession());
   const [activeSection, setActiveSection] = useState<AdminSection>('overview');
+  const [loginError, setLoginError] = useState('');
   
-  const loginMutation = useAdminLogin();
+  const verifyAccessMutation = useVerifyAdminAccess();
+
+  // Verify admin access on mount if session exists
+  useEffect(() => {
+    const session = getAdminSession();
+    if (session && !isAuthenticated) {
+      verifyAccessMutation.mutate(undefined, {
+        onSuccess: (hasAccess) => {
+          if (hasAccess) {
+            setIsAuthenticated(true);
+          } else {
+            clearAdminSession();
+            setIsAuthenticated(false);
+          }
+        },
+        onError: () => {
+          clearAdminSession();
+          setIsAuthenticated(false);
+        },
+      });
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoginError('');
     
-    try {
-      const result = await loginMutation.mutateAsync({ username, password });
-      
-      if (result) {
-        setAdminSession(username, password);
-        setIsAuthenticated(true);
-        setUsername('');
-        setPassword('');
-      } else {
-        alert(t('admin.invalidCredentials'));
-      }
-    } catch (error) {
-      console.error('Login error:', error);
-      alert(t('admin.loginError'));
-    }
+    // Store credentials in session
+    setAdminSession(username, password);
+    
+    // Verify access by trying to call an admin-only method
+    verifyAccessMutation.mutate(undefined, {
+      onSuccess: (hasAccess) => {
+        if (hasAccess) {
+          setIsAuthenticated(true);
+          setUsername('');
+          setPassword('');
+        } else {
+          clearAdminSession();
+          setLoginError(t('admin.invalidCredentials'));
+        }
+      },
+      onError: (error: any) => {
+        clearAdminSession();
+        if (error?.message?.includes('Unauthorized')) {
+          setLoginError(t('admin.invalidCredentials'));
+        } else {
+          setLoginError(t('admin.loginError'));
+        }
+      },
+    });
   };
 
   const handleLogout = () => {
@@ -77,7 +109,7 @@ export default function Admin() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   required
-                  disabled={loginMutation.isPending}
+                  disabled={verifyAccessMutation.isPending}
                   className="bg-admin-input border-admin-border text-admin-foreground"
                 />
               </div>
@@ -91,16 +123,19 @@ export default function Admin() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  disabled={loginMutation.isPending}
+                  disabled={verifyAccessMutation.isPending}
                   className="bg-admin-input border-admin-border text-admin-foreground"
                 />
               </div>
+              {loginError && (
+                <p className="text-sm text-destructive">{loginError}</p>
+              )}
               <Button
                 type="submit"
                 className="w-full bg-admin-primary hover:bg-admin-primary/90 text-white"
-                disabled={loginMutation.isPending}
+                disabled={verifyAccessMutation.isPending}
               >
-                {loginMutation.isPending ? t('admin.loggingIn') : t('admin.login')}
+                {verifyAccessMutation.isPending ? t('admin.loggingIn') : t('admin.login')}
               </Button>
             </form>
           </CardContent>

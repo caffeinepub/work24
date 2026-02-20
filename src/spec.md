@@ -1,13 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Fix activity notifications system to display material sales and worker registrations in real-time across main dashboard and admin panel.
+**Goal:** Fix the admin dashboard to display all user activities while removing the activity feed from the main home page.
 
 **Planned changes:**
-- Create messages automatically when users submit materials for sale
-- Create messages automatically when users register as workers
-- Add activity feed component to main dashboard home page showing recent activities
-- Display all activity messages in admin dashboard MessagesTab
-- Update admin summary cards to reflect accurate real-time counts
+- Remove the ActivityFeed component from the main home page (HomeServices.tsx)
+- Update the admin dashboard Messages tab to display all user activities including worker registrations, material listings, and requirement submissions
+- Modify the backend getAllMessages query to return all message records without filtering
 
-**User-visible outcome:** All users can see recent material sales and worker registrations in a live activity feed on the home page. Admins can view all activity messages in their dashboard with accurate counts and complete history.
+**User-visible outcome:** Regular users no longer see an activity feed on the home page. Admins can view all user activities (worker registrations, material listings, requirements) in the admin dashboard Messages tab.

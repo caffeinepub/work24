@@ -2,7 +2,6 @@ import { useNavigate } from '@tanstack/react-router';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '../i18n/I18nProvider';
 import { services } from '../lib/servicesCatalog';
-import ActivityFeed from '../components/activity/ActivityFeed';
 
 export default function HomeServices() {
   const { t } = useI18n();
@@ -34,11 +33,6 @@ export default function HomeServices() {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Activity Feed Section */}
-      <section className="container">
-        <ActivityFeed />
       </section>
 
       {/* Services Section */}

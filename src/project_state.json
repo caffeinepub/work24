@@ -1,51 +1,26 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Dashboard application with messaging and activity tracking system",
-  "architectural_notes": [
-    "System includes language switching functionality",
-    "System has admin dashboard with styling",
-    "Real-time activity updates required for main and admin dashboards",
-    "Activity types include: messages, material sales, worker registrations"
-  ],
+  "summary": "Admin dashboard application tracking user activities (worker registration, material listings, requirement submissions)",
+  "architectural_notes": [],
   "known_issues": [
-    "Messages not received when users send activity/messages",
-    "Material sale activities not showing in main dashboard for all users",
-    "Worker registration activities not showing in main dashboard for all users",
-    "Activities not appearing in admin dashboard",
-    "Build failed on version 14 deployment"
+    "Admin dashboard not displaying user activities (worker registration, material listing, requirement submission)"
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-ensure-that-when-a-user-sells-material-via-sellermaterialsubmission-a-message-is-created-and-broadcast-to-all-users-on-the-main-dashboard",
-      "title": "Ensure that when a user sells material via SellerMaterialSubmission, a message is created and broadcast to all users on the main dashboard",
+      "id": "feature-remove-the-activityfeed-component-from-the-main-home-page-homeservices-tsx-so-that-no-recent-activity-is-displayed-to-regular-users",
+      "title": "Remove the ActivityFeed component from the main home page (HomeServices.tsx) so that no recent activity is displayed to regular users",
       "reqIds": [
         "REQ-1"
       ],
       "version": 1
     },
     {
-      "id": "feature-display-all-activity-messages-material-sales-worker-registrations-contact-requests-in-the-admin-dashboard-messagestab",
-      "title": "Display all activity messages (material sales, worker registrations, contact requests) in the admin dashboard MessagesTab",
+      "id": "feature-modify-the-admin-dashboard-messages-tab-to-display-all-activity-messages-including-worker-registrations-material-listings-and-requirement-submissions-with-proper-parsing-and-rendering",
+      "title": "Modify the admin dashboard Messages tab to display all activity messages including worker registrations, material listings, and requirement submissions with proper parsing and rendering",
       "reqIds": [
-        "REQ-3"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-a-main-dashboard-activity-feed-component-that-displays-recent-messages-and-activities-to-all-users-on-the-home-page",
-      "title": "Create a main dashboard activity feed component that displays recent messages and activities to all users on the home page",
-      "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-ensure-the-admin-dashboard-summary-cards-reflect-accurate-real-time-counts-including-all-activity-types",
-      "title": "Ensure the admin dashboard summary cards reflect accurate real-time counts including all activity types",
-      "reqIds": [
-        "REQ-7"
+        "REQ-2"
       ],
       "version": 1
     }
@@ -53,54 +28,26 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Fix real-time message reception and activity notifications",
+      "summary": "Remove recent activity from main page",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Fix material sale notifications not appearing in main dashboard",
+      "summary": "Show all user activities in admin dashboard (worker registration, material listings, requirements)",
       "reqIds": [],
       "status": "pending"
     },
     {
-      "id": "AR-3",
-      "summary": "Fix worker registration notifications not appearing in main dashboard",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Fix activity notifications not appearing in admin dashboard",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-6",
-      "summary": "Ensure that when a user registers as a worker via WorkerSubmission, a message is created and broadcast to all users on the main dashboard",
+      "id": "AR-5",
+      "summary": "Ensure the backend getAllMessages query returns all message records without any filtering so the admin dashboard receives complete activity data",
       "reqIds": [
-        "REQ-2"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-9",
-      "summary": "Update backend to automatically create and store messages when materials are submitted via submitMaterial",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-10",
-      "summary": "Update backend to automatically create and store messages when workers are registered via submitWorker",
-      "reqIds": [
-        "REQ-6"
+        "REQ-3"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Fix activity notifications and real-time message display across dashboards",
+  "projectName": "Fix admin dashboard activity feed to show all user activities",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

@@ -224,13 +224,19 @@ export function useSubmitArchitectProject() {
   });
 }
 
-export function useAdminLogin() {
+export function useVerifyAdminAccess() {
   const { actor } = useActor();
 
   return useMutation({
-    mutationFn: async (credentials: { username: string; password: string }) => {
+    mutationFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.adminLogin(credentials.username, credentials.password);
+      // Try to call an admin-only method to verify access
+      try {
+        await actor.getAdminMessages();
+        return true;
+      } catch (error) {
+        return false;
+      }
     },
   });
 }

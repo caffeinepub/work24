@@ -2,8 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-ensure-that-when-a-user-sells-material-via-sellermaterialsubmission-a-message-is-created-and-broadcast-to-all-users-on-the-main-dashboard",
-      "featureTitle": "Ensure that when a user sells material via SellerMaterialSubmission, a message is created and broadcast to all users on the main dashboard",
+      "featureId": "feature-remove-the-activityfeed-component-from-the-main-home-page-homeservices-tsx-so-that-no-recent-activity-is-displayed-to-regular-users",
+      "featureTitle": "Remove the ActivityFeed component from the main home page (HomeServices.tsx) so that no recent activity is displayed to regular users",
       "files": [
         "frontend/src/pages/HomeServices.tsx"
       ],
@@ -22,30 +22,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-display-all-activity-messages-material-sales-worker-registrations-contact-requests-in-the-admin-dashboard-messagestab",
-      "featureTitle": "Display all activity messages (material sales, worker registrations, contact requests) in the admin dashboard MessagesTab",
+      "featureId": "feature-modify-the-admin-dashboard-messages-tab-to-display-all-activity-messages-including-worker-registrations-material-listings-and-requirement-submissions-with-proper-parsing-and-rendering",
+      "featureTitle": "Modify the admin dashboard Messages tab to display all activity messages including worker registrations, material listings, and requirement submissions with proper parsing and rendering",
       "files": [
-        "frontend/src/components/admin/MessagesTab.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-main-dashboard-activity-feed-component-that-displays-recent-messages-and-activities-to-all-users-on-the-home-page",
-      "featureTitle": "Create a main dashboard activity feed component that displays recent messages and activities to all users on the home page",
-      "files": [
-        "frontend/src/components/activity/ActivityFeed.tsx",
+        "frontend/src/components/admin/MessagesTab.tsx",
         "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
@@ -58,27 +38,7 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-ensure-the-admin-dashboard-summary-cards-reflect-accurate-real-time-counts-including-all-activity-types",
-      "featureTitle": "Ensure the admin dashboard summary cards reflect accurate real-time counts including all activity types",
-      "files": [
-        "frontend/src/components/admin/AdminSummaryCards.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
+        "REQ-2"
       ],
       "confidence": "high"
     }

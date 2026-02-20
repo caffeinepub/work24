@@ -16,6 +16,11 @@ export default function MessagesTab() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState<bigint | null>(null);
 
+  // Sort messages by timestamp in descending order (newest first)
+  const sortedMessages = [...messages].sort((a, b) => {
+    return Number(b.timestamp - a.timestamp);
+  });
+
   const handleDeleteClick = (messageId: bigint) => {
     setMessageToDelete(messageId);
     setDeleteDialogOpen(true);
@@ -47,7 +52,7 @@ export default function MessagesTab() {
       <CardContent>
         {isLoading ? (
           <div className="text-center py-8 text-admin-muted">{t('admin.loading')}</div>
-        ) : messages.length === 0 ? (
+        ) : sortedMessages.length === 0 ? (
           <div className="text-center py-8 text-admin-muted">{t('admin.noMessages')}</div>
         ) : (
           <div className="rounded-md border border-admin-border overflow-hidden">
@@ -61,7 +66,7 @@ export default function MessagesTab() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {messages.map((message) => (
+                {sortedMessages.map((message) => (
                   <TableRow key={message.id.toString()} className="border-admin-border">
                     <TableCell className="text-admin-foreground">{message.id.toString()}</TableCell>
                     <TableCell className="text-admin-muted text-sm">

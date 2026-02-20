@@ -1,147 +1,75 @@
 {
   "kind": "build_request",
-  "title": "Fix activity notifications and real-time message display across dashboards",
+  "title": "Fix admin dashboard activity feed to show all user activities",
   "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Ensure that when a user sells material via SellerMaterialSubmission, a message is created and broadcast to all users on the main dashboard",
-      "target": "both",
+      "text": "Remove the ActivityFeed component from the main home page (HomeServices.tsx) so that no recent activity is displayed to regular users",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-previous"
         ],
         "quotes": [
-          "when someone sell material, ragister as worker, it's not showing in main dashboard to all users"
+          "i don't want to show any recent activity on main page"
         ]
       },
       "acceptanceCriteria": [
-        "Material sale submissions create a message entry visible to all users",
-        "Message appears in the main dashboard activity feed immediately after submission",
-        "Message content includes material name, category, and seller information"
+        "The ActivityFeed component is no longer rendered on the HomeServices page",
+        "Regular users visiting the home page do not see any activity feed"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Ensure that when a user registers as a worker via WorkerSubmission, a message is created and broadcast to all users on the main dashboard",
-      "target": "both",
+      "text": "Modify the admin dashboard Messages tab to display all activity messages including worker registrations, material listings, and requirement submissions with proper parsing and rendering",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-previous"
         ],
         "quotes": [
-          "when someone sell material, ragister as worker, it's not showing in main dashboard to all users"
+          "all the activities of all users, should show on admin dashboard, which is not showing. when my friend try to ragister as worker, listing material or sending requirement"
         ]
       },
       "acceptanceCriteria": [
-        "Worker registration submissions create a message entry visible to all users",
-        "Message appears in the main dashboard activity feed immediately after submission",
-        "Message content includes worker name, skill, category, and location"
+        "Admin Messages tab shows all messages from the backend without filtering",
+        "Worker registration activities are visible in the admin dashboard",
+        "Material listing activities are visible in the admin dashboard",
+        "Requirement submission activities are visible in the admin dashboard",
+        "Messages are sorted by timestamp in descending order (newest first)",
+        "Each message displays its source/origin clearly using AdminMessageRenderer"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Display all activity messages (material sales, worker registrations, contact requests) in the admin dashboard MessagesTab",
-      "target": "both",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "also not showing in admmin dashboard"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Admin MessagesTab shows all message types including material sales and worker registrations",
-        "Messages are properly categorized and display source information",
-        "Admin can see the complete activity history with timestamps"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Create a main dashboard activity feed component that displays recent messages and activities to all users on the home page",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "not showing in main dashboard to all users"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Activity feed component is visible on the main home page (HomeServices)",
-        "Feed displays recent material sales, worker registrations, and other activities",
-        "Feed updates automatically when new activities occur",
-        "Activities are displayed in reverse chronological order"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Update backend to automatically create and store messages when materials are submitted via submitMaterial",
+      "text": "Ensure the backend getAllMessages query returns all message records without any filtering so the admin dashboard receives complete activity data",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-previous"
         ],
         "quotes": [
-          "when someone sell material, ragister as worker, it's not showing in main dashboard"
+          "all the activities of all users, should show on admin dashboard, which is not showing"
         ]
       },
       "acceptanceCriteria": [
-        "submitMaterial function creates a message entry with material details",
-        "Message is stored in the messages collection",
-        "Message includes submitter ID and timestamp"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Update backend to automatically create and store messages when workers are registered via submitWorker",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "when someone sell material, ragister as worker, it's not showing in main dashboard"
-        ]
-      },
-      "acceptanceCriteria": [
-        "submitWorker function creates a message entry with worker details",
-        "Message is stored in the messages collection",
-        "Message includes submitter ID and timestamp"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Ensure the admin dashboard summary cards reflect accurate real-time counts including all activity types",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "also not showing in admmin dashboard"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Summary cards show correct counts for messages, workers, materials, and total activity",
-        "Counts update when new activities are added",
-        "All message types are included in the message count"
+        "getAllMessages query returns every message in the messages array",
+        "No messages are filtered or excluded from the response",
+        "Messages include all types: worker registrations, material listings, career applications, architect projects, and contact requests"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the Internet Identity authentication system",
-    "Do not change the single-actor backend architecture",
-    "Preserve existing UI component structure in frontend/src/components/ui",
-    "Maintain compatibility with existing translation system across English, Hindi, and Gujarati"
+    "Do not modify the AdminMessageRenderer component logic",
+    "Preserve the existing message data structure in the backend",
+    "Maintain admin authorization checks for the Messages tab"
   ],
   "nonGoals": [
-    "Real-time WebSocket notifications",
-    "Push notifications to user devices",
-    "Email notifications for activities",
-    "Advanced filtering or search in activity feeds"
+    "Changing the message storage format",
+    "Adding filtering or search capabilities to the Messages tab",
+    "Modifying the appearance or styling of message cards",
+    "Creating new message types or activity categories"
   ],
   "imageRequirements": {
     "required": [],

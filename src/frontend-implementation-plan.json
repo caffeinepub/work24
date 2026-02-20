@@ -1,96 +1,44 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix activity notifications and real-time message display across dashboards",
+  "title": "Fix admin dashboard activity feed to show all user activities",
   "requirements": [
     {
       "id": "REQ-1",
-      "summary": "Ensure material sale submissions create messages visible to all users on the main dashboard",
+      "summary": "Remove ActivityFeed component from HomeServices page so regular users don't see recent activity",
       "acceptanceCriteria": [
-        "Material sale submissions create a message entry visible to all users",
-        "Message appears in the main dashboard activity feed immediately after submission",
-        "Message content includes material name, category, and seller information"
+        "The ActivityFeed component is no longer rendered on the HomeServices page",
+        "Regular users visiting the home page do not see any activity feed"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/SellerMaterialSubmission.tsx",
-          "operation": "modify",
-          "description": "Update the submission success handler to invalidate the messages query so that the new activity message appears immediately in the activity feed after material submission completes."
-        },
-        {
           "path": "frontend/src/pages/HomeServices.tsx",
           "operation": "modify",
-          "description": "Add an ActivityFeed component to the home page that displays recent messages fetched via getAllMessages backend method. Position it prominently on the page to show material sales, worker registrations, and other activities to all users."
+          "description": "Remove the ActivityFeed component import and its rendering from the HomeServices page. Keep the hero section and service catalog grid intact."
         }
       ]
     },
     {
       "id": "REQ-2",
-      "summary": "Ensure worker registration submissions create messages visible to all users on the main dashboard",
+      "summary": "Update admin dashboard Messages tab to display all activity messages with proper parsing and sorting",
       "acceptanceCriteria": [
-        "Worker registration submissions create a message entry visible to all users",
-        "Message appears in the main dashboard activity feed immediately after submission",
-        "Message content includes worker name, skill, category, and location"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/pages/WorkerSubmission.tsx",
-          "operation": "modify",
-          "description": "Update the submission success handler to invalidate the messages query so that the new activity message appears immediately in the activity feed after worker registration completes."
-        }
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "summary": "Display all activity messages including material sales and worker registrations in the admin dashboard MessagesTab",
-      "acceptanceCriteria": [
-        "Admin MessagesTab shows all message types including material sales and worker registrations",
-        "Messages are properly categorized and display source information",
-        "Admin can see the complete activity history with timestamps"
+        "Admin Messages tab shows all messages from the backend without filtering",
+        "Worker registration activities are visible in the admin dashboard",
+        "Material listing activities are visible in the admin dashboard",
+        "Requirement submission activities are visible in the admin dashboard",
+        "Messages are sorted by timestamp in descending order (newest first)",
+        "Each message displays its source/origin clearly using AdminMessageRenderer"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/admin/MessagesTab.tsx",
           "operation": "modify",
-          "description": "Update the MessagesTab to use getAllMessages instead of getAdminMessages to ensure all activity types (material sales, worker registrations, contact requests) are displayed. Verify that AdminMessageRenderer properly categorizes and displays all message types with source information."
-        }
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "summary": "Create a main dashboard activity feed component that displays recent messages and activities to all users",
-      "acceptanceCriteria": [
-        "Activity feed component is visible on the main home page (HomeServices)",
-        "Feed displays recent material sales, worker registrations, and other activities",
-        "Feed updates automatically when new activities occur",
-        "Activities are displayed in reverse chronological order"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/activity/ActivityFeed.tsx",
-          "operation": "create",
-          "description": "Create a new ActivityFeed component that fetches messages using the getAllMessages query hook from useQueries. Display messages in reverse chronological order (most recent first) with proper formatting for material sales, worker registrations, and contact requests. Include loading states, empty states, and automatic refresh when new activities are submitted. Use Work24Card for consistent styling."
+          "description": "Update the MessagesTab component to call getAllMessages instead of getAdminMessages. Ensure messages are sorted by timestamp in descending order (newest first). Verify that AdminMessageRenderer is used for each message to properly display the source/origin. The component should display all message types including worker registrations, material listings, career applications, architect projects, and contact requests without any filtering."
         },
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Add or verify the existence of a useGetAllMessages query hook that calls the getAllMessages backend method. Ensure it returns properly typed Message array and integrates with React Query for caching and automatic updates."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Ensure admin dashboard summary cards reflect accurate real-time counts including all activity types",
-      "acceptanceCriteria": [
-        "Summary cards show correct counts for messages, workers, materials, and total activity",
-        "Counts update when new activities are added",
-        "All message types are included in the message count"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/admin/AdminSummaryCards.tsx",
-          "operation": "modify",
-          "description": "Update the summary cards to use getAllMessages instead of getAdminMessages for the message count to ensure all activity types (material sales, worker registrations, contact requests) are included in the total. Verify that the total activity count properly sums messages, workers, and materials."
+          "description": "Update or add a query hook for getAllMessages if not already present. Ensure the hook uses actor.getAllMessages() and includes proper error handling and loading states. This query should fetch all messages without any client-side filtering."
         }
       ]
     }

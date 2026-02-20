@@ -18,10 +18,6 @@ actor {
   include MixinAuthorization(accessControlState);
   include MixinStorage();
 
-  // Admin credentials
-  let ADMIN_USERNAME = "admin";
-  let ADMIN_PASSWORD = "demo123";
-
   // Type definitions
   public type Message = {
     id : Nat;
@@ -104,9 +100,9 @@ actor {
   // Message functions
   public shared ({ caller }) func addMessage(message : Text) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can add messages directly\n");
+      Runtime.trap("Unauthorized: Only admins can add messages directly");
     };
-    
+
     let newMessage : Message = {
       id = nextMessageId;
       text = message;
@@ -118,20 +114,19 @@ actor {
 
   public query ({ caller }) func getAdminMessages() : async [Message] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can access messages\n");
+      Runtime.trap("Unauthorized: Only admins can access messages");
     };
 
     messages.values().toArray();
   };
 
   public query ({ caller }) func getAllMessages() : async [Message] {
-    // Public access to all messages for main dashboard
     messages.values().toArray();
   };
 
   public shared ({ caller }) func deleteMessage(messageId : Nat) : async Bool {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can delete messages\n");
+      Runtime.trap("Unauthorized: Only admins can delete messages");
     };
 
     switch (messages.get(messageId)) {
@@ -145,7 +140,7 @@ actor {
 
   public shared ({ caller }) func deleteAllMessages() : async Nat {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can delete all messages\n");
+      Runtime.trap("Unauthorized: Only admins can delete all messages");
     };
 
     let count = messages.size();
@@ -167,7 +162,7 @@ actor {
   public shared ({ caller }) func addWorker(name : Text, skill : Text, category : Text, location : Text, profileImage : Storage.ExternalBlob, workImages : [Storage.ExternalBlob]) : async () {
     // Public access - any user including guests can register as a worker
     if (workImages.size() < 3) {
-      Runtime.trap("At least 3 work images are required\n");
+      Runtime.trap("At least 3 work images are required");
     };
 
     let newWorker : Worker = {
@@ -241,7 +236,7 @@ actor {
 
   public query ({ caller }) func getAllCareerApplications() : async [CareerApplication] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can view career applications\n");
+      Runtime.trap("Unauthorized: Only admins can view career applications");
     };
 
     careerApplications.values().toArray();
@@ -266,7 +261,7 @@ actor {
 
   public query ({ caller }) func getAllArchitectProjects() : async [ArchitectProject] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can view architect projects\n");
+      Runtime.trap("Unauthorized: Only admins can view architect projects");
     };
 
     architectProjects.values().toArray();
@@ -290,7 +285,7 @@ actor {
 
   public query ({ caller }) func getAllContactRequests() : async [ContactRequest] {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
-      Runtime.trap("Unauthorized: Only admins can view contact requests\n");
+      Runtime.trap("Unauthorized: Only admins can view contact requests");
     };
 
     contactRequests.values().toArray();
@@ -299,28 +294,22 @@ actor {
   // User profile functions
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can access profiles\n");
+      Runtime.trap("Unauthorized: Only users can access profiles");
     };
     userProfiles.get(caller);
   };
 
   public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
     if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
-      Runtime.trap("Unauthorized: Can only view your own profile\n");
+      Runtime.trap("Unauthorized: Can only view your own profile");
     };
     userProfiles.get(user);
   };
 
   public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can save profiles\n");
+      Runtime.trap("Unauthorized: Only users can save profiles");
     };
     userProfiles.add(caller, profile);
-  };
-
-  // Simple admin login function
-  public shared ({ caller }) func adminLogin(username : Text, password : Text) : async Bool {
-    // Public access - anyone can attempt login
-    username == ADMIN_USERNAME and password == ADMIN_PASSWORD;
   };
 };

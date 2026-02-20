@@ -3,6 +3,7 @@ import { useGetAllMessages } from '../../hooks/useQueries';
 import { useI18n } from '../../i18n/I18nProvider';
 import { formatIcTime } from '../../lib/formatIcTime';
 import { MessageSquare, Loader2 } from 'lucide-react';
+import ActivityMessageRenderer from './ActivityMessageRenderer';
 
 export default function ActivityFeed() {
   const { t } = useI18n();
@@ -54,7 +55,7 @@ export default function ActivityFeed() {
             key={message.id.toString()}
             className="border-l-2 border-primary/30 pl-4 py-2 hover:border-primary/60 transition-colors"
           >
-            <p className="text-sm text-foreground">{message.text}</p>
+            <ActivityMessageRenderer message={message.text} />
             <p className="text-xs text-muted-foreground mt-1">
               {formatIcTime(message.timestamp)}
             </p>
