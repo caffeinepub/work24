@@ -114,6 +114,7 @@ export interface _CaffeineStorageRefillInformation {
 export interface Message {
     id: bigint;
     text: string;
+    personName: string;
     timestamp: Time;
 }
 export interface CareerApplication {
@@ -170,7 +171,7 @@ export interface backendInterface {
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     addMaterial(name: string, category: string, description: string, location: string, images: Array<ExternalBlob>): Promise<void>;
-    addMessage(message: string): Promise<void>;
+    addMessage(message: string, name: string): Promise<void>;
     addWorker(name: string, skill: string, category: string, location: string, profileImage: ExternalBlob, workImages: Array<ExternalBlob>): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteAllMessages(): Promise<bigint>;
@@ -307,17 +308,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async addMessage(arg0: string): Promise<void> {
+    async addMessage(arg0: string, arg1: string): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.addMessage(arg0);
+                const result = await this.actor.addMessage(arg0, arg1);
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.addMessage(arg0);
+            const result = await this.actor.addMessage(arg0, arg1);
             return result;
         }
     }

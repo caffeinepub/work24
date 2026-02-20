@@ -28,7 +28,8 @@ export function useSubmitContact() {
         timestamp: new Date().toISOString(),
       });
       
-      await actor.addMessage(message);
+      // addMessage requires both message and name parameters
+      await actor.addMessage(message, submission.customerName);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['adminMessages'] });

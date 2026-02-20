@@ -1,44 +1,62 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix admin dashboard activity feed to show all user activities",
+  "title": "Fix admin dashboard not showing cross-device activity data",
   "requirements": [
     {
-      "id": "REQ-1",
-      "summary": "Remove ActivityFeed component from HomeServices page so regular users don't see recent activity",
+      "id": "REQ-3",
+      "summary": "Verify and fix the admin dashboard's ActivityFeed and MessagesTab components to ensure they fetch data directly from the backend without any client-side filtering that could hide cross-device submissions",
       "acceptanceCriteria": [
-        "The ActivityFeed component is no longer rendered on the HomeServices page",
-        "Regular users visiting the home page do not see any activity feed"
+        "ActivityFeed uses useGetAllMessages without client-side filtering",
+        "MessagesTab displays all messages returned from the backend",
+        "No localStorage or device-specific filtering is applied"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/HomeServices.tsx",
+          "path": "frontend/src/components/activity/ActivityFeed.tsx",
           "operation": "modify",
-          "description": "Remove the ActivityFeed component import and its rendering from the HomeServices page. Keep the hero section and service catalog grid intact."
-        }
-      ]
-    },
-    {
-      "id": "REQ-2",
-      "summary": "Update admin dashboard Messages tab to display all activity messages with proper parsing and sorting",
-      "acceptanceCriteria": [
-        "Admin Messages tab shows all messages from the backend without filtering",
-        "Worker registration activities are visible in the admin dashboard",
-        "Material listing activities are visible in the admin dashboard",
-        "Requirement submission activities are visible in the admin dashboard",
-        "Messages are sorted by timestamp in descending order (newest first)",
-        "Each message displays its source/origin clearly using AdminMessageRenderer"
-      ],
-      "file_operations": [
+          "description": "Review and ensure useGetAllMessages hook is called correctly without any client-side filtering logic that could exclude messages based on device, localStorage, or submitter ID. Verify that all messages returned from the backend are passed to the display logic without modification. Remove any conditional filtering that checks local state or device identifiers."
+        },
         {
           "path": "frontend/src/components/admin/MessagesTab.tsx",
           "operation": "modify",
-          "description": "Update the MessagesTab component to call getAllMessages instead of getAdminMessages. Ensure messages are sorted by timestamp in descending order (newest first). Verify that AdminMessageRenderer is used for each message to properly display the source/origin. The component should display all message types including worker registrations, material listings, career applications, architect projects, and contact requests without any filtering."
+          "description": "Review and ensure all messages from useGetAllMessages are displayed in the table without filtering. Verify the component renders every message returned from the backend query. Remove any logic that filters messages based on localStorage values, device identifiers, or other client-side conditions."
         },
         {
           "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Update or add a query hook for getAllMessages if not already present. Ensure the hook uses actor.getAllMessages() and includes proper error handling and loading states. This query should fetch all messages without any client-side filtering."
+          "description": "Review useGetAllMessages hook implementation to ensure it directly returns all messages from actor.getAllMessages() without any transformation, filtering, or post-processing. Verify the query is properly enabled when the actor is available and returns the raw backend data."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Add error boundary and network diagnostics to the admin dashboard to display clear error messages if backend queries fail or return empty results",
+      "acceptanceCriteria": [
+        "Error states are displayed when backend queries fail",
+        "Empty state clearly indicates if no data exists vs. query failure",
+        "Network connectivity issues are surfaced to the admin user"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/activity/ActivityFeed.tsx",
+          "operation": "modify",
+          "description": "Add comprehensive error handling to display clear error messages when useGetAllMessages query fails. Show network connectivity issues with actionable guidance. Differentiate between empty data state (no messages exist) and error state (query failed). Include retry functionality for failed queries."
+        },
+        {
+          "path": "frontend/src/components/admin/MessagesTab.tsx",
+          "operation": "modify",
+          "description": "Add error boundary logic to handle getAllMessages query failures. Display clear error messages distinguishing between empty results (no messages in database) and query errors (network/backend failure). Include network diagnostic information and retry functionality when queries fail."
+        },
+        {
+          "path": "frontend/src/components/admin/AdminSummaryCards.tsx",
+          "operation": "modify",
+          "description": "Add error state handling for each summary card query. Display error indicators when data fetching fails and provide clear messaging about which specific queries failed. Show loading states during retries and surface network connectivity issues."
+        },
+        {
+          "path": "frontend/src/pages/Admin.tsx",
+          "operation": "modify",
+          "description": "Add top-level error boundary component to catch unhandled errors in the admin dashboard. Display global error states for critical failures and provide diagnostic information about backend connectivity. Include a retry mechanism for the entire dashboard when backend connection fails."
         }
       ]
     }

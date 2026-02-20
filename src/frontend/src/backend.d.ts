@@ -36,6 +36,7 @@ export type Time = bigint;
 export interface Message {
     id: bigint;
     text: string;
+    personName: string;
     timestamp: Time;
 }
 export interface CareerApplication {
@@ -77,7 +78,7 @@ export enum UserRole {
 }
 export interface backendInterface {
     addMaterial(name: string, category: string, description: string, location: string, images: Array<ExternalBlob>): Promise<void>;
-    addMessage(message: string): Promise<void>;
+    addMessage(message: string, name: string): Promise<void>;
     addWorker(name: string, skill: string, category: string, location: string, profileImage: ExternalBlob, workImages: Array<ExternalBlob>): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteAllMessages(): Promise<bigint>;

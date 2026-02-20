@@ -29,6 +29,7 @@ export const Time = IDL.Int;
 export const Message = IDL.Record({
   'id' : IDL.Nat,
   'text' : IDL.Text,
+  'personName' : IDL.Text,
   'timestamp' : Time,
 });
 export const ArchitectProject = IDL.Record({
@@ -113,7 +114,7 @@ export const idlService = IDL.Service({
       [],
       [],
     ),
-  'addMessage' : IDL.Func([IDL.Text], [], []),
+  'addMessage' : IDL.Func([IDL.Text, IDL.Text], [], []),
   'addWorker' : IDL.Func(
       [
         IDL.Text,
@@ -195,6 +196,7 @@ export const idlFactory = ({ IDL }) => {
   const Message = IDL.Record({
     'id' : IDL.Nat,
     'text' : IDL.Text,
+    'personName' : IDL.Text,
     'timestamp' : Time,
   });
   const ArchitectProject = IDL.Record({
@@ -279,7 +281,7 @@ export const idlFactory = ({ IDL }) => {
         [],
         [],
       ),
-    'addMessage' : IDL.Func([IDL.Text], [], []),
+    'addMessage' : IDL.Func([IDL.Text, IDL.Text], [], []),
     'addWorker' : IDL.Func(
         [
           IDL.Text,

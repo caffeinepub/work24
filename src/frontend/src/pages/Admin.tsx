@@ -7,12 +7,13 @@ import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
+import { Alert, AlertDescription, AlertTitle } from '../components/ui/alert';
 import AdminDashboardLayout from '../components/admin/AdminDashboardLayout';
 import AdminSummaryCards from '../components/admin/AdminSummaryCards';
 import MessagesTab from '../components/admin/MessagesTab';
 import MaterialsTab from '../components/admin/MaterialsTab';
 import WorkersTab from '../components/admin/WorkersTab';
-import { LogOut } from 'lucide-react';
+import { LogOut, AlertCircle, WifiOff } from 'lucide-react';
 
 type AdminSection = 'overview' | 'messages' | 'materials' | 'workers';
 
@@ -24,6 +25,7 @@ export default function Admin() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => !!getAdminSession());
   const [activeSection, setActiveSection] = useState<AdminSection>('overview');
   const [loginError, setLoginError] = useState('');
+  const [connectionError, setConnectionError] = useState(false);
   
   const verifyAccessMutation = useVerifyAdminAccess();
 
@@ -31,18 +33,23 @@ export default function Admin() {
   useEffect(() => {
     const session = getAdminSession();
     if (session && !isAuthenticated) {
+      console.log('[Admin] Verifying existing session on mount');
       verifyAccessMutation.mutate(undefined, {
         onSuccess: (hasAccess) => {
+          console.log('[Admin] Session verification result:', hasAccess);
           if (hasAccess) {
             setIsAuthenticated(true);
+            setConnectionError(false);
           } else {
             clearAdminSession();
             setIsAuthenticated(false);
           }
         },
-        onError: () => {
+        onError: (error) => {
+          console.error('[Admin] Session verification error:', error);
           clearAdminSession();
           setIsAuthenticated(false);
+          setConnectionError(true);
         },
       });
     }
@@ -51,6 +58,9 @@ export default function Admin() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginError('');
+    setConnectionError(false);
+    
+    console.log('[Admin] Login attempt with username:', username);
     
     // Store credentials in session
     setAdminSession(username, password);
@@ -58,18 +68,29 @@ export default function Admin() {
     // Verify access by trying to call an admin-only method
     verifyAccessMutation.mutate(undefined, {
       onSuccess: (hasAccess) => {
+        console.log('[Admin] Login verification result:', hasAccess);
         if (hasAccess) {
           setIsAuthenticated(true);
           setUsername('');
           setPassword('');
+          setConnectionError(false);
         } else {
           clearAdminSession();
           setLoginError(t('admin.invalidCredentials'));
         }
       },
       onError: (error: any) => {
+        console.error('[Admin] Login verification error:', error);
         clearAdminSession();
-        if (error?.message?.includes('Unauthorized')) {
+        const errorMessage = error?.message || String(error);
+        const isNetworkError = errorMessage.toLowerCase().includes('network') || 
+                              errorMessage.toLowerCase().includes('fetch') ||
+                              errorMessage.toLowerCase().includes('connection');
+        
+        if (isNetworkError) {
+          setConnectionError(true);
+          setLoginError('Network connectivity issue. Please check your internet connection and try again.');
+        } else if (errorMessage.includes('Unauthorized')) {
           setLoginError(t('admin.invalidCredentials'));
         } else {
           setLoginError(t('admin.loginError'));
@@ -79,6 +100,7 @@ export default function Admin() {
   };
 
   const handleLogout = () => {
+    console.log('[Admin] Logging out');
     clearAdminSession();
     setIsAuthenticated(false);
     setActiveSection('overview');
@@ -98,6 +120,16 @@ export default function Admin() {
             </CardDescription>
           </CardHeader>
           <CardContent>
+            {connectionError && (
+              <Alert variant="destructive" className="mb-4">
+                <WifiOff className="h-4 w-4" />
+                <AlertTitle>Connection Error</AlertTitle>
+                <AlertDescription>
+                  Unable to connect to the backend. Please check your internet connection and ensure the backend canister is running.
+                </AlertDescription>
+              </Alert>
+            )}
+            
             <form onSubmit={handleLogin} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="username" className="text-admin-foreground">
@@ -128,7 +160,10 @@ export default function Admin() {
                 />
               </div>
               {loginError && (
-                <p className="text-sm text-destructive">{loginError}</p>
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{loginError}</AlertDescription>
+                </Alert>
               )}
               <Button
                 type="submit"

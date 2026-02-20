@@ -1,11 +1,12 @@
 # Specification
 
 ## Summary
-**Goal:** Fix the admin dashboard to display all user activities while removing the activity feed from the main home page.
+**Goal:** Fix the admin dashboard to properly display activity data submitted from any device by debugging backend storage and frontend data retrieval.
 
 **Planned changes:**
-- Remove the ActivityFeed component from the main home page (HomeServices.tsx)
-- Update the admin dashboard Messages tab to display all user activities including worker registrations, material listings, and requirement submissions
-- Modify the backend getAllMessages query to return all message records without filtering
+- Debug and fix backend message storage to ensure cross-device activities are persisted in stable storage
+- Add comprehensive backend logging for message storage and retrieval operations
+- Verify and fix ActivityFeed and MessagesTab components to fetch all backend data without client-side filtering
+- Add error boundaries and network diagnostics to surface backend query failures
 
-**User-visible outcome:** Regular users no longer see an activity feed on the home page. Admins can view all user activities (worker registrations, material listings, requirements) in the admin dashboard Messages tab.
+**User-visible outcome:** Admin dashboard will display all activity data regardless of which device submitted it, with clear error messages if data retrieval fails.

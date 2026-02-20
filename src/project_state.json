@@ -1,26 +1,26 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Admin dashboard application tracking user activities (worker registration, material listings, requirement submissions)",
+  "summary": "New project",
   "architectural_notes": [],
   "known_issues": [
-    "Admin dashboard not displaying user activities (worker registration, material listing, requirement submission)"
+    "Admin dashboard not showing data from activities performed on other devices"
   ],
   "isFixRequest": true,
   "existing_features": [
     {
-      "id": "feature-remove-the-activityfeed-component-from-the-main-home-page-homeservices-tsx-so-that-no-recent-activity-is-displayed-to-regular-users",
-      "title": "Remove the ActivityFeed component from the main home page (HomeServices.tsx) so that no recent activity is displayed to regular users",
+      "id": "feature-verify-and-fix-the-admin-dashboard-s-activityfeed-and-messagestab-components-to-ensure-they-fetch-data-directly-from-the-backend-without-any-client-side-filtering-that-could-hide-cross-device-submissions",
+      "title": "Verify and fix the admin dashboard's ActivityFeed and MessagesTab components to ensure they fetch data directly from the backend without any client-side filtering that could hide cross-device submissions",
       "reqIds": [
-        "REQ-1"
+        "REQ-3"
       ],
       "version": 1
     },
     {
-      "id": "feature-modify-the-admin-dashboard-messages-tab-to-display-all-activity-messages-including-worker-registrations-material-listings-and-requirement-submissions-with-proper-parsing-and-rendering",
-      "title": "Modify the admin dashboard Messages tab to display all activity messages including worker registrations, material listings, and requirement submissions with proper parsing and rendering",
+      "id": "feature-add-error-boundary-and-network-diagnostics-to-the-admin-dashboard-to-display-clear-error-messages-if-backend-queries-fail-or-return-empty-results",
+      "title": "Add error boundary and network diagnostics to the admin dashboard to display clear error messages if backend queries fail or return empty results",
       "reqIds": [
-        "REQ-2"
+        "REQ-4"
       ],
       "version": 1
     }
@@ -28,26 +28,22 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Remove recent activity from main page",
-      "reqIds": [],
+      "summary": "Debug and fix the backend message storage mechanism to ensure that activities submitted from any device are properly persisted in the canister's stable storage and can be retrieved via getAllMessages query",
+      "reqIds": [
+        "REQ-1"
+      ],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Show all user activities in admin dashboard (worker registration, material listings, requirements)",
-      "reqIds": [],
-      "status": "pending"
-    },
-    {
-      "id": "AR-5",
-      "summary": "Ensure the backend getAllMessages query returns all message records without any filtering so the admin dashboard receives complete activity data",
+      "summary": "Add comprehensive backend logging to diagnose message storage and retrieval: log when messages are received, when they're stored in stable variables, and when they're queried via getAllMessages",
       "reqIds": [
-        "REQ-3"
+        "REQ-2"
       ],
       "status": "pending"
     }
   ],
-  "projectName": "Fix admin dashboard activity feed to show all user activities",
+  "projectName": "Fix admin dashboard not showing cross-device activity data",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

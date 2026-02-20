@@ -2,29 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-the-activityfeed-component-from-the-main-home-page-homeservices-tsx-so-that-no-recent-activity-is-displayed-to-regular-users",
-      "featureTitle": "Remove the ActivityFeed component from the main home page (HomeServices.tsx) so that no recent activity is displayed to regular users",
+      "featureId": "feature-verify-and-fix-the-admin-dashboard-s-activityfeed-and-messagestab-components-to-ensure-they-fetch-data-directly-from-the-backend-without-any-client-side-filtering-that-could-hide-cross-device-submissions",
+      "featureTitle": "Verify and fix the admin dashboard's ActivityFeed and MessagesTab components to ensure they fetch data directly from the backend without any client-side filtering that could hide cross-device submissions",
       "files": [
-        "frontend/src/pages/HomeServices.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "authorization@4.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-1"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-modify-the-admin-dashboard-messages-tab-to-display-all-activity-messages-including-worker-registrations-material-listings-and-requirement-submissions-with-proper-parsing-and-rendering",
-      "featureTitle": "Modify the admin dashboard Messages tab to display all activity messages including worker registrations, material listings, and requirement submissions with proper parsing and rendering",
-      "files": [
+        "frontend/src/components/activity/ActivityFeed.tsx",
         "frontend/src/components/admin/MessagesTab.tsx",
         "frontend/src/hooks/useQueries.ts"
       ],
@@ -38,7 +19,30 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-2"
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-error-boundary-and-network-diagnostics-to-the-admin-dashboard-to-display-clear-error-messages-if-backend-queries-fail-or-return-empty-results",
+      "featureTitle": "Add error boundary and network diagnostics to the admin dashboard to display clear error messages if backend queries fail or return empty results",
+      "files": [
+        "frontend/src/components/activity/ActivityFeed.tsx",
+        "frontend/src/components/admin/AdminSummaryCards.tsx",
+        "frontend/src/components/admin/MessagesTab.tsx",
+        "frontend/src/pages/Admin.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "authorization@4.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
       ],
       "confidence": "high"
     }

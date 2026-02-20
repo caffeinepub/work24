@@ -9,10 +9,18 @@ export function useGetAdminMessages() {
     queryKey: ['adminMessages'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.getAdminMessages();
+      console.log('[useGetAdminMessages] Fetching admin messages...');
+      const messages = await actor.getAdminMessages();
+      console.log('[useGetAdminMessages] Received messages:', {
+        count: messages.length,
+        messageIds: messages.map(m => m.id.toString()),
+        timestamps: messages.map(m => new Date(Number(m.timestamp) / 1000000).toISOString())
+      });
+      return messages;
     },
     enabled: !!actor && !isFetching,
-    retry: false,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -23,9 +31,21 @@ export function useGetAllMessages() {
     queryKey: ['messages'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.getAllMessages();
+      console.log('[useGetAllMessages] Fetching all messages from backend...');
+      const messages = await actor.getAllMessages();
+      console.log('[useGetAllMessages] Successfully received messages:', {
+        count: messages.length,
+        messageIds: messages.map(m => m.id.toString()),
+        timestamps: messages.map(m => new Date(Number(m.timestamp) / 1000000).toISOString()),
+        firstFewTexts: messages.slice(0, 3).map(m => m.text.substring(0, 50))
+      });
+      return messages;
     },
     enabled: !!actor && !isFetching,
+    refetchInterval: 10000, // Refetch every 10 seconds to catch cross-device updates
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    staleTime: 0, // Always consider data stale to ensure fresh fetches
   });
 }
 
@@ -36,13 +56,16 @@ export function useDeleteMessage() {
   return useMutation({
     mutationFn: async (messageId: bigint) => {
       if (!actor) throw new Error('Actor not available');
+      console.log('[useDeleteMessage] Deleting message:', messageId.toString());
       const result = await actor.deleteMessage(messageId);
       if (!result) {
         throw new Error('Message not found or could not be deleted');
       }
+      console.log('[useDeleteMessage] Message deleted successfully');
       return result;
     },
     onSuccess: () => {
+      console.log('[useDeleteMessage] Invalidating message queries');
       queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
       queryClient.invalidateQueries({ queryKey: ['messages'] });
     },
@@ -56,9 +79,14 @@ export function useGetAllWorkers() {
     queryKey: ['workers'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.getAllWorkers();
+      console.log('[useGetAllWorkers] Fetching all workers...');
+      const workers = await actor.getAllWorkers();
+      console.log('[useGetAllWorkers] Received workers:', workers.length);
+      return workers;
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -82,9 +110,14 @@ export function useGetAllMaterials() {
     queryKey: ['materials'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
-      return actor.getAllMaterials();
+      console.log('[useGetAllMaterials] Fetching all materials...');
+      const materials = await actor.getAllMaterials();
+      console.log('[useGetAllMaterials] Received materials:', materials.length);
+      return materials;
     },
     enabled: !!actor && !isFetching,
+    retry: 3,
+    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
   });
 }
 
@@ -102,6 +135,7 @@ export function useAddWorker() {
       workImages: any[];
     }) => {
       if (!actor) throw new Error('Actor not available');
+      console.log('[useAddWorker] Adding worker:', data.name);
       return actor.addWorker(
         data.name,
         data.skill,
@@ -112,6 +146,7 @@ export function useAddWorker() {
       );
     },
     onSuccess: () => {
+      console.log('[useAddWorker] Worker added, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['workers'] });
       queryClient.invalidateQueries({ queryKey: ['messages'] });
       queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
@@ -132,6 +167,7 @@ export function useAddMaterial() {
       images: any[];
     }) => {
       if (!actor) throw new Error('Actor not available');
+      console.log('[useAddMaterial] Adding material:', data.name);
       return actor.addMaterial(
         data.name,
         data.category,
@@ -141,6 +177,7 @@ export function useAddMaterial() {
       );
     },
     onSuccess: () => {
+      console.log('[useAddMaterial] Material added, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['materials'] });
       queryClient.invalidateQueries({ queryKey: ['messages'] });
       queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
@@ -161,6 +198,7 @@ export function useSubmitContactRequest() {
       targetType: string;
     }) => {
       if (!actor) throw new Error('Actor not available');
+      console.log('[useSubmitContactRequest] Submitting contact request for:', data.targetType, data.targetId.toString());
       return actor.submitContactRequest(
         data.customerName,
         data.mobile,
@@ -170,6 +208,7 @@ export function useSubmitContactRequest() {
       );
     },
     onSuccess: () => {
+      console.log('[useSubmitContactRequest] Contact request submitted, invalidating queries');
       queryClient.invalidateQueries({ queryKey: ['adminMessages'] });
       queryClient.invalidateQueries({ queryKey: ['messages'] });
     },
@@ -188,6 +227,7 @@ export function useSubmitCareerApplication() {
       message: string;
     }) => {
       if (!actor) throw new Error('Actor not available');
+      console.log('[useSubmitCareerApplication] Submitting career application for:', data.name);
       return actor.submitCareerApplication(
         data.name,
         data.mobile,
@@ -212,6 +252,7 @@ export function useSubmitArchitectProject() {
       files: any[];
     }) => {
       if (!actor) throw new Error('Actor not available');
+      console.log('[useSubmitArchitectProject] Submitting architect project for:', data.name);
       return actor.submitArchitectProject(
         data.name,
         data.projectType,

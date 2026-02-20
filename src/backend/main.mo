@@ -18,9 +18,9 @@ actor {
   include MixinAuthorization(accessControlState);
   include MixinStorage();
 
-  // Type definitions
   public type Message = {
     id : Nat;
+    personName : Text;
     text : Text;
     timestamp : Time.Time;
   };
@@ -73,7 +73,7 @@ actor {
     mobile : Text;
     requirements : Text;
     targetId : Nat;
-    targetType : Text; // "worker" or "material"
+    targetType : Text;
     timestamp : Time.Time;
   };
 
@@ -81,7 +81,6 @@ actor {
     name : Text;
   };
 
-  // State variables
   var nextMessageId = 0;
   var nextWorkerId = 0;
   var nextMaterialId = 0;
@@ -98,7 +97,7 @@ actor {
   let userProfiles = Map.empty<Principal, UserProfile>();
 
   // Message functions
-  public shared ({ caller }) func addMessage(message : Text) : async () {
+  public shared ({ caller }) func addMessage(message : Text, name : Text) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can add messages directly");
     };
@@ -106,6 +105,7 @@ actor {
     let newMessage : Message = {
       id = nextMessageId;
       text = message;
+      personName = name;
       timestamp = Time.now();
     };
     messages.add(nextMessageId, newMessage);
@@ -116,11 +116,10 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can access messages");
     };
-
     messages.values().toArray();
   };
 
-  public query ({ caller }) func getAllMessages() : async [Message] {
+  public query func getAllMessages() : async [Message] {
     messages.values().toArray();
   };
 
@@ -148,10 +147,11 @@ actor {
     count;
   };
 
-  func createAndStoreMessage(message : Text) {
+  func createSystemMessage(message : Text, name : Text) {
     let newMessage : Message = {
       id = nextMessageId;
       text = message;
+      personName = name;
       timestamp = Time.now();
     };
     messages.add(nextMessageId, newMessage);
@@ -160,7 +160,6 @@ actor {
 
   // Worker functions
   public shared ({ caller }) func addWorker(name : Text, skill : Text, category : Text, location : Text, profileImage : Storage.ExternalBlob, workImages : [Storage.ExternalBlob]) : async () {
-    // Public access - any user including guests can register as a worker
     if (workImages.size() < 3) {
       Runtime.trap("At least 3 work images are required");
     };
@@ -176,12 +175,11 @@ actor {
       timestamp = Time.now();
     };
     workers.add(nextWorkerId, newWorker);
-    createAndStoreMessage("New worker registered: " # name # " - " # skill);
+    createSystemMessage("New worker registered: " # name # " - " # skill, "System");
     nextWorkerId += 1;
   };
 
   public query ({ caller }) func getWorkersByCategory(category : Text) : async [Worker] {
-    // Public access - anyone can view workers
     let filteredWorkers = List.empty<Worker>();
     for ((_, worker) in workers.entries()) {
       if (worker.category == category) {
@@ -192,13 +190,11 @@ actor {
   };
 
   public query ({ caller }) func getAllWorkers() : async [Worker] {
-    // Public access - anyone can view workers
     workers.values().toArray();
   };
 
   // Material functions
   public shared ({ caller }) func addMaterial(name : Text, category : Text, description : Text, location : Text, images : [Storage.ExternalBlob]) : async () {
-    // Public access - any user including guests can submit materials for sale
     let newMaterial : Material = {
       id = nextMaterialId;
       name;
@@ -209,18 +205,16 @@ actor {
       timestamp = Time.now();
     };
     materials.add(nextMaterialId, newMaterial);
-    createAndStoreMessage("New material submitted for sale: " # name # " - " # category);
+    createSystemMessage("New material submitted for sale: " # name # " - " # category, "System");
     nextMaterialId += 1;
   };
 
   public query ({ caller }) func getAllMaterials() : async [Material] {
-    // Public access - anyone can view materials
     materials.values().toArray();
   };
 
   // Career application functions
   public shared ({ caller }) func submitCareerApplication(name : Text, mobile : Text, skills : Text, experience : Text, message : Text) : async () {
-    // Public access - anyone can submit career applications
     let newApplication : CareerApplication = {
       id = nextCareerApplicationId;
       name;
@@ -238,13 +232,11 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can view career applications");
     };
-
     careerApplications.values().toArray();
   };
 
   // Architect project functions
   public shared ({ caller }) func submitArchitectProject(name : Text, projectType : Text, location : Text, budget : Text, message : Text, files : [Storage.ExternalBlob]) : async () {
-    // Public access - anyone can submit architect projects
     let newProject : ArchitectProject = {
       id = nextArchitectProjectId;
       name;
@@ -263,13 +255,11 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can view architect projects");
     };
-
     architectProjects.values().toArray();
   };
 
   // Contact request functions
   public shared ({ caller }) func submitContactRequest(customerName : Text, mobile : Text, requirements : Text, targetId : Nat, targetType : Text) : async () {
-    // Public access - anyone can submit contact requests
     let newRequest : ContactRequest = {
       id = nextContactRequestId;
       customerName;
@@ -287,11 +277,9 @@ actor {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can view contact requests");
     };
-
     contactRequests.values().toArray();
   };
 
-  // User profile functions
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can access profiles");

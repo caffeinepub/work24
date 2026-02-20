@@ -48,7 +48,12 @@ export interface Material {
   'location' : string,
   'images' : Array<ExternalBlob>,
 }
-export interface Message { 'id' : bigint, 'text' : string, 'timestamp' : Time }
+export interface Message {
+  'id' : bigint,
+  'text' : string,
+  'personName' : string,
+  'timestamp' : Time,
+}
 export type Time = bigint;
 export interface UserProfile { 'name' : string }
 export type UserRole = { 'admin' : null } |
@@ -96,7 +101,7 @@ export interface _SERVICE {
     [string, string, string, string, Array<ExternalBlob>],
     undefined
   >,
-  'addMessage' : ActorMethod<[string], undefined>,
+  'addMessage' : ActorMethod<[string, string], undefined>,
   'addWorker' : ActorMethod<
     [string, string, string, string, ExternalBlob, Array<ExternalBlob>],
     undefined

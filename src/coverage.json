@@ -1,45 +1,60 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-19T17:01:42.029Z",
+  "generatedAt": "2026-02-20T15:51:26.845Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 3,
+    "total": 4,
     "implemented": 2,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Remove the ActivityFeed component from the main home page (HomeServices.tsx) so that no recent activity is displayed to regular users",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/pages/HomeServices.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/pages/HomeServices.tsx"
-        ]
-      },
-      {
-        "id": "REQ-2",
-        "summary": "Modify the admin dashboard Messages tab to display all activity messages including worker registrations, material listings, and requirement submissions with proper parsing and rendering",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/admin/MessagesTab.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/admin/MessagesTab.tsx",
-          "frontend/src/hooks/useQueries.ts"
-        ]
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Ensure the backend getAllMessages query returns all message records without any filtering so the admin dashboard receives complete activity data",
+        "summary": "Debug and fix the backend message storage mechanism to ensure that activities submitted from any device are properly persisted in the canister's stable storage and can be retrieved via getAllMessages query",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Add comprehensive backend logging to diagnose message storage and retrieval: log when messages are received, when they're stored in stable variables, and when they're queried via getAllMessages",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Verify and fix the admin dashboard's ActivityFeed and MessagesTab components to ensure they fetch data directly from the backend without any client-side filtering that could hide cross-device submissions",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/activity/ActivityFeed.tsx",
+          "frontend/src/components/admin/MessagesTab.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/activity/ActivityFeed.tsx",
+          "frontend/src/components/admin/MessagesTab.tsx",
+          "frontend/src/hooks/useQueries.ts"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Add error boundary and network diagnostics to the admin dashboard to display clear error messages if backend queries fail or return empty results",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/activity/ActivityFeed.tsx",
+          "frontend/src/components/admin/MessagesTab.tsx",
+          "frontend/src/components/admin/AdminSummaryCards.tsx",
+          "frontend/src/pages/Admin.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/activity/ActivityFeed.tsx",
+          "frontend/src/components/admin/MessagesTab.tsx",
+          "frontend/src/components/admin/AdminSummaryCards.tsx",
+          "frontend/src/pages/Admin.tsx"
+        ]
       }
     ]
   },
@@ -52,12 +67,14 @@
     "frontend-implementation-plan.json",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
+    "frontend/src/components/activity/ActivityFeed.tsx",
+    "frontend/src/components/admin/AdminSummaryCards.tsx",
     "frontend/src/components/admin/MessagesTab.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
     "frontend/src/hooks/useQueries.ts",
+    "frontend/src/lib/contactSubmissions.ts",
     "frontend/src/pages/Admin.tsx",
-    "frontend/src/pages/HomeServices.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

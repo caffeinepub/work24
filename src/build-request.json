@@ -1,75 +1,81 @@
 {
   "kind": "build_request",
-  "title": "Fix admin dashboard activity feed to show all user activities",
+  "title": "Fix admin dashboard not showing cross-device activity data",
   "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Remove the ActivityFeed component from the main home page (HomeServices.tsx) so that no recent activity is displayed to regular users",
-      "target": "frontend",
+      "text": "Debug and fix the backend message storage mechanism to ensure that activities submitted from any device are properly persisted in the canister's stable storage and can be retrieved via getAllMessages query",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-previous"
+          "msg-latest"
         ],
         "quotes": [
-          "i don't want to show any recent activity on main page"
+          "still when i do any activity from another device, in this app's link, the data is not showing in the admin dashboard"
         ]
       },
       "acceptanceCriteria": [
-        "The ActivityFeed component is no longer rendered on the HomeServices page",
-        "Regular users visiting the home page do not see any activity feed"
+        "Messages submitted from different devices are stored in the backend canister",
+        "getAllMessages query returns all stored messages regardless of submission device",
+        "Backend storage persists across canister upgrades"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Modify the admin dashboard Messages tab to display all activity messages including worker registrations, material listings, and requirement submissions with proper parsing and rendering",
-      "target": "frontend",
+      "text": "Add comprehensive backend logging to diagnose message storage and retrieval: log when messages are received, when they're stored in stable variables, and when they're queried via getAllMessages",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-previous"
-        ],
-        "quotes": [
-          "all the activities of all users, should show on admin dashboard, which is not showing. when my friend try to ragister as worker, listing material or sending requirement"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "Admin Messages tab shows all messages from the backend without filtering",
-        "Worker registration activities are visible in the admin dashboard",
-        "Material listing activities are visible in the admin dashboard",
-        "Requirement submission activities are visible in the admin dashboard",
-        "Messages are sorted by timestamp in descending order (newest first)",
-        "Each message displays its source/origin clearly using AdminMessageRenderer"
+        "Debug.print statements added for message storage operations",
+        "Debug.print statements added for getAllMessages query execution",
+        "Logs include message count and submission details"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Ensure the backend getAllMessages query returns all message records without any filtering so the admin dashboard receives complete activity data",
-      "target": "backend",
+      "text": "Verify and fix the admin dashboard's ActivityFeed and MessagesTab components to ensure they fetch data directly from the backend without any client-side filtering that could hide cross-device submissions",
+      "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-previous"
-        ],
-        "quotes": [
-          "all the activities of all users, should show on admin dashboard, which is not showing"
+          "msg-latest"
         ]
       },
       "acceptanceCriteria": [
-        "getAllMessages query returns every message in the messages array",
-        "No messages are filtered or excluded from the response",
-        "Messages include all types: worker registrations, material listings, career applications, architect projects, and contact requests"
+        "ActivityFeed uses useGetAllMessages without client-side filtering",
+        "MessagesTab displays all messages returned from the backend",
+        "No localStorage or device-specific filtering is applied"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add error boundary and network diagnostics to the admin dashboard to display clear error messages if backend queries fail or return empty results",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-latest"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Error states are displayed when backend queries fail",
+        "Empty state clearly indicates if no data exists vs. query failure",
+        "Network connectivity issues are surfaced to the admin user"
       ]
     }
   ],
   "constraints": [
-    "Do not modify the AdminMessageRenderer component logic",
-    "Preserve the existing message data structure in the backend",
-    "Maintain admin authorization checks for the Messages tab"
+    "Maintain existing single-actor backend architecture",
+    "Do not modify Internet Identity authentication flow",
+    "Preserve existing admin session authentication mechanism"
   ],
   "nonGoals": [
-    "Changing the message storage format",
-    "Adding filtering or search capabilities to the Messages tab",
-    "Modifying the appearance or styling of message cards",
-    "Creating new message types or activity categories"
+    "Implementing real-time updates or WebSockets",
+    "Adding new message types or data models",
+    "Changing the UI layout or styling of the admin dashboard"
   ],
   "imageRequirements": {
     "required": [],
